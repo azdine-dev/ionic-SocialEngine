@@ -1,0 +1,62 @@
+<!--
+  Generated template for the PostPage page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar color="primary" >
+    <ion-title>Post</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item class="item-no-border">
+    <ion-avatar item-left (click)="viewUser(post.user_id)">
+      <img src="{{ post.face }}">
+    </ion-avatar>
+    <h2 ion-text color="primary"  class="post-author" (click)="viewUser(post.user_id)">{{ post.name }}</h2>
+    <span class="post-time">
+      <ion-icon name="timer-outline"></ion-icon>
+      {{ post.time }}
+    </span>
+  </ion-item>
+
+  <div padding>
+    <img class="full-image" *ngIf="post.image" src="{{ post.image }}">
+    <p>{{ post.content}}</p>
+
+    <p>
+      <a (click)="toggleLike(post)" class="subdued">
+        <ion-icon name="thumbs-up" color="primary"  *ngIf="post.liked"></ion-icon>
+        <ion-icon name="thumbs-up" color="gray"  *ngIf="!post.liked"></ion-icon>
+        {{ post.likeCount}}
+      </a>
+      <a class="subdued">
+        <ion-icon name="chatboxes" color="primary" ></ion-icon>
+        {{ post.commentCount}}
+      </a>
+    </p>
+
+    <ion-item class="post-comment" *ngFor="let comment of post.comments">
+      <ion-avatar item-left (click)="viewUser(comment.user_id)">
+        <img src="{{ comment.face }}">
+      </ion-avatar>
+
+      <h3 ion-text color="primary"  class="post-author">
+        {{ comment.name }}
+      </h3>
+      <p text-wrap>{{ comment.content}}</p>
+      <a class="subdued like-count">
+        <ion-icon name="heart" color="danger"  *ngIf="comment.liked"></ion-icon>
+        <ion-icon name="heart" color="gray"  *ngIf="!comment.liked"></ion-icon>
+        {{ comment.likeCount}}
+      </a>
+      <span class="post-time">
+        <ion-icon name="timer-outline"></ion-icon>
+        {{ comment.time }}
+      </span>
+    </ion-item>
+  </div>
+</ion-content>

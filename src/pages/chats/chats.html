@@ -1,0 +1,38 @@
+<!--
+  Generated template for the ChatsPage page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar color="primary" >
+    <button  ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Chats</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list class="list-full-border">
+    <ion-item-sliding *ngFor="let chat of chats">
+
+      <ion-item text-wrap (click)="viewChat(chat.id)">
+        <ion-avatar item-left>
+          <img class="profile-picture" src="{{ chat.face }}" alt=""/>
+        </ion-avatar>
+        <h2 ion-text color="primary" >{{chat.name}}</h2>
+        <p>{{chat.lastText}}</p>
+      </ion-item>
+
+      <ion-item-options>
+        <button  ion-button color="yellow" >
+          Mute
+        </button>
+        <button  ion-button color="danger" >
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

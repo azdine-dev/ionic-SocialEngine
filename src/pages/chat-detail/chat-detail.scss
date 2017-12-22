@@ -1,0 +1,126 @@
+page-chat-detail,
+.chat-detail {
+  img.profile-picture {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    bottom: 10px;
+    &.left {
+      left: 10px;
+    }
+    &.right {
+      right: 10px;
+    }
+  }
+
+  .ion-email {
+    float: right;
+    font-size: 32px;
+    vertical-align: middle;
+  }
+
+  .message {
+    font-size: 14px;
+  }
+
+  .message-detail {
+    white-space: nowrap;
+    font-size: 14px;
+  }
+
+  .bar.item-input-inset {
+    .item-input-wrapper {
+      input {
+        width: 100% !important;
+      }
+    }
+  }
+
+  .message-wrapper {
+    position: relative;
+    &:last-child {
+      margin-bottom: 10px;
+    }
+  }
+
+  .chat-bubble {
+    border-radius: 5px;
+    display: inline-block;
+    padding: 10px 18px;
+    position: relative;
+    margin: 10px;
+    max-width: 80%;
+
+    .message-time {
+      font-size: 0.7em;
+      display: block;
+    }
+
+    &:before {
+      content: "\00a0";
+      display: block;
+      height: 16px;
+      width: 9px;
+      position: absolute;
+      bottom: -7.5px;
+    }
+
+    &.left {
+      background-color: #e6e5eb;
+      float: left;
+      margin-left: 55px;
+
+      &:before {
+        background-color: #e6e5eb;
+        left: 10px;
+        -webkit-transform: rotate(70deg) skew(5deg);
+      }
+    }
+    &.right {
+      background-color: #158ffe;
+      color: #fff;
+      float: right;
+      margin-right: 55px;
+
+      &:before {
+        background-color: #158ffe;
+        right: 10px;
+        -webkit-transform: rotate(118deg) skew(-5deg);
+      }
+
+      a.autolinker {
+        color: #fff;
+        font-weight: bold;
+      }
+
+      .message-time {
+        text-align: right;
+      }
+    }
+  }
+
+  .bar-footer {
+    height: auto;
+    overflow: visible !important;
+
+    .item-input-inset {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    textarea {
+      resize: none;
+      height: 1.5em;
+      width: 100%;
+      background: none;
+    }
+
+    .footer-btn-wrap {
+      align-self: flex-end;
+
+      .button-icon:before {
+        font-size: 1.5em;
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+page-recent-posts,
+.recent-posts {
+
+  .timeline-list {
+    padding-top: 1em;
+    .item.item-block {
+      border: none;
+      padding: 0;
+      padding-left: 1.2em;
+
+      .item-inner {
+        border-bottom: none;
+
+        ion-label {
+          margin: 0 8px 0 0;
+        }
+
+        .item-body {
+          border-left: 1px solid color($colors, primary);
+          padding-top: 0.4em;
+          padding-left: 0.8em;
+        }
+
+        .item-header-img {
+          position: absolute;
+          top: 0;
+          left: 0.3em;
+
+          .profile-picture {
+            width: 2em;
+            height: 2em;
+          }
+        }
+
+        .post-author {
+          margin-left: 0.5em;
+        }
+
+        .post-time {
+          position: absolute;
+          top: 0.5em;
+          right: 1.5em;
+        }
+
+        .post-content {
+          margin-top: 1em;
+          border-bottom: 1px solid $borderColor;
+          padding-bottom: 1em;
+        }
+      }
+    }
+  }
+
+}

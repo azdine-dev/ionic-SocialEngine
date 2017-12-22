@@ -1,0 +1,53 @@
+<!--
+  Generated template for the RecentPostsPage page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar color="primary" >
+    <button  ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Recent Posts</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list class="timeline-list">
+
+    <ion-item text-wrap *ngFor="let post of posts">
+      <div class="item-body">
+        <div (click)="viewUser(post.user_id)" class="item-header-img">
+          <img class="profile-picture" src="{{ post.face }}" alt=""/>
+        </div>
+
+        <h3 ion-text color="primary"  class="post-author" (click)="viewUser(post.user_id)">
+          {{ post.name }}
+        </h3>
+
+        <div color="dark"  class="post-time">
+          <ion-icon name="timer-outline"></ion-icon>
+          {{ post.time }}
+        </div>
+
+        <div class="post-content">
+          <img class="full-image" *ngIf="post.image" src="{{ post.image }}">
+          <p>{{ post.content}}</p>
+
+          <p>
+            <a (click)="toggleLike(post)" class="subdued">
+              <ion-icon name="thumbs-up" color="primary"  *ngIf="post.liked"></ion-icon>
+              <ion-icon name="thumbs-up" color="gray"  *ngIf="!post.liked"></ion-icon>
+              {{ post.likeCount}}
+            </a>
+            <a class="subdued">
+              <ion-icon name="chatboxes" color="primary" ></ion-icon>
+              {{ post.commentCount}}
+            </a>
+          </p>
+        </div>
+      </div>
+    </ion-item>
+  </ion-list>
+</ion-content>

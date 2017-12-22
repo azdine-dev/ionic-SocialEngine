@@ -1,0 +1,181 @@
+
+a {
+  color: inherit;
+}
+
+.rlt {
+  position: relative;
+}
+
+.cf {
+  clear: both;
+}
+
+.no-border {
+  border: none;
+}
+
+.post-author {
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.post-time {
+  font-size: 0.8em;
+}
+
+.profile-picture {
+  border-radius: 50%;
+}
+
+.item-no-border {
+
+  .item-inner {
+    border: none;
+  }
+}
+
+ion-navbar.no-border {
+
+  .toolbar-background {
+    border: none;
+  }
+}
+
+.primary-bg {
+  color: color($colors, light);
+  background: color($colors, primary);
+}
+
+.secondary-bg {
+  background: color($colors, secondary);
+}
+
+.danger-bg {
+  background: color($colors, danger);
+}
+
+.green-bg {
+  background: color($colors, green);
+}
+
+.facebook-color {
+  color: #4C66A4;
+}
+
+.twitter-color {
+  color: #34CCFD;
+}
+
+.googleplus-color {
+  color: #C40807;
+}
+
+.align-top {
+  align-items: flex-start;
+}
+
+.list-full-border {
+
+  .item {
+    border-bottom: 1px solid $borderColor;
+
+    .item-inner {
+      border: none;
+    }
+  }
+}
+
+.list-no-border {
+  .item {
+    &:first-child {
+      border: none;
+    }
+
+    &:last-child {
+      border: none;
+    }
+
+    .item-inner {
+      border: none;
+    }
+  }
+}
+
+ion-item.item-block.item-no-border {
+
+  .item-inner {
+    border: none;
+  }
+}
+
+.item {
+
+  p {
+    line-height: 20px;
+  }
+}
+
+.search-form {
+  margin-bottom: 1px;
+  border-bottom: 1px solid $borderColor;
+  padding-left: 40px;
+  position: relative;
+
+  ion-icon {
+    position: absolute;
+    top: 12px;
+    left: 18px;
+    color: #999999;
+  }
+}
+
+.menu-left {
+  .profile-picture {
+    width: 7em;
+    height: 7em;
+    margin-top: 0.75em;
+  }
+
+  .search-form {
+    border: none;
+  }
+
+  .menu-item {
+    color: color($colors, dark);
+
+    .item-icon {
+      font-size: 32px;
+    }
+  }
+}
+
+// login and register page
+.auth-page {
+  background: url("../assets/img/bg/mountain.jpg");
+  background-size: 100% 100%;
+
+  h1 {
+    font-size: 36px;
+  }
+
+  .item-block, .item:first-child,.item:last-child {
+    padding-left: 0;
+    background: none;
+    border: none;
+    border-bottom: 1px solid $borderColor;
+    color: color($colors, light);
+
+    .item-inner {
+      border: none;
+
+      .text-input {
+        margin-bottom: 6px;
+      }
+
+      ::-webkit-input-placeholder {
+        color: $borderColor;
+      }
+    }
+  }
+}

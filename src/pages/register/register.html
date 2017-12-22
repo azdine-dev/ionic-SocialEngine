@@ -1,0 +1,56 @@
+<!--
+  Generated template for the RegisterPage page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-content padding class="register auth-page">
+  <!-- Logo -->
+  <div text-center padding>
+    <h1 ion-text color="light" >
+      <i class="ion-social-angular"></i>
+      <ion-icon name="logo-angular"></ion-icon>
+    </h1>
+    <h2 ion-text color="light" >Ionic 2 Social</h2>
+    <h5 ion-text color="light" >Flat social template</h5>
+  </div>
+
+  <!-- Login form -->
+  <ion-list>
+
+    <ion-item>
+      <ion-icon item-left name="ios-contact-outline"></ion-icon>
+      <ion-input type="text" placeholder="Your name"></ion-input>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-icon item-left name="ios-mail-outline"></ion-icon>
+      <ion-input type="text" placeholder="Email"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon item-left name="ios-lock-outline"></ion-icon>
+      <ion-input type="password" placeholder="Password"></ion-input>
+    </ion-item>
+
+  </ion-list>
+
+  <div>
+    <button  ion-button block color="secondary"  (click)="register()">SIGN UP</button>
+  </div>
+
+  <!-- Other links -->
+  <ion-grid>
+    <ion-row>
+      <ion-col width-50>
+        <span ion-text color="light"  >Forgot password?</span>
+      </ion-col>
+
+      <ion-col width-50>
+        <a ion-text color="light"  (click)="login()">Have account? Login</a>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

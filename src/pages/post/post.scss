@@ -1,0 +1,19 @@
+page-post,
+.post {
+
+  .post-author {
+    align-self: center;
+  }
+
+  h3.post-author {
+    font-weight: normal;
+  }
+
+  .post-comment {
+
+    .like-count {
+      margin-right: 5px;
+      font-size: 0.8em;
+    }
+  }
+}

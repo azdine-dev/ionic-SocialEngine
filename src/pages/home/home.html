@@ -1,0 +1,65 @@
+<!--
+  Generated template for the HomePage page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar color="primary" >
+    <button  ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title></ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-item>
+      <ion-label color="primary" stacked></ion-label>
+      <ion-input type="email" (click)="goToExpress()" placeholder="Exprime toi .."></ion-input>
+    </ion-item>
+  </ion-card>
+  <ion-card *ngFor="let post of feed ; let info = feedInfo" >
+    <ion-item>
+      <ion-avatar item-left (click)="viewUser(post.user_id)">
+        <img src="{{ post.owner.imgs.icon}}">
+        <!--<img src="{{post.face}}">-->
+      </ion-avatar>
+      <h2 (click)="viewUser(post.user_id)">{{ post.name }}</h2>
+      <p>{{ post.time }}</p>
+    </ion-item>
+
+    <ion-item text-wrap class="post-body">
+      <div (click)="viewPost(post.id)">
+        <img class="full-image" *ngIf="post.attachments.length" src="{{ post.attachments[0].img }}">
+        <p padding-top padding-bottom>{{ post.content }}</p>
+      </div>
+
+      <div>
+        <a (click)="viewPost(post.id)" class="subdued">{{ post.total_like}} Likes</a>
+        <a (click)="viewPost(post.id)" class="subdued" margin-left>{{ post.total_comment}} Comments</a>
+      </div>
+    </ion-item>
+
+    <ion-grid class="post-actions">
+      <ion-row>
+        <ion-col width-25 text-center (click)="toggleLike(post)">
+          <ion-icon name="thumbs-up" color="primary"  *ngIf="post.is_liked"></ion-icon>
+          <ion-icon name="thumbs-up" *ngIf="!post.is_liked"></ion-icon>
+        </ion-col>
+        <ion-col width-25 text-center (click)="viewPost(post.id)">
+          <ion-icon name="chatboxes"></ion-icon>
+        </ion-col>
+        <ion-col width-25 text-center>
+          <ion-icon name="share-alt"></ion-icon>
+        </ion-col>
+        <ion-col width-25 text-center (click)="deletePost(post)">
+          <ion-icon name="ios-trash-outline" *ngIf="post.can_delete"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </ion-card>
+
+</ion-content>

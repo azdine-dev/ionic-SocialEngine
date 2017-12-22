@@ -1,0 +1,22 @@
+page-user,
+.user {
+  .profile-picture {
+    width: 8em;
+    height: 8em;
+  }
+
+  ion-row {
+    border-top: 1px solid $borderColor;
+
+    .number {
+      display: block;
+    }
+  }
+
+  .post-content {
+
+    .subdued {
+      margin-right: 5px;
+    }
+  }
+}

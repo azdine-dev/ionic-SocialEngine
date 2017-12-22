@@ -1,0 +1,14 @@
+{
+  "name": "ionic2_social",
+  "app_id": "0ca38c1d",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular",
+  "proxies": [
+    {
+      "path": "/intaliq.novway.com/api/v1",
+      "proxyUrl": "http://intaliq.novway.com/api/v1"
+    }
+  ]
+}

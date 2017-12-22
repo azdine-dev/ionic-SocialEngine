@@ -1,0 +1,53 @@
+<!--
+  Generated template for the PostPage page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar color="primary" >
+    <ion-title>Créer une publication</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item class="item-no-border">
+    <ion-avatar item-left (click)="viewUser(post.user_id)">
+      <img src="{{ post.face }}">
+    </ion-avatar>
+    <h2 ion-text color="primary"  class="post-author" (click)="viewUser(post.user_id)">{{ post.name }}</h2>
+    <p>{{imgSrc}}</p>
+    <!--<span class="post-time">-->
+      <!--<ion-icon name="ios-timer-outline"></ion-icon>-->
+      <!--{{ post.time }}-->
+    <!--</span>-->
+  </ion-item>
+
+  <div padding>
+    <!--<img class="full-image" *ngIf="post.image" src="{{ post.image }}">-->
+    <!--<p>{{ post.content}}</p>-->
+    <form (ngSubmit)="express(f)" #f="ngForm" >
+      <ion-list>
+         <ion-item>
+            <ion-label fixed></ion-label>
+            <ion-input  required ngModel  text-wrap type="text" placeholder="Exprimez-vous" name="bodyText"  ></ion-input>
+         </ion-item>
+        <ion-item>
+          <button ion-button color="secondary" type="button" full round large (click)="selectPhoto()">Galeries </button>
+        </ion-item>
+        <ion-item>
+        <button ion-button color="secondary" type="button" full round large (click)="takePicture()">Take Picture</button>
+        </ion-item>
+          <button ion-item [disabled]="!f.valid"(click)="express()">Partager {{imgSrc}}</button>
+
+      </ion-list>
+    </form>
+    <ion-card>
+      <img [src]="imgSrc"/>
+    </ion-card>
+    <div>
+      {{imgData}}
+    </div>
+  </div>
+</ion-content>
