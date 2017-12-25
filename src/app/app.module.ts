@@ -29,6 +29,9 @@ import {WallPostsPage} from '../pages/wall-posts/wall-posts';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {ExpressionPage} from "../pages/expression/expression";
 import {Camera} from "@ionic-native/camera";
+import {FileTransfer, FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer";
+import {File} from "@ionic-native/file";
+import {ComposeUploadService} from "../services/compose-upload";
 
 // end import pages
 
@@ -71,6 +74,7 @@ import {Camera} from "@ionic-native/camera";
     ExpressionPage
   ],
   providers: [
+    FileTransfer,
     Camera,
     StatusBar,
     SplashScreen,
@@ -78,6 +82,7 @@ import {Camera} from "@ionic-native/camera";
     UserService,
     NotificationService,
     ChatService,
+    ComposeUploadService,
     AuthServiceProvider
     /* import services */
   ]

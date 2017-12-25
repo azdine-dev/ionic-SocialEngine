@@ -6,7 +6,14 @@
 -->
 <ion-header>
   <ion-navbar color="primary" >
-    <ion-title>Créer une publication</ion-title>
+    <ion-row>
+    <ion-col width-75>
+     <ion-title>Créer une publication</ion-title>
+    </ion-col>
+    <ion-col width-25>
+     <button ion-item (click)="uploadFile()">Partager</button>
+    </ion-col>
+    </ion-row>
   </ion-navbar>
 </ion-header>
 
@@ -39,12 +46,15 @@
         <ion-item>
         <button ion-button color="secondary" type="button" full round large (click)="takePicture()">Take Picture</button>
         </ion-item>
-          <button ion-item [disabled]="!f.valid"(click)="express()">Partager {{imgSrc}}</button>
+        <ion-item>
+          <input type="file" ngModel name="FileData"/>
+        </ion-item>
+          <button ion-item [disabled]="!f.valid" type="submit">Partager {{imgSrc}}</button>
 
       </ion-list>
     </form>
     <ion-card>
-      <img [src]="imgSrc"/>
+      <img [src]="imgData"/>
     </ion-card>
     <div>
       {{imgData}}

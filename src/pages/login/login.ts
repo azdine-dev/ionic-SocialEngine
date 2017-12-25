@@ -21,10 +21,10 @@ export class LoginPage {
   loginData = {
     grant_type: "password",
     scope :"activities basic albums videos blogs",
-    email: "",
+    email: "aben@novway.com",
     client_id: "tmyfu3Hg5nua08I",
     client_secret: "Ur3Obk6bvW6tdAbWAEfAwzC1DfjMW1wy",
-    password: "",
+    password: "bvbdortmund",
   };
   data: any;
 

@@ -6,7 +6,6 @@ let client_id = 'tmyfu3Hg5nua08I';
 let response_type = 'code';
 let scope = 'basic';
 let apiUrl = 'intaliq.novway.com/api/v1/oauth/token';
-  '&client_id='+client_id;
 
 
 
