@@ -4,6 +4,7 @@ import {forwardRef, Inject} from "@angular/core";
 
 let photoUrl = 'http://intaliq.novway.com/api/v1/albums/compose_upload';
 export class ComposeUploadService {
+
   private transferImageOptions : FileUploadOptions ={
     chunkedMode : false,
     fileKey : "Filedata",

@@ -17,15 +17,15 @@
   <ion-card>
     <ion-item>
       <ion-label color="primary" stacked></ion-label>
-      <ion-input type="email" (click)="goToExpress()" placeholder="Exprime toi .."></ion-input>
+      <ion-input type="email" (click)="goToExpress(post)" placeholder="Exprime toi .."></ion-input>
     </ion-item>
   </ion-card>
-  <ion-card *ngFor="let post of feed ; let info = feedInfo" >
+  <ion-card   *ngFor="let post of feed ; let info = feedInfo" >
     <ion-item>
       <ion-avatar item-left (click)="viewUser(post.user_id)">
         <img src="{{ post.owner.imgs.icon}}">
-        <!--<img src="{{post.face}}">-->
       </ion-avatar>
+      <ion-label>{{post.owner.title}}</ion-label>
       <h2 (click)="viewUser(post.user_id)">{{ post.name }}</h2>
       <p>{{ post.time }}</p>
     </ion-item>
@@ -59,7 +59,5 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-
   </ion-card>
-
 </ion-content>

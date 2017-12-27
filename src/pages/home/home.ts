@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {Events, NavController} from 'ionic-angular';
+import {Events, ModalController, NavController} from 'ionic-angular';
 import {PostService} from '../../services/post-service';
 import {PostPage} from '../post/post';
 import {UserPage} from '../user/user';
 import {ExpressionPage} from "../expression/expression";
+import {UserService} from "../../services/user-service";
+import {CommentPage} from "../comment/comment";
 /*
  Generated class for the LoginPage page.
 
@@ -18,10 +20,15 @@ export class HomePage implements OnInit {
   public posts: any;
   public feed : Array<{}>;
   public feedInfo : any;
+  private authUser ={
+    image : '',
+    title :'',
+  };
 
   token = localStorage.getItem('token');
 
-  constructor(public nav: NavController, public postService: PostService, public events : Events) {
+  constructor(public nav: NavController, public postService: PostService, public events : Events,public userService : UserService,
+              public modalCtrl : ModalController) {
     this.posts = postService.getAll();
     this.events.subscribe('delete-user',()=>{
       this.getFeed();
@@ -30,6 +37,7 @@ export class HomePage implements OnInit {
   }
   ngOnInit(){
     this.getFeed();
+    this.getAuthUser();
   }
 
   toggleLike(post) {
@@ -46,18 +54,18 @@ export class HomePage implements OnInit {
 
   // on click, go to post detail
   viewPost(postId) {
-    this.nav.push(PostPage, {id: postId})
+    let cmntModal = this.modalCtrl.create(CommentPage);
+    cmntModal.present();
   }
 
   // on click, go to user timeline
   viewUser(userId) {
-    this.nav.push(UserPage, {id: userId})
+    this.nav.push(CommentPage, {id: userId})
   }
   getFeed() {
     this.postService.getAllFeed().then((result) => {
       this.feedInfo = result["data"];
       this.feed = result["data"]["items"];
-      console.log('MMMMMMM ')
     },(err) => {
       console.log(err);
     });
@@ -89,9 +97,19 @@ export class HomePage implements OnInit {
 
 
   }
+  getAuthUser(){
+    this.userService.getAuthorizedUser().then(res=>{
+     this.authUser.title = res['data']['title'];
+     this.authUser.image = res['data']['imgs']['profile'];
+
+    })
+  }
 
   goToExpress(){
-    this.nav.push(ExpressionPage);
+    this.nav.push(ExpressionPage,{
+      ownerName :this.authUser.title,
+      ownerPhoto :this.authUser.image,
+    });
   }
 
 }

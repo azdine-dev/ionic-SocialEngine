@@ -2,6 +2,8 @@ import {Injectable} from "@angular/core";
 import {POSTS} from "./mock-posts";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {catchError, finalize} from "rxjs/operators";
+import {AttachementClass} from "../Data/attachement.interface";
+import {ComposeUploadService} from "./compose-upload";
 
 let feedUrl = 'intaliq.novway.com/api/v1/activities';
 let likeUrl = 'intaliq.novway.com/api/v1/core/likes';
@@ -14,8 +16,9 @@ export class PostService {
   private accessToken = localStorage.getItem('token');
   private fields = 'owner,id,content,attachments,timestamp,is_liked,can_like,total_like,user_liked,' +
     'can_comment,total_comment,comments,can_delete,can_share,type ';
+  private composeUploadData : any;
 
-  constructor(public http : HttpClient) {
+  constructor(public http : HttpClient, private composeUploadService : ComposeUploadService) {
     this.posts = POSTS;
   }
   getAll() {
@@ -81,20 +84,40 @@ export class PostService {
        });
     })
   }
-  postNewActivity(postBody){
-
+  postNewActivity(postBody,withAttachment : boolean, attachment : AttachementClass){
     return new Promise((resolve,reject)=>{
       let headers = new HttpHeaders();
       headers.append('Content-Type', 'multipart/form-data');
 
-      this.http.post(feedUrl+param+'access_token='+this.accessToken+param_delimiter+'body='+postBody.body
-        ,{headers}).subscribe(res=>{
+      if(withAttachment){
+         this.composeUploadService.composeUploadPhoto(attachment.Filedata).then(data=>{
+           this.composeUploadData = JSON.parse(data['response']);
+           console.log((this.composeUploadData).data.photo_id);
+
+         }).then(()=> {
+             this.http.post(feedUrl + param + 'access_token=' + this.accessToken + param_delimiter + 'body=' + postBody.bodyText
+               +param_delimiter+'attachment[type]=photo&attachment[photo_id]='+this.composeUploadData.data.photo_id,{headers}).subscribe(res=>{
+
+                 console.log('POST'+res);
+             },err=>{
+                console.log('ERR'+err);
+             })
+
+           }
+         )
+
+
+      }else {
+
+        this.http.post(feedUrl + param + 'access_token=' + this.accessToken + param_delimiter + 'body=' + postBody.bodyText
+          , {headers}).subscribe(res => {
           resolve(res);
-      },err =>{
+        }, err => {
           reject(err);
         })
+      }
+    },);
 
-    });
   }
 
     composeUpload(formData : FormData){

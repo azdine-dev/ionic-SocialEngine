@@ -16,6 +16,7 @@ import {LoginPage} from '../pages/login/login';
 import {RegisterPage} from '../pages/register/register';
 import {ChatsPage} from '../pages/chats/chats';
 import {ExpressionPage} from "../pages/expression/expression";
+import {CommentPage} from "../pages/comment/comment";
 
 @Component({
   templateUrl: 'app.component.html',

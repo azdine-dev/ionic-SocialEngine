@@ -32,6 +32,7 @@ import {Camera} from "@ionic-native/camera";
 import {FileTransfer, FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer";
 import {File} from "@ionic-native/file";
 import {ComposeUploadService} from "../services/compose-upload";
+import {CommentPage} from "../pages/comment/comment";
 
 // end import pages
 
@@ -48,6 +49,7 @@ import {ComposeUploadService} from "../services/compose-upload";
     RecentPostsPage,
     RegisterPage,
     SettingPage,
+    CommentPage,
     UserPage,
     WallPostsPage,
     ExpressionPage
@@ -71,7 +73,8 @@ import {ComposeUploadService} from "../services/compose-upload";
     SettingPage,
     UserPage,
     WallPostsPage,
-    ExpressionPage
+    ExpressionPage,
+    CommentPage
   ],
   providers: [
     FileTransfer,

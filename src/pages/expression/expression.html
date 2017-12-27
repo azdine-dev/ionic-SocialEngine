@@ -7,12 +7,9 @@
 <ion-header>
   <ion-navbar color="primary" >
     <ion-row>
-    <ion-col width-75>
+
      <ion-title>Créer une publication</ion-title>
-    </ion-col>
-    <ion-col width-25>
-     <button ion-item (click)="uploadFile()">Partager</button>
-    </ion-col>
+     <button [disabled]="!f.valid"(click)="partager()">Partager</button>
     </ion-row>
   </ion-navbar>
 </ion-header>
@@ -20,15 +17,12 @@
 <ion-content>
 
   <ion-item class="item-no-border">
-    <ion-avatar item-left (click)="viewUser(post.user_id)">
-      <img src="{{ post.face }}">
+    <ion-avatar item-left >
+      <img [src]="ownerPhoto">
     </ion-avatar>
-    <h2 ion-text color="primary"  class="post-author" (click)="viewUser(post.user_id)">{{ post.name }}</h2>
-    <p>{{imgSrc}}</p>
-    <!--<span class="post-time">-->
-      <!--<ion-icon name="ios-timer-outline"></ion-icon>-->
-      <!--{{ post.time }}-->
-    <!--</span>-->
+
+      <ion-label class="owner">{{ownerName}}</ion-label>
+    <h2 ion-text color="primary"  class="post-author" ></h2>
   </ion-item>
 
   <div padding>
@@ -38,7 +32,7 @@
       <ion-list>
          <ion-item>
             <ion-label fixed></ion-label>
-            <ion-input  required ngModel  text-wrap type="text" placeholder="Exprimez-vous" name="bodyText"  ></ion-input>
+            <ion-input  required [(ngModel)]="body.bodyText"  text-wrap type="text" placeholder="Exprimez-vous" name="bodyText"  ></ion-input>
          </ion-item>
         <ion-item>
           <button ion-button color="secondary" type="button" full round large (click)="selectPhoto()">Galeries </button>
@@ -46,18 +40,13 @@
         <ion-item>
         <button ion-button color="secondary" type="button" full round large (click)="takePicture()">Take Picture</button>
         </ion-item>
-        <ion-item>
-          <input type="file" ngModel name="FileData"/>
-        </ion-item>
-          <button ion-item [disabled]="!f.valid" type="submit">Partager {{imgSrc}}</button>
-
       </ion-list>
     </form>
     <ion-card>
       <img [src]="imgData"/>
     </ion-card>
-    <div>
-      {{imgData}}
-    </div>
+   <div>
+     {{imgData}}
+   </div>
   </div>
 </ion-content>

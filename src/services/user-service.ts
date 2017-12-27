@@ -46,4 +46,15 @@ export class UserService {
     });
 
   }
+
+  getAuthorizedUser(){
+     return new Promise((resolve,reject)=>{
+       this.http.get(membersUrl+'/me'+param+'access_token='+this.accessToken).subscribe(res=>{
+         resolve(res);
+
+       },err=>{
+         reject(err);
+       })
+     });
+  }
 }
