@@ -26,9 +26,7 @@
   </ion-item>
 
   <div padding>
-    <!--<img class="full-image" *ngIf="post.image" src="{{ post.image }}">-->
-    <!--<p>{{ post.content}}</p>-->
-    <form (ngSubmit)="express(f)" #f="ngForm" >
+    <form  #f="ngForm" >
       <ion-list>
          <ion-item>
             <ion-label fixed></ion-label>
@@ -43,7 +41,7 @@
       </ion-list>
     </form>
     <ion-card>
-      <img [src]="imgData"/>
+      <img style="height: 80px;width: 80px" [src]="imgData"/>
     </ion-card>
    <div>
      {{imgData}}

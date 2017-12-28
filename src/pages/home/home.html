@@ -19,6 +19,21 @@
       <ion-label color="primary" stacked></ion-label>
       <ion-input type="email" (click)="goToExpress(post)" placeholder="Exprime toi .."></ion-input>
     </ion-item>
+    <ion-item color="light" >
+      <ion-grid>
+        <ion-row>
+          <ion-col width-33>
+            <ion-icon name="md-camera" color="gray"></ion-icon>
+          </ion-col>
+          <ion-col width-33>
+            <ion-icon name="md-link" color="gray"></ion-icon>
+          </ion-col>
+          <ion-col width-33>
+            <ion-icon   name="md-videocam" color="gray"></ion-icon>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
   </ion-card>
   <ion-card   *ngFor="let post of feed ; let info = feedInfo" >
     <ion-item>
@@ -32,7 +47,8 @@
 
     <ion-item text-wrap class="post-body">
       <div (click)="viewPost(post.id)">
-        <img class="full-image" *ngIf="post.attachments.length" src="{{ post.attachments[0].img }}">
+        <!--<div  *ngIf="post.attachments.length && post.attachments[0].type=='video'" ></div>-->
+        <img class="full-image" *ngIf="post.attachments.length && post.attachments[0].type!='core_link' " src="{{ post.attachments[0].img }}">
         <p padding-top padding-bottom>{{ post.content }}</p>
       </div>
 
@@ -44,18 +60,18 @@
 
     <ion-grid class="post-actions">
       <ion-row>
-        <ion-col width-25 text-center (click)="toggleLike(post)">
+        <ion-col  *ngIf="post.can_like"text-center (click)="toggleLike(post)">
           <ion-icon name="thumbs-up" color="primary"  *ngIf="post.is_liked"></ion-icon>
           <ion-icon name="thumbs-up" *ngIf="!post.is_liked"></ion-icon>
         </ion-col>
-        <ion-col width-25 text-center (click)="viewPost(post.id)">
+        <ion-col  *ngIf="post.can_comment"text-center (click)="viewPost(post)">
           <ion-icon name="chatboxes"></ion-icon>
         </ion-col>
-        <ion-col width-25 text-center>
+        <ion-col *ngIf="post.can_share" text-center (click)="sharePost(post)">
           <ion-icon name="share-alt"></ion-icon>
         </ion-col>
-        <ion-col width-25 text-center (click)="deletePost(post)">
-          <ion-icon name="ios-trash-outline" *ngIf="post.can_delete"></ion-icon>
+        <ion-col *ngIf="post.can_delete" text-center (click)="showDeletePostDialog(post)">
+          <ion-icon name="ios-trash-outline" ></ion-icon>
         </ion-col>
       </ion-row>
     </ion-grid>

@@ -7,6 +7,7 @@ import {ComposeUploadService} from "./compose-upload";
 
 let feedUrl = 'intaliq.novway.com/api/v1/activities';
 let likeUrl = 'intaliq.novway.com/api/v1/core/likes';
+let commentUrl = 'intaliq.novway.com/api/v1/core/comments';
 let composePhotoUrl ='intaliq.novway.com/api/v1/albums/compose_upload';
 let param = '?';
 let param_delimiter = '&';
@@ -49,6 +50,22 @@ export class PostService {
     });
 
   }
+  getFeed(feed_id){
+    return new Promise((resolve, reject )=>{
+
+
+      this.http.get(feedUrl+'/'+feed_id+param+'access_token='+this.accessToken+param_delimiter+'fields='+this.fields)
+        .subscribe( res =>{
+          resolve(res);
+          console.log(res);
+        }, (err)=>{
+          reject(err);
+        });
+
+
+    });
+  }
+
   likePost(item_id,item_type){
     return new Promise((resolve,reject)=>{
       let headers = new HttpHeaders();
@@ -134,8 +151,29 @@ export class PostService {
       });
     }
 
-  remove(item) {
-    this.posts.splice(this.posts.indexOf(item), 1);
-  }
+     /****************************************COMMENTAIRES***********************************/
 
+    commentActivity(post,comment){
+      return new Promise((resolve,reject)=>{
+        let headers = new HttpHeaders();
+        headers.append('Content-Type', 'multipart/form-data');
+        this.http.post(commentUrl+param+'access_token='+this.accessToken+param_delimiter+'item_id='+post.id+
+          '&item_type='+post.type+'&body='+comment.body,{headers}).subscribe(data=>{
+          resolve(data);
+        },err=>{
+          reject(err);
+        })
+      });
+    }
+
+    deleteComment(comment,post){
+       return new Promise((resolve,reject)=>{
+         this.http.delete(commentUrl+param+'access_token='+this.accessToken+param_delimiter+'item_id='+post.id+
+           '&item_type='+post.type+'&comment_id='+comment.id).subscribe(data=>{
+             resolve(data);
+         },err=>{
+             reject(err);
+         })
+       });
+    }
 }

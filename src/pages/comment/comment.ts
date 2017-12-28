@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {AlertController, Events, NavController, NavParams} from 'ionic-angular';
 import {PostService} from '../../services/post-service';
 import {UserPage} from '../user/user';
 
@@ -15,11 +15,20 @@ import {UserPage} from '../user/user';
 })
 export class CommentPage {
   public post: any;
+  private commentElement = {
+    body : '',
+    canComment : true,
+  }
+  constructor(public nav: NavController, public postService: PostService,public navParams : NavParams,public events : Events,
+              public alertCtrl : AlertController) {
 
-  constructor(public nav: NavController, public postService: PostService) {
-    // get sample data only
-    //this.post = postService.getItem(navParams.get('id'));
-    this.post = postService.getItem(0);
+    this.post = this.navParams.get('post');
+    this.events.subscribe('new-comment',()=>{
+      this.updateActivity();
+    });
+    this.events.subscribe('delete-comment',()=>{
+      this.updateActivity();
+    })
   }
 
   toggleLike(post) {
@@ -38,7 +47,59 @@ export class CommentPage {
     this.nav.push(UserPage, {id: userId})
   }
 
-  test(comment){
-    console.log(comment);
+
+  updateActivity(){
+   this.postService.getFeed(this.post.id).then(data=>{
+     this.commentElement.body='';
+     this.post=data['data'];
+
+   })
+  }
+
+  commentActivity(post) {
+      this.postService.commentActivity(post,this.commentElement).then(data=>{
+        console.log(data,'SUCCESS');
+        this.events.publish('new-comment')
+      },err=>{
+        console.log(err,'ERR');
+      })
+    }
+
+  showDeleteCommentDialog(comment){
+    let confirmDelComm = this.alertCtrl.create({
+
+      message: 'voulez-vous vraiment supprimer ce commentaire?',
+      buttons: [
+
+        {
+          text: 'Annuler',
+          handler: () => {
+            console.log('Agree clicked');
+          }
+        },
+        {
+          text: 'Oui',
+          handler: () => {
+            this.deleteComment(comment);
+          }
+        },
+      ]
+    });
+
+     if(comment.can_delete) {
+       confirmDelComm.present();
+     }
+  }
+
+  deleteComment(comment){
+    this.postService.deleteComment(comment,this.post).then(res=>{
+      console.log(JSON.stringify(res),'OK');
+      this.events.publish('delete-comment');
+    },err=>{
+      console.log(JSON.stringify(err),'ERR');
+    })
+  }
+  likeComment(comment){
+    console.log('coment liked');
   }
 }

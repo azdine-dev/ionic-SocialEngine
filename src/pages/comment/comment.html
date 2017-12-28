@@ -9,14 +9,13 @@
 
   <ion-item class="item-no-border">
     <ion-avatar item-left (click)="viewUser(post.user_id)">
-      <img src="{{ post.face }}">
+      <img src="{{ post.owner.imgs.profile }}">
     </ion-avatar>
-    <h2 ion-text color="primary"  class="post-author" (click)="viewUser(post.user_id)">{{ post.name }}</h2>
+    <h2 ion-text color="primary"  class="post-author" (click)="viewUser(post.user_id)">{{ post.owner.title }}</h2>
     <span class="post-time">
       <ion-icon name="timer-outline"></ion-icon>
       {{ post.time }}
     </span>
-    <input placeholder="wez.."/>
   </ion-item>
     <div padding>
     <!--<img class="full-image" *ngIf="post.image" src="{{ post.image }}">-->
@@ -33,32 +32,35 @@
         <!--{{ post.commentCount}}-->
       <!--</a>-->
     <!--</p>-->
-    <ion-item  class="post-comment" *ngFor="let comment of post.comments">
+    <ion-item    class="post-comment" *ngFor="let comment of post.comments" (press)="showDeleteCommentDialog(comment)">
       <ion-avatar item-left (click)="viewUser(comment.user_id)">
-        <img src="{{ comment.face }}">
+        <img src="{{ comment.owner.imgs.profile }}">
       </ion-avatar>
 
       <h3 ion-text color="primary"  class="post-author">
-        {{ comment.name }}
+        {{ comment.owner.title }}
       </h3>
-      <p text-wrap>{{ comment.content}}</p>
+      <p text-wrap>{{ comment.body}}</p>
       <a class="subdued like-count">
-        <ion-icon name="heart" color="danger"  *ngIf="comment.liked"></ion-icon>
-        <ion-icon name="heart" color="gray"  *ngIf="!comment.liked"></ion-icon>
-        {{ comment.likeCount}}
+        <ion-icon name="heart" color="danger"  (click)="likeComment(comment)" *ngIf="comment.is_liked"></ion-icon>
+        <ion-icon name="heart" color="gray"  (click)="unlikeComment(comment)"*ngIf="!comment.is_liked"></ion-icon>
+        {{ comment.total_like}}
       </a>
-      <span class="post-time">
-        <ion-icon name="timer-outline"></ion-icon>
-        {{ comment.time }}
-      </span>
+      <br>
+      <a class="subdued">j'aime</a>
+      <!--<span class="post-time">-->
+        <!--<ion-icon name="timer-outline"></ion-icon>-->
+        <!--{{ comment.date }}-->
+      <!--</span>-->
     </ion-item>
       </div>
 
-  <ion-item class="item-no-border">
-    <ion-label></ion-label>
-    <ion-input placeholder="Votre commentaire..." #comment></ion-input>
-    <ion-avatar item-end (click)="test(comment)"><ion-icon name="md-send"></ion-icon> </ion-avatar>
-  </ion-item>
+  <ion-grid class="post-actions">
+
+       <ion-input [(ngModel)]="commentElement.body" placeholder="Votre commentaire..." ></ion-input>
+    <br>
+       <button (click)="commentActivity(post)"  [disabled]="!commentElement.body" ion-button>commenter</button>
+  </ion-grid>
 
 </ion-content>
 

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Events, ModalController, NavController} from 'ionic-angular';
+import {AlertController, Events, ModalController, NavController} from 'ionic-angular';
 import {PostService} from '../../services/post-service';
 import {PostPage} from '../post/post';
 import {UserPage} from '../user/user';
@@ -17,7 +17,7 @@ import {CommentPage} from "../comment/comment";
   templateUrl: 'home.html'
 })
 export class HomePage implements OnInit {
-  public posts: any;
+  public post: any;
   public feed : Array<{}>;
   public feedInfo : any;
   private authUser ={
@@ -28,12 +28,8 @@ export class HomePage implements OnInit {
   token = localStorage.getItem('token');
 
   constructor(public nav: NavController, public postService: PostService, public events : Events,public userService : UserService,
-              public modalCtrl : ModalController) {
-    this.posts = postService.getAll();
-    this.events.subscribe('delete-user',()=>{
-      this.getFeed();
-    });
-
+              public modalCtrl : ModalController,public alertCtrl : AlertController) {
+       this.listenToFeedEvents();
   }
   ngOnInit(){
     this.getFeed();
@@ -48,13 +44,12 @@ export class HomePage implements OnInit {
     } else {
       this.likePost(post);
     }
-
     post.is_liked = !post.is_liked
   }
 
   // on click, go to post detail
-  viewPost(postId) {
-    let cmntModal = this.modalCtrl.create(CommentPage);
+  viewPost(post) {
+    let cmntModal = this.modalCtrl.create(CommentPage,{post : post});
     cmntModal.present();
   }
 
@@ -72,21 +67,44 @@ export class HomePage implements OnInit {
 
   }
   likePost(post){
-
+    post.total_like ++ ;
     this.postService.likePost(post.id,post.type).then((result)=>{
-      post.total_like ++ ;
+
     },(err)=>{
 
     });
 
   }
   unlikePost(post){
-
+    post.total_like -- ;
     this.postService.unlikePost(post.id,post.type).then((result)=>{
-      post.total_like -- ;
+
     },(err)=>{
     });
 
+  }
+  showDeletePostDialog(post){
+    let confirmDelActivity = this.alertCtrl.create({
+
+      message: 'voulez-vous vraiment supprimer ce post?',
+      buttons: [
+
+        {
+          text: 'Annuler',
+          handler: () => {
+            console.log('Agree clicked');
+          }
+        },
+        {
+          text: 'Oui',
+          handler: () => {
+            this.deletePost(post);
+          }
+        }
+      ]
+    });
+
+   confirmDelActivity.present();
   }
   deletePost(post){
      this.postService.deletePost(post).then(result =>{
@@ -112,4 +130,18 @@ export class HomePage implements OnInit {
     });
   }
 
-}
+  private listenToFeedEvents(){
+    this.events.subscribe('delete-user',()=>{
+      this.getFeed();
+    });
+    this.events.subscribe('new-comment',()=>{
+      this.getFeed();
+    });
+    this.events.subscribe('delete-comment',()=>{
+      this.getFeed();
+    });
+    this.events.subscribe('new-activity',()=>{
+      this.getFeed();
+    });
+  }
+ }

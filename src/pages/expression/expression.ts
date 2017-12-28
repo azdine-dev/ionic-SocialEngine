@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
+import {Events, LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
 import {PostService} from '../../services/post-service';
 import {UserPage} from '../user/user';
 import {FormControl, NgForm} from "@angular/forms";
@@ -9,6 +9,7 @@ import {FileTransfer, FileTransferObject, FileUploadOptions} from "@ionic-native
 import {File, FileEntry} from "@ionic-native/file";
 import {ComposeUploadService} from "../../services/compose-upload";
 import {AttachementClass} from "../../Data/attachement.interface";
+import {HomePage} from "../home/home";
 
 let accessToken = localStorage.getItem('token');
 
@@ -48,7 +49,8 @@ export class ExpressionPage implements OnInit{
 
 
   constructor(public nav: NavController, public postService: PostService, private  camera : Camera,
-              public loadingCtrl : LoadingController, public toastCtrl : ToastController,public navParams :NavParams) {
+              public loadingCtrl : LoadingController, public toastCtrl : ToastController,public navParams :NavParams,
+              public events :Events) {
     console.log(localStorage.getItem('token'));
     this.ownerName = this.navParams.get('ownerName');
     this.ownerPhoto = this.navParams.get('ownerPhoto');
@@ -81,7 +83,8 @@ export class ExpressionPage implements OnInit{
 
   partager(){
      this.postService.postNewActivity(this.body,(this.imgData),this.attachement).then(data=>{
-
+           this.events.publish('new-activity');
+           this.nav.setRoot(HomePage);
        },err=>{
 
      })
