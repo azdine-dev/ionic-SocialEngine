@@ -6,6 +6,8 @@ import {UserPage} from '../user/user';
 import {ExpressionPage} from "../expression/expression";
 import {UserService} from "../../services/user-service";
 import {CommentPage} from "../comment/comment";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {VideoService} from "../../services/video-service";
 /*
  Generated class for the LoginPage page.
 
@@ -20,6 +22,9 @@ export class HomePage implements OnInit {
   public post: any;
   public feed : Array<{}>;
   public feedInfo : any;
+  private videoFeedMap : Map <number,SafeUrl> = new Map <number,SafeUrl>();
+  private videos : Array<{}>;
+  private video_src ='';
   private authUser ={
     image : '',
     title :'',
@@ -28,14 +33,20 @@ export class HomePage implements OnInit {
   token = localStorage.getItem('token');
 
   constructor(public nav: NavController, public postService: PostService, public events : Events,public userService : UserService,
-              public modalCtrl : ModalController,public alertCtrl : AlertController) {
+              public modalCtrl : ModalController,public alertCtrl : AlertController,
+              public sanitizer : DomSanitizer,public videoService : VideoService) {
        this.listenToFeedEvents();
   }
   ngOnInit(){
     this.getFeed();
     this.getAuthUser();
+    this.getFeedVideos();
   }
-
+  ionViewDidLoad(){
+    let x = document.getElementsByClassName('feed_item_username');
+    let y = document.getElementById('wdez');
+    console.log(x);
+  }
   toggleLike(post) {
     // if user liked
     if(post.is_liked) {
@@ -143,5 +154,35 @@ export class HomePage implements OnInit {
     this.events.subscribe('new-activity',()=>{
       this.getFeed();
     });
+  }
+
+
+  processHtmlContent(post){
+     // document.getElementsByClassName('feed_item_username')[0].innerHTML='T';
+    return (post.content);
+  }
+
+  videoAttachmentSrc(video_id){
+   this.videoService.getVideo(video_id).then(res=>{
+     console.log(res,'SUCCESS');
+     return res['data']['video_src'];
+   },err=>{
+     console.log(err,'ERR');
+   })
+  }
+
+  getFeedVideos(){
+   this.videoService.getAllVideos().then(res=>{
+     this.videos = res['data'];
+     console.log(this.videos,'VIDEOS');
+     this.initVideoMap();
+     console.log(this.videoFeedMap.get(12),'VIDEO8src');
+   })
+  }
+  initVideoMap(){
+    for(let video of this.videos){
+      this.videoFeedMap.set(video['id'],this.sanitizer.bypassSecurityTrustResourceUrl(video['video_src']));
+
+    }
   }
  }

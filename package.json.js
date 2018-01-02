@@ -1,0 +1,140 @@
+{
+    "name";
+    "ionic-hello-world",
+        "author";
+    "Ionic Framework",
+        "homepage";
+    "http://ionicframework.com/",
+        "private";
+    true,
+        "scripts";
+    {
+        "build";
+        "ionic-app-scripts build --prod",
+            "watch";
+        "ionic-app-scripts watch",
+            "serve:before";
+        "watch",
+            "emulate:before";
+        "build",
+            "deploy:before";
+        "build",
+            "build:before";
+        "build",
+            "run:before";
+        "build";
+    }
+    "dependencies";
+    {
+        "@angular/common";
+        "5.0.0",
+            "@angular/compiler";
+        "5.0.0",
+            "@angular/compiler-cli";
+        "5.0.0",
+            "@angular/core";
+        "^5.1.2",
+            "@angular/forms";
+        "5.0.0",
+            "@angular/http";
+        "5.0.0",
+            "@angular/platform-browser";
+        "5.0.0",
+            "@angular/platform-browser-dynamic";
+        "5.0.0",
+            "@ionic-native/camera";
+        "^4.5.2",
+            "@ionic-native/core";
+        "4.3.3",
+            "@ionic-native/file";
+        "^4.5.2",
+            "@ionic-native/file-transfer";
+        "^4.5.2",
+            "@ionic-native/image-picker";
+        "^4.5.2",
+            "@ionic-native/splash-screen";
+        "4.3.3",
+            "@ionic-native/status-bar";
+        "4.3.3",
+            "@ionic/storage";
+        "2.1.3",
+            "com.synconset.imagepicker";
+        "^2.1.10",
+            "cordova-android";
+        "6.3.0",
+            "cordova-plugin-camera";
+        "^3.0.0",
+            "cordova-plugin-device";
+        "^1.1.7",
+            "cordova-plugin-file";
+        "^5.0.0",
+            "cordova-plugin-file-transfer";
+        "^1.7.0",
+            "cordova-plugin-ionic-webview";
+        "^1.1.16",
+            "cordova-plugin-splashscreen";
+        "^4.1.0",
+            "cordova-plugin-telerik-imagepicker";
+        "^2.1.8",
+            "cordova-plugin-whitelist";
+        "^1.3.3",
+            "ionic-angular";
+        "3.9.2",
+            "ionic-plugin-keyboard";
+        "^2.2.1",
+            "ionicons";
+        "3.0.0",
+            "rxjs";
+        "5.5.2",
+            "sw-toolbox";
+        "3.6.0",
+            "zone.js";
+        "0.8.18";
+    }
+    "devDependencies";
+    {
+        "@ionic/app-scripts";
+        "3.1.2",
+            "tslint";
+        "^5.8.0",
+            "typescript";
+        "^2.4.2";
+    }
+    "description";
+    "ionic2_social: An Ionic project",
+        "cordovaPlugins";
+    [],
+        "cordovaPlatforms";
+    [],
+        "cordova";
+    {
+        "plugins";
+        {
+            "ionic-plugin-keyboard";
+            { }
+            "cordova-plugin-whitelist";
+            { }
+            "cordova-plugin-device";
+            { }
+            "cordova-plugin-splashscreen";
+            { }
+            "cordova-plugin-ionic-webview";
+            { }
+            "com.synconset.imagepicker";
+            {
+                "PHOTO_LIBRARY_USAGE_DESCRIPTION";
+                "feed attachement";
+            }
+            "cordova-plugin-camera";
+            { }
+            "cordova-plugin-file";
+            { }
+            "cordova-plugin-file-transfer";
+            { }
+        }
+        "platforms";
+        [
+            "android"
+        ];
+    }
+}

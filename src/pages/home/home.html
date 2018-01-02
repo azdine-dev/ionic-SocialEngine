@@ -19,21 +19,24 @@
       <ion-label color="primary" stacked></ion-label>
       <ion-input type="email" (click)="goToExpress(post)" placeholder="Exprime toi .."></ion-input>
     </ion-item>
-    <ion-item color="light" >
+    <div style="background-color: #f4f4f4" color="light" >
       <ion-grid>
         <ion-row>
-          <ion-col width-33>
+          <ion-col width-25>
             <ion-icon name="md-camera" color="gray"></ion-icon>
           </ion-col>
-          <ion-col width-33>
+          <ion-col width-25>
             <ion-icon name="md-link" color="gray"></ion-icon>
           </ion-col>
-          <ion-col width-33>
+          <ion-col width-25>
             <ion-icon   name="md-videocam" color="gray"></ion-icon>
+          </ion-col>
+          <ion-col width-25>
+            <ion-icon name="md-link" color="gray"></ion-icon>
           </ion-col>
         </ion-row>
       </ion-grid>
-    </ion-item>
+    </div>
   </ion-card>
   <ion-card   *ngFor="let post of feed ; let info = feedInfo" >
     <ion-item>
@@ -47,9 +50,12 @@
 
     <ion-item text-wrap class="post-body">
       <div (click)="viewPost(post.id)">
-        <!--<div  *ngIf="post.attachments.length && post.attachments[0].type=='video'" ></div>-->
-        <img class="full-image" *ngIf="post.attachments.length && post.attachments[0].type!='core_link' " src="{{ post.attachments[0].img }}">
-        <p padding-top padding-bottom>{{ post.content }}</p>
+        <div [innerHtml]="processHtmlContent(post)"></div>
+        <div  *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
+           <iframe [src]="videoFeedMap.get(post.attachments[0].id)"  height="200px" allowfullscreen frameborder="0"></iframe>
+        </div>
+        <img class="full-image" *ngIf="post.attachments.length && post.attachments[0].type=='album_photo' " src="{{ post.attachments[0].img }}">
+        <!--<p padding-top padding-bottom>{{ post.content }}</p>-->
       </div>
 
       <div>

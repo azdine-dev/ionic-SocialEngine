@@ -33,6 +33,7 @@ import {FileTransfer, FileTransferObject, FileUploadOptions} from "@ionic-native
 import {File} from "@ionic-native/file";
 import {ComposeUploadService} from "../services/compose-upload";
 import {CommentPage} from "../pages/comment/comment";
+import {VideoService} from "../services/video-service";
 
 // end import pages
 
@@ -86,7 +87,8 @@ import {CommentPage} from "../pages/comment/comment";
     NotificationService,
     ChatService,
     ComposeUploadService,
-    AuthServiceProvider
+    AuthServiceProvider,
+    VideoService
     /* import services */
   ]
 })
