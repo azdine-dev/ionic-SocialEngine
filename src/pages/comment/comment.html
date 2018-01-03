@@ -18,20 +18,6 @@
     </span>
   </ion-item>
     <div padding>
-    <!--<img class="full-image" *ngIf="post.image" src="{{ post.image }}">-->
-    <!--<p>{{ post.content}}</p>-->
-
-    <!--<p>-->
-      <!--<a (click)="toggleLike(post)" class="subdued">-->
-        <!--<ion-icon name="thumbs-up" color="primary"  *ngIf="post.liked"></ion-icon>-->
-        <!--<ion-icon name="thumbs-up" color="gray"  *ngIf="!post.liked"></ion-icon>-->
-        <!--{{ post.likeCount}}-->
-      <!--</a>-->
-      <!--<a class="subdued">-->
-        <!--<ion-icon name="chatboxes" color="primary" ></ion-icon>-->
-        <!--{{ post.commentCount}}-->
-      <!--</a>-->
-    <!--</p>-->
     <ion-item    class="post-comment" *ngFor="let comment of post.comments" (press)="showDeleteCommentDialog(comment)">
       <ion-avatar item-left (click)="viewUser(comment.user_id)">
         <img src="{{ comment.owner.imgs.profile }}">
@@ -48,10 +34,6 @@
       </a>
       <br>
       <a class="subdued">j'aime</a>
-      <!--<span class="post-time">-->
-        <!--<ion-icon name="timer-outline"></ion-icon>-->
-        <!--{{ comment.date }}-->
-      <!--</span>-->
     </ion-item>
       </div>
 

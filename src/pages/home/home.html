@@ -40,11 +40,10 @@
   </ion-card>
   <ion-card   *ngFor="let post of feed ; let info = feedInfo" >
     <ion-item>
-      <ion-avatar item-left (click)="viewUser(post.user_id)">
+      <ion-avatar item-left (click)="viewUser(post.owner.id)">
         <img src="{{ post.owner.imgs.icon}}">
       </ion-avatar>
       <ion-label>{{post.owner.title}}</ion-label>
-      <h2 (click)="viewUser(post.user_id)">{{ post.name }}</h2>
       <p>{{ post.time }}</p>
     </ion-item>
 
@@ -70,7 +69,7 @@
           <ion-icon name="thumbs-up" color="primary"  *ngIf="post.is_liked"></ion-icon>
           <ion-icon name="thumbs-up" *ngIf="!post.is_liked"></ion-icon>
         </ion-col>
-        <ion-col  *ngIf="post.can_comment"text-center (click)="viewPost(post)">
+        <ion-col  *ngIf="post.can_comment"text-center (click)="viewComment(post)">
           <ion-icon name="chatboxes"></ion-icon>
         </ion-col>
         <ion-col *ngIf="post.can_share" text-center (click)="sharePost(post)">

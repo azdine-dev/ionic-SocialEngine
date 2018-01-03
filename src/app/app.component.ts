@@ -17,6 +17,7 @@ import {RegisterPage} from '../pages/register/register';
 import {ChatsPage} from '../pages/chats/chats';
 import {ExpressionPage} from "../pages/expression/expression";
 import {CommentPage} from "../pages/comment/comment";
+import {UserService} from "../services/user-service";
 
 @Component({
   templateUrl: 'app.component.html',
@@ -29,6 +30,8 @@ export class MyApp {
   public rootPage: any;
 
   public nav: any;
+  private profilePicture ='';
+  private userId ='';
 
   public pages = [
     {
@@ -81,7 +84,7 @@ export class MyApp {
     }
   ];
 
-  constructor(public platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
+  constructor(public platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen,public userService : UserService) {
     this.rootPage = LoginPage;
 
     platform.ready().then(() => {
@@ -89,6 +92,8 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
+      this.getProfilePicture();
+      this.userId = localStorage.getItem('user-id');
     });
   }
 
@@ -101,6 +106,14 @@ export class MyApp {
   // on click, go to user timeline
   viewUser(userId) {
     this.nav.push(UserPage, {id: userId})
+  }
+
+  getProfilePicture(){
+    this.userService.getAuthorizedUser().then(res=>{
+      this.profilePicture = res['data']['imgs']['icon'];
+    },err=>{
+      console.log(err,'ERRR PROFILE PIC')
+    })
   }
 }
 

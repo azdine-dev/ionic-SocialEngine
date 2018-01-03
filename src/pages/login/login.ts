@@ -20,7 +20,7 @@ export class LoginPage {
   loading: Modal;
   loginData = {
     grant_type: "password",
-    scope :"activities basic albums videos blogs",
+    scope :"activities basic albums videos blogs settings",
     email: "aben@novway.com",
     client_id: "tmyfu3Hg5nua08I",
     client_secret: "Ur3Obk6bvW6tdAbWAEfAwzC1DfjMW1wy",
@@ -45,6 +45,7 @@ export class LoginPage {
       this.data = result;
       localStorage.setItem('token',this.data.access_token);
       localStorage.setItem('refresh_token', this.data.refresh_token);
+      localStorage.setItem('user-id',this.data.user_id);
       this.showLoader(HomePage);
     }, (err) => {
       console.log( 'ERROR ==>',err["statusText"]);

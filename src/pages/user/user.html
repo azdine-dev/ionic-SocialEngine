@@ -6,64 +6,163 @@
 -->
 <ion-header>
   <ion-navbar color="primary"  class="no-border">
-    <ion-title>User</ion-title>
+    <ion-title>{{user.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <div text-center class="user-profile primary-bg">
 
-    <img class="profile-picture" src="{{ user.face}}">
-
-    <h4 class="light">{{ user.name }}</h4>
+    <img class="profile-picture" src="{{ userImage.profile}}">
+    <h4 class="light">{{ user.title }}</h4>
 
     <ion-grid>
       <ion-row>
-        <ion-col width-33>
-          <span class="number">{{ user.followers }}</span>
-          <span class="desc">Follower</span>
+        <ion-col >
+          <ion-icon name="md-person-add"></ion-icon> <br>
+          <span>Ajouter à mes contacts </span>
         </ion-col>
-        <ion-col width-33>
-          <span class="number">{{ user.following }}</span>
-          <span class="desc">Following</span>
+
+        <ion-col>
+          <ion-icon name="logo-rss"></ion-icon>
+          <span class="number">{{ user.total_friend }} amis</span>
         </ion-col>
-        <ion-col width-33>
-          <span class="number">{{ user.favorites }}</span>
-          <span class="desc">Favorites</span>
+
+        <ion-col >
+          <span class="number">{{ user.total_mutual_friend }} </span>
+          <span>amis en commun</span>
+        </ion-col>
+
+        <ion-col >
+          <ion-icon ios="ios-hand" md="md-hand"></ion-icon><br>
+          <span>Bloquer Membre </span>
+        </ion-col>
+
+        <ion-col>
+          <ion-icon ios="ios-flag" md="md-flag"></ion-icon><br>
+          <span>Signaler</span>
+        </ion-col>
+      </ion-row>
+      </ion-grid>
+
+     <ion-card>
+       <ion-segment [(ngModel)]="infoUser">
+         <ion-segment-button value="infoPer">
+           Information Personnelle
+         </ion-segment-button>
+
+         <ion-segment-button value="infoContact">
+           Informations de contact
+         </ion-segment-button>
+
+       </ion-segment>
+       <div [ngSwitch]="infoUser">
+
+         <ion-list *ngSwitchCase="'infoPer'" inset>
+              <ion-item>
+             <ion-label item-left>Prénom</ion-label>
+                <ion-input disabled item-right type="text" [value]="user.first_name"></ion-input>
+              </ion-item>
+                <ion-item>
+             <ion-label>Nom de famille</ion-label>
+             <ion-input disabled type="text" [value]="user.last_name"></ion-input>
+                </ion-item>
+                <ion-item>
+             <ion-label>Genre</ion-label>
+             <ion-input disabled type="text" [value]="user.gender_label"></ion-input>
+                </ion-item>
+                 <ion-item>
+             <ion-label>Anniversaire</ion-label>
+             <ion-input disabled type="text" [value]="user.birthdate"></ion-input>
+                 </ion-item>
+         </ion-list>
+
+         <ion-list *ngSwitchCase="'infoContact'" inset>
+           <ion-item>
+             <ion-label item-left>Secteur d'activité</ion-label>
+             <ion-input disabled item-right type="text" [value]="user.about_me"></ion-input>
+           </ion-item>
+           <ion-item>
+             <ion-label>Site internet</ion-label>
+             <ion-input disabled type="text" [value]="user.website"></ion-input>
+           </ion-item>
+           <ion-item>
+             <ion-label>Linkedin</ion-label>
+             <ion-input disabled type="text" [value]="user.aim"></ion-input>
+           </ion-item>
+
+         </ion-list>
+       </div>
+
+     </ion-card>
+    <ion-grid>
+      <ion-row>
+        <ion-col (click)="getUserFriends(user.id,user.title)" >
+          <span>Contacts </span>
+        </ion-col>
+
+        <ion-col>
+          <span (click)="getUserAlbums(user.id)">Albums</span>
+        </ion-col>
+
+        <ion-col >
+          <span (click)="getUserLinks(user.id)">Liens</span>
+        </ion-col>
+
+        <ion-col >
+          <span (click)="getUserVideos(user.id,user.title)">Videos</span>
+        </ion-col>
+
+        <ion-col>
+          <span (click)="getUserEvents(user.id)">Evenements</span>
         </ion-col>
       </ion-row>
     </ion-grid>
+
   </div>
 
-  <ion-item text-wrap *ngFor="let post of user.posts">
-    <ion-avatar item-left (click)="viewUser(post.user_id)">
-      <img class="profile-picture" src="{{ post.face }}" alt=""/>
-    </ion-avatar>
+  <ion-card   *ngFor="let post of userFeed " >
+    <ion-item>
+      <ion-avatar item-left (click)="viewUser(post.owner.id)">
+        <img src="{{ post.owner.imgs.icon}}">
+      </ion-avatar>
+      <ion-label>{{post.owner.title}}</ion-label>
+      <p>{{ post.time }}</p>
+    </ion-item>
 
-    <a class="post-author" (click)="viewUser(post.user_id)">
-      {{ post.name }}
-    </a>
-
-    <div class="post-content">
+    <ion-item text-wrap class="post-body">
       <div (click)="viewPost(post.id)">
-        <p>{{ post.content}}</p>
+        <div [innerHtml]="processHtmlContent(post)"></div>
+        <div  *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
+          <iframe [src]="videoFeedMap.get(post.attachments[0].id)"  height="200px" allowfullscreen frameborder="0"></iframe>
+        </div>
+        <img class="full-image" *ngIf="post.attachments.length && post.attachments[0].type=='album_photo' " src="{{ post.attachments[0].img }}">
+        <!--<p padding-top padding-bottom>{{ post.content }}</p>-->
       </div>
-      <p>
-        <a (click)="toggleLike(post)" class="subdued">
-          <ion-icon name="heart" color="danger"  *ngIf="post.liked"></ion-icon>
-          <ion-icon name="heart" color="gray"  *ngIf="!post.liked"></ion-icon>
-          {{ post.likeCount}}
-        </a>
-        <a class="subdued">
-          <ion-icon name="chatboxes" color="primary" ></ion-icon>
-          {{ post.commentCount}}
-        </a>
-        <span class="post-time">
-          <ion-icon name="timer-outline"></ion-icon>
-          {{ post.time }}
-        </span>
-      </p>
-    </div>
 
-  </ion-item>
+      <div>
+        <a (click)="viewPost(post.id)" class="subdued">{{ post.total_like}} Likes</a>
+        <a (click)="viewPost(post.id)" class="subdued" margin-left>{{ post.total_comment}} Comments</a>
+      </div>
+    </ion-item>
+
+    <ion-grid class="post-actions">
+      <ion-row>
+        <ion-col  *ngIf="post.can_like"text-center (click)="toggleLike(post)">
+          <ion-icon name="thumbs-up" color="primary"  *ngIf="post.is_liked"></ion-icon>
+          <ion-icon name="thumbs-up" *ngIf="!post.is_liked"></ion-icon>
+        </ion-col>
+        <ion-col  *ngIf="post.can_comment"text-center (click)="viewPost(post)">
+          <ion-icon name="chatboxes"></ion-icon>
+        </ion-col>
+        <ion-col *ngIf="post.can_share" text-center (click)="sharePost(post)">
+          <ion-icon name="share-alt"></ion-icon>
+        </ion-col>
+        <ion-col *ngIf="post.can_delete" text-center (click)="showDeletePostDialog(post)">
+          <ion-icon name="ios-trash-outline" ></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+
 </ion-content>

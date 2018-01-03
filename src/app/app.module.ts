@@ -34,6 +34,7 @@ import {File} from "@ionic-native/file";
 import {ComposeUploadService} from "../services/compose-upload";
 import {CommentPage} from "../pages/comment/comment";
 import {VideoService} from "../services/video-service";
+import {InfoPage} from "../pages/info/info";
 
 // end import pages
 
@@ -53,7 +54,8 @@ import {VideoService} from "../services/video-service";
     CommentPage,
     UserPage,
     WallPostsPage,
-    ExpressionPage
+    ExpressionPage,
+    InfoPage
   ],
   imports: [
     BrowserModule,HttpClientModule,
@@ -75,7 +77,8 @@ import {VideoService} from "../services/video-service";
     UserPage,
     WallPostsPage,
     ExpressionPage,
-    CommentPage
+    CommentPage,
+    InfoPage
   ],
   providers: [
     FileTransfer,

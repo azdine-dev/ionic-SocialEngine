@@ -16,7 +16,7 @@ export class PostService {
   private posts: any;
   private accessToken = localStorage.getItem('token');
   private fields = 'owner,id,content,attachments,timestamp,is_liked,can_like,total_like,user_liked,' +
-    'can_comment,total_comment,comments,can_delete,can_share,type ';
+    'can_comment,total_comment,comments,can_delete,can_share,type';
   private composeUploadData : any;
 
   constructor(public http : HttpClient, private composeUploadService : ComposeUploadService) {
@@ -48,7 +48,23 @@ export class PostService {
 
 
     });
+  }
 
+  getUserFeed(userId){
+    return new Promise((resolve, reject )=>{
+
+
+      this.http.get(feedUrl+param+'access_token='+this.accessToken+param_delimiter+'fields='+this.fields+
+        '&subject_type=user'+'&subject_id='+userId)
+        .subscribe( res =>{
+          resolve(res);
+          console.log(res);
+        }, (err)=>{
+          reject(err);
+        });
+
+
+    });
   }
   getFeed(feed_id){
     return new Promise((resolve, reject )=>{

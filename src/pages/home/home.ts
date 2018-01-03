@@ -22,6 +22,7 @@ export class HomePage implements OnInit {
   public post: any;
   public feed : Array<{}>;
   public feedInfo : any;
+
   private videoFeedMap : Map <number,SafeUrl> = new Map <number,SafeUrl>();
   private videos : Array<{}>;
   private video_src ='';
@@ -32,6 +33,14 @@ export class HomePage implements OnInit {
 
   token = localStorage.getItem('token');
 
+  private userEvents  = [
+    'unlike-profile',
+    'delete-user',
+    'like-profile',
+    'new-comment',
+    'delete-comment',
+    'new-activity'
+  ]
   constructor(public nav: NavController, public postService: PostService, public events : Events,public userService : UserService,
               public modalCtrl : ModalController,public alertCtrl : AlertController,
               public sanitizer : DomSanitizer,public videoService : VideoService) {
@@ -59,14 +68,14 @@ export class HomePage implements OnInit {
   }
 
   // on click, go to post detail
-  viewPost(post) {
+  viewComment(post) {
     let cmntModal = this.modalCtrl.create(CommentPage,{post : post});
     cmntModal.present();
   }
 
   // on click, go to user timeline
   viewUser(userId) {
-    this.nav.push(CommentPage, {id: userId})
+    this.nav.push(UserPage, {id: userId})
   }
   getFeed() {
     this.postService.getAllFeed().then((result) => {
@@ -103,7 +112,6 @@ export class HomePage implements OnInit {
         {
           text: 'Annuler',
           handler: () => {
-            console.log('Agree clicked');
           }
         },
         {
@@ -124,7 +132,6 @@ export class HomePage implements OnInit {
 
      });
 
-
   }
   getAuthUser(){
     this.userService.getAuthorizedUser().then(res=>{
@@ -141,24 +148,18 @@ export class HomePage implements OnInit {
     });
   }
 
-  private listenToFeedEvents(){
-    this.events.subscribe('delete-user',()=>{
-      this.getFeed();
-    });
-    this.events.subscribe('new-comment',()=>{
-      this.getFeed();
-    });
-    this.events.subscribe('delete-comment',()=>{
-      this.getFeed();
-    });
-    this.events.subscribe('new-activity',()=>{
-      this.getFeed();
-    });
+  private listenToFeedEvents() {
+
+    for(let event of this.userEvents){
+      this.events.subscribe(event, () => {
+        this.getFeed();
+      });
+    }
+
   }
 
 
   processHtmlContent(post){
-     // document.getElementsByClassName('feed_item_username')[0].innerHTML='T';
     return (post.content);
   }
 
