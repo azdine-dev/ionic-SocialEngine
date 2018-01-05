@@ -50,8 +50,8 @@
     <ion-item text-wrap class="post-body">
       <div (click)="viewPost(post.id)">
         <div [innerHtml]="processHtmlContent(post)"></div>
-        <div  *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
-           <iframe [src]="videoFeedMap.get(post.attachments[0].id)"  height="200px" allowfullscreen frameborder="0"></iframe>
+        <div  *ngIf="post.attachments.length && post.attachments[0].type=='video'"  >
+           <ion-item  [innerHtml]="videoFeedMap.get(post.attachments[0].id)"  ></ion-item>
         </div>
         <img class="full-image" *ngIf="post.attachments.length && post.attachments[0].type=='album_photo' " src="{{ post.attachments[0].img }}">
         <!--<p padding-top padding-bottom>{{ post.content }}</p>-->
@@ -65,7 +65,7 @@
 
     <ion-grid class="post-actions">
       <ion-row>
-        <ion-col  *ngIf="post.can_like"text-center (click)="toggleLike(post)">
+        <ion-col  *ngIf="post.can_like" text-center (click)="toggleLike(post)">
           <ion-icon name="thumbs-up" color="primary"  *ngIf="post.is_liked"></ion-icon>
           <ion-icon name="thumbs-up" *ngIf="!post.is_liked"></ion-icon>
         </ion-col>

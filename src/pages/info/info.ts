@@ -34,10 +34,15 @@ export class InfoPage {
 
   getUserVideos(userId){
     this.videoService.getUserVideos(userId).then(data=>{
+      this.userVideos =data['data'];
       console.log(data,'USER-VIDEOS');
     },err=>{
       console.log(err)
     })
+  }
+
+  trustResourceUrl(src){
+    return this.sanitizer.bypassSecurityTrustResourceUrl(src);
   }
 
 }

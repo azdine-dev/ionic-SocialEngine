@@ -18,6 +18,7 @@ import {ChatsPage} from '../pages/chats/chats';
 import {ExpressionPage} from "../pages/expression/expression";
 import {CommentPage} from "../pages/comment/comment";
 import {UserService} from "../services/user-service";
+import {AlbumPage} from "../pages/album/album";
 
 @Component({
   templateUrl: 'app.component.html',
@@ -112,7 +113,7 @@ export class MyApp {
     this.userService.getAuthorizedUser().then(res=>{
       this.profilePicture = res['data']['imgs']['icon'];
     },err=>{
-      console.log(err,'ERRR PROFILE PIC')
+      console.log(err,'ERRRd PROFILE PIC')
     })
   }
 }

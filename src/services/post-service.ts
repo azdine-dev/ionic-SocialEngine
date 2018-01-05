@@ -192,4 +192,20 @@ export class PostService {
          })
        });
     }
+
+    getComents(item_type,item_id){
+      return new Promise((resolve, reject )=>{
+
+
+        this.http.get(commentUrl+param+'access_token='+this.accessToken+param_delimiter+'fields='+this.fields)
+          .subscribe( res =>{
+            resolve(res);
+            console.log(res);
+          }, (err)=>{
+            reject(err);
+          });
+
+
+      });
+    }
 }

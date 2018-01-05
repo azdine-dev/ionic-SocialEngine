@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {AlertController, Events, NavController, NavParams} from 'ionic-angular';
 import {PostService} from '../../services/post-service';
 import {UserPage} from '../user/user';
+import {AlbumService} from "../../services/album-service";
 
 /*
  Generated class for the LoginPage page.
@@ -15,20 +16,30 @@ import {UserPage} from '../user/user';
 })
 export class CommentPage {
   public post: any;
+  private albumComments  : Array<{}>;
   private commentElement = {
     body : '',
     canComment : true,
-  }
+  };
+  private albumPhotos : Array<{}>;
   constructor(public nav: NavController, public postService: PostService,public navParams : NavParams,public events : Events,
-              public alertCtrl : AlertController) {
+              public alertCtrl : AlertController, public albumService :AlbumService) {
+
 
     this.post = this.navParams.get('post');
-    this.events.subscribe('new-comment',()=>{
-      this.updateActivity();
-    });
-    this.events.subscribe('delete-comment',()=>{
-      this.updateActivity();
-    })
+    this.init(this.post.type);
+    this.listenToActionEvents();
+
+  }
+
+  init(type){
+    switch(type){
+      case 'album' :{
+        this.getAlbumPhotos(this.post.id);
+        break;
+      }
+
+    }
   }
 
   toggleLike(post) {
@@ -48,20 +59,31 @@ export class CommentPage {
   }
 
 
-  updateActivity(){
-   this.postService.getFeed(this.post.id).then(data=>{
-     this.commentElement.body='';
-     this.post=data['data'];
+  updateActivity(post) {
+    switch (post.type) {
+      case 'activity_action': {
+        this.postService.getFeed(this.post.id).then(data => {
+          this.commentElement.body = '';
+          this.post = data['data'];
 
-   })
+        });
+        break;
+      }
+      case 'album':{
+        this.postService.getComents(post.type,post.id).then(data => {
+         this.albumComments = data['data'];
+          this.commentElement.body = '';
+
+        });
+        break;
+      }
+     }
+
   }
-
   commentActivity(post) {
       this.postService.commentActivity(post,this.commentElement).then(data=>{
-        console.log(data,'SUCCESS');
         this.events.publish('new-comment')
       },err=>{
-        console.log(err,'ERR');
       })
     }
 
@@ -101,5 +123,23 @@ export class CommentPage {
   }
   likeComment(comment){
     console.log('coment liked');
+  }
+
+  getAlbumPhotos(albumId){
+    this.albumService.getAlbumPhotos(albumId).then(res=>{
+      this.albumPhotos = res['data'].photos;
+      console.log('SUCCESS');
+    },err=>{
+      console.log('ERR')
+    })
+  }
+
+  listenToActionEvents(){
+    this.events.subscribe('new-comment',()=>{
+      this.updateActivity(this.post);
+    });
+    this.events.subscribe('delete-comment',()=>{
+      this.updateActivity(this.post);
+    })
   }
 }

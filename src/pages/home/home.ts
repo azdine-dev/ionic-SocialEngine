@@ -49,7 +49,6 @@ export class HomePage implements OnInit {
   ngOnInit(){
     this.getFeed();
     this.getAuthUser();
-    this.getFeedVideos();
   }
   ionViewDidLoad(){
     let x = document.getElementsByClassName('feed_item_username');
@@ -81,9 +80,11 @@ export class HomePage implements OnInit {
     this.postService.getAllFeed().then((result) => {
       this.feedInfo = result["data"];
       this.feed = result["data"]["items"];
+      this.getFeedAttchmentVideos(this.feed);
+
     },(err) => {
       console.log(err);
-    });
+    })
 
   }
   likePost(post){
@@ -172,18 +173,27 @@ export class HomePage implements OnInit {
    })
   }
 
-  getFeedVideos(){
-   this.videoService.getAllVideos().then(res=>{
-     this.videos = res['data'];
-     console.log(this.videos,'VIDEOS');
-     this.initVideoMap();
-     console.log(this.videoFeedMap.get(12),'VIDEO8src');
-   })
-  }
-  initVideoMap(){
-    for(let video of this.videos){
-      this.videoFeedMap.set(video['id'],this.sanitizer.bypassSecurityTrustResourceUrl(video['video_src']));
+  getFeedAttchmentVideos(feed){
+    for(let activity of feed){
+      if( activity.attachments.length > 0){
+           if(activity.attachments[0].type =='video') {
 
+             this.videoService.getEmbedVideo(activity.attachments[0].id).then( res=>{
+               this.initVideoMap(activity.attachments[0].id,res['data']['code']);
+               })
+
+           }
+
+      }
     }
+    console.log(this.videoFeedMap,'MAAAP')
+
+
   }
+  initVideoMap(videoId,videoCode){
+
+      this.videoFeedMap.set(videoId,this.sanitizer.bypassSecurityTrustHtml(videoCode));
+
+  }
+
  }

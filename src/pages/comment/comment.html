@@ -5,7 +5,10 @@
   Ionic pages and navigation.
 -->
 
-<ion-content >
+<ion-content  >
+  <ion-item *ngIf= " post.type =='activity_action'">
+
+  </ion-item>
 
   <ion-item class="item-no-border">
     <ion-avatar item-left (click)="viewUser(post.user_id)">
@@ -42,6 +45,25 @@
        <ion-input [(ngModel)]="commentElement.body" placeholder="Votre commentaire..." ></ion-input>
     <br>
        <button (click)="commentActivity(post)"  [disabled]="!commentElement.body" ion-button>commenter</button>
+  </ion-grid>
+
+</ion-content>
+
+<ion-content *ngIf="post.type=='album'" color="light">
+  <span>{{post.title}}</span>
+  <ion-slides>
+    <ion-slide *ngFor="let image of albumPhotos " >
+      <img src="{{image.thumb}}" class="thumb-img" imageViewer>
+
+
+    </ion-slide>
+
+  </ion-slides>
+  <ion-grid class="post-actions">
+
+    <ion-input [(ngModel)]="commentElement.body" placeholder="Votre commentaire..." ></ion-input>
+    <br>
+    <button (click)="commentActivity(post)"  [disabled]="!commentElement.body" ion-button>commenter</button>
   </ion-grid>
 
 </ion-content>

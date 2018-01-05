@@ -1,0 +1,49 @@
+<!--
+  Generated template for the AlbumPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary"  class="no-border">
+    <ion-title>albums de {{userName}} </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <!--<ion-slides>-->
+    <!--<ion-slide *ngFor="let image of images" effect="coverflow">-->
+      <!--<img src="/assets/img/{{image}}" class="thumb-img" imageViewer>-->
+    <!--</ion-slide>-->
+  <!--</ion-slides>-->
+
+  <ion-list *ngFor="let album of userAlbums">
+
+    <ion-card  tappable>
+      <img (click)="goToAlbumPhotos(album.id);" height="200" width="50" src="{{album.thumb}}"/>
+
+      <ion-card-content>
+
+        <p>
+          {{album.title}} ({{album.total_photo}}) photos
+        </p>
+        <ion-grid >
+          <ion-row class="post-actions">
+            <ion-col *ngIf="album.can_like" (click)="toggleLikeAlbum(album)">
+              <ion-icon name="thumbs-up" color="primary"  *ngIf="album.is_liked"></ion-icon>
+              <ion-icon name="thumbs-up" *ngIf="!album.is_liked"></ion-icon>
+            </ion-col>
+            <ion-col (click)="viewComment(album)">
+              <ion-icon name="chatboxes"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+
+
+    </ion-card>
+  </ion-list>
+</ion-content>

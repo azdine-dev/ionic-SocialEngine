@@ -35,6 +35,10 @@ import {ComposeUploadService} from "../services/compose-upload";
 import {CommentPage} from "../pages/comment/comment";
 import {VideoService} from "../services/video-service";
 import {InfoPage} from "../pages/info/info";
+import {AlbumService} from "../services/album-service";
+import {IonicImageViewerModule} from "ionic-img-viewer";
+import {AlbumPage} from "../pages/album/album";
+import {PhotosPage} from "../pages/photos/photos";
 
 // end import pages
 
@@ -55,10 +59,13 @@ import {InfoPage} from "../pages/info/info";
     UserPage,
     WallPostsPage,
     ExpressionPage,
-    InfoPage
+    InfoPage,
+    AlbumPage,
+    PhotosPage
   ],
   imports: [
     BrowserModule,HttpClientModule,
+    IonicImageViewerModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -78,7 +85,9 @@ import {InfoPage} from "../pages/info/info";
     WallPostsPage,
     ExpressionPage,
     CommentPage,
-    InfoPage
+    InfoPage,
+    AlbumPage,
+    PhotosPage
   ],
   providers: [
     FileTransfer,
@@ -91,7 +100,9 @@ import {InfoPage} from "../pages/info/info";
     ChatService,
     ComposeUploadService,
     AuthServiceProvider,
-    VideoService
+    VideoService,
+    AlbumService,
+
     /* import services */
   ]
 })

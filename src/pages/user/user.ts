@@ -7,6 +7,7 @@ import {VideoService} from "../../services/video-service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {CommentPage} from "../comment/comment";
 import {InfoPage} from "../info/info";
+import {AlbumPage} from "../album/album";
 
 /*
  Generated class for the LoginPage page.
@@ -24,7 +25,6 @@ export class UserPage {
   public userId : any ;
   private userFeed : Array<{}>;
   private userImage='';
-  private videos : Array<{}>;
   private videoFeedMap : Map <number,SafeUrl> = new Map <number,SafeUrl>();
 
   constructor(public nav: NavController, public navParams: NavParams, public userService: UserService,
@@ -34,7 +34,6 @@ export class UserPage {
     this.userId = (navParams.get('id'));
     this.getUserProfileInfo(this.userId);
     this.getUserFeed();
-    this.getFeedVideos();
     this.listenToFeedEvents();
     this.infoUser ='infoPer'
   }
@@ -71,22 +70,32 @@ export class UserPage {
   getUserFeed() {
     this.postService.getUserFeed(this.userId).then((result) => {
       this.userFeed = result["data"]["items"];
+      this.getFeedAttchmentVideos(this.userFeed);
     },(err) => {
     });
 
   }
-  getFeedVideos(){
-    this.videoService.getUserVideos(this.userId).then(res=>{
-      this.videos = res['data'];
-      this.initVideoMap();
-    })
-  }
-  initVideoMap(){
-    for(let video of this.videos){
-      this.videoFeedMap.set(video['id'],this.sanitizer.bypassSecurityTrustResourceUrl(video['video_src']));
+  getFeedAttchmentVideos(feed) {
+    for (let activity of feed) {
+      if (activity.attachments.length > 0) {
+        if (activity.attachments[0].type == 'video') {
 
+          this.videoService.getEmbedVideo(activity.attachments[0].id).then(res => {
+            this.initVideoMap(activity.attachments[0].id, res['data']['code']);
+          })
+
+        }
+
+      }
     }
   }
+
+  initVideoMap(videoId,videoCode){
+
+      this.videoFeedMap.set(videoId,this.sanitizer.bypassSecurityTrustHtml(videoCode));
+
+  }
+
   processHtmlContent(post){
     return post.content;
   }
@@ -110,13 +119,12 @@ export class UserPage {
   showDeletePostDialog(post){
     let confirmDelActivity = this.alertCtrl.create({
 
-      message: 'voulez-vous vraiment supprimer ce post?',
+      message: 'voulez-vous vraiment supprimer ce post ?',
       buttons: [
 
         {
           text: 'Annuler',
           handler: () => {
-            console.log('Agree clicked');
           }
         },
         {
@@ -158,6 +166,12 @@ export class UserPage {
 
   getUserVideos(userId,userName){
     this.nav.push(InfoPage,{
+      id: userId,
+      name : userName
+    });
+  }
+  getUserAlbums(userId,userName){
+    this.nav.push(AlbumPage,{
       id: userId,
       name : userName
     });
