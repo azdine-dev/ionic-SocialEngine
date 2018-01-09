@@ -4,13 +4,8 @@
   See http://ionicframework.com/docs/v2/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-
-<ion-content  >
-  <ion-item *ngIf= " post.type =='activity_action'">
-
-  </ion-item>
-
-  <ion-item class="item-no-border">
+<ion-content no-bounce *ngIf= " post.type =='activity_action'" >
+  <ion-item  class="item-no-border">
     <ion-avatar item-left (click)="viewUser(post.user_id)">
       <img src="{{ post.owner.imgs.profile }}">
     </ion-avatar>
@@ -39,32 +34,54 @@
       <a class="subdued">j'aime</a>
     </ion-item>
       </div>
-
-  <ion-grid class="post-actions">
+  <div class="body-message">
+  <ion-grid class="post-actions" ion-fixed >
 
        <ion-input [(ngModel)]="commentElement.body" placeholder="Votre commentaire..." ></ion-input>
     <br>
        <button (click)="commentActivity(post)"  [disabled]="!commentElement.body" ion-button>commenter</button>
   </ion-grid>
-
+  </div>
 </ion-content>
 
-<ion-content *ngIf="post.type=='album'" color="light">
-  <span>{{post.title}}</span>
-  <ion-slides>
-    <ion-slide *ngFor="let image of albumPhotos " >
-      <img src="{{image.thumb}}" class="thumb-img" imageViewer>
 
 
-    </ion-slide>
+<ion-content *ngIf="post.type=='album'" no-bounce>
+  <ion-item class="item-no-border">
+    <ion-avatar item-left (click)="viewUser(post.user_id)">
+      <img src="{{ post.owner.imgs.profile }}">
+    </ion-avatar>
+    <h2 ion-text color="primary"  class="post-author" (click)="viewUser(post.user_id)">{{ post.owner.title }}</h2>
+    <span class="post-time">
+      <ion-icon name="timer-outline"></ion-icon>
+      {{ post.time }}
+    </span>
+  </ion-item>
 
-  </ion-slides>
-  <ion-grid class="post-actions">
 
-    <ion-input [(ngModel)]="commentElement.body" placeholder="Votre commentaire..." ></ion-input>
-    <br>
-    <button (click)="commentActivity(post)"  [disabled]="!commentElement.body" ion-button>commenter</button>
-  </ion-grid>
+  <div padding>
+    <ion-item    class="post-comment" *ngFor="let comment of albumComments" (press)="showDeleteCommentDialog(comment)">
+      <ion-avatar item-left (click)="viewUser(comment.user_id)">
+        <img src="{{ comment.owner.imgs.profile }}">
+      </ion-avatar>
+
+      <h3 ion-text color="primary"  class="post-author">
+        {{ comment.owner.title }}
+      </h3>
+      <p text-wrap>{{ comment.body}}</p>
+      <a class="subdued like-count">
+        <ion-icon name="heart" color="danger"  (click)="likeComment(comment)" *ngIf="comment.is_liked"></ion-icon>
+        <ion-icon name="heart" color="gray"  (click)="unlikeComment(comment)"*ngIf="!comment.is_liked"></ion-icon>
+        {{ comment.total_like}}
+      </a>
+      <br>
+      <a class="subdued">j'aime</a>
+    </ion-item>
+  </div>
+
+
+
+
+
 
 </ion-content>
-

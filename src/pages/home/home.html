@@ -5,10 +5,23 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar color="primary" >
+  <ion-navbar color="silver" >
     <button  ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
+
+    <ion-row class="home-bar">
+    <ion-col width-25>
+      <ion-icon style="zoom:1.5;" name="ios-home-outline"  (click)="scrollToTop()" color="{{homeIcon}}"></ion-icon>
+    </ion-col>
+      <ion-col width-40>
+        <ion-icon style="zoom:1.5;" name="ios-videocam-outline" color="white"></ion-icon>
+      </ion-col>
+      <ion-col width-25>
+        <ion-icon  style="zoom:1.5;" name="ios-notifications-outline" color="white" ></ion-icon>
+      </ion-col>
+    </ion-row>
+
     <ion-title></ion-title>
   </ion-navbar>
 </ion-header>
@@ -28,7 +41,7 @@
           <ion-col width-25>
             <ion-icon name="md-link" color="gray"></ion-icon>
           </ion-col>
-          <ion-col width-25>
+          <ion-col (click)="postNewVideo()" width-25>
             <ion-icon   name="md-videocam" color="gray"></ion-icon>
           </ion-col>
           <ion-col width-25>

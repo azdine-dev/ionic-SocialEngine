@@ -36,6 +36,8 @@ export class CommentPage {
     switch(type){
       case 'album' :{
         this.getAlbumPhotos(this.post.id);
+        this.getAlbumComments(this.post.id);
+        console.log('TRUE');
         break;
       }
 
@@ -141,5 +143,16 @@ export class CommentPage {
     this.events.subscribe('delete-comment',()=>{
       this.updateActivity(this.post);
     })
+  }
+
+  getAlbumComments(albumId){
+    this.postService.getComents('album',albumId).then(data => {
+      this.albumComments = data['data'];
+      console.log('COMMENTS ON ALBUM');
+      this.commentElement.body = '';
+
+    },err=>{
+      console.log(JSON.stringify(err));
+    });
   }
 }

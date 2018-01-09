@@ -1,6 +1,28 @@
 // http://ionicframework.com/docs/v2/theming/
+ion-modal.wez {
+  @media (min-width: 768px)  {
+    ion-backdrop {
+      visibility: visible;
+    }
+  }
 
-
+  .modal-wrapper {
+    position: absolute;
+    overflow: hidden;
+    max-width: 280px;
+    border-radius: 2px;
+    width: 80vw;
+    height: 50vh;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: 0;
+    box-shadow: 0 16px 20px rgba(0,0,0,.4);
+    background-color: red;
+  }
+}
 // Global CSS
 // --------------------------------------------------
 // Put CSS rules here that you want to apply globally.

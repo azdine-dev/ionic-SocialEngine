@@ -1,5 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {AlertController, Events, ModalController, NavController} from 'ionic-angular';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {
+  AlertController, Content, Events, LoadingController, ModalController, NavController,
+  ViewController
+} from 'ionic-angular';
 import {PostService} from '../../services/post-service';
 import {PostPage} from '../post/post';
 import {UserPage} from '../user/user';
@@ -8,6 +11,8 @@ import {UserService} from "../../services/user-service";
 import {CommentPage} from "../comment/comment";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {VideoService} from "../../services/video-service";
+import {ShareModalPage} from "../share-modal/share-modal";
+import {VideoModalPage} from "../video-modal/video-modal";
 /*
  Generated class for the LoginPage page.
 
@@ -19,9 +24,11 @@ import {VideoService} from "../../services/video-service";
   templateUrl: 'home.html'
 })
 export class HomePage implements OnInit {
+  @ViewChild(Content) content: Content;
   public post: any;
   public feed : Array<{}>;
   public feedInfo : any;
+  private homeIcon = 'white';
 
   private videoFeedMap : Map <number,SafeUrl> = new Map <number,SafeUrl>();
   private videos : Array<{}>;
@@ -43,7 +50,8 @@ export class HomePage implements OnInit {
   ]
   constructor(public nav: NavController, public postService: PostService, public events : Events,public userService : UserService,
               public modalCtrl : ModalController,public alertCtrl : AlertController,
-              public sanitizer : DomSanitizer,public videoService : VideoService) {
+              public sanitizer : DomSanitizer,public videoService : VideoService,public viewCtrl :  ViewController
+              ,public loadingCtrl : LoadingController) {
        this.listenToFeedEvents();
   }
   ngOnInit(){
@@ -68,7 +76,15 @@ export class HomePage implements OnInit {
 
   // on click, go to post detail
   viewComment(post) {
-    let cmntModal = this.modalCtrl.create(CommentPage,{post : post});
+    let cmntModal = this.modalCtrl.create(CommentPage,{post : post,},{cssClass:'wez'});
+    cmntModal.present();
+  }
+
+  sharePost(post){
+    let cmntModal = this.modalCtrl.create(ShareModalPage,{
+      item : post,
+      type : post.type,
+    });
     cmntModal.present();
   }
 
@@ -194,6 +210,21 @@ export class HomePage implements OnInit {
 
       this.videoFeedMap.set(videoId,this.sanitizer.bypassSecurityTrustHtml(videoCode));
 
+  }
+  scrollToTop(){
+    if(this.homeIcon == 'white'){
+      this.homeIcon = 'coffee';
+    }
+    else{
+      this.homeIcon ='white';
+    }
+
+    this.content.scrollToTop();
+  }
+
+  postNewVideo(){
+    let videoModal = this.modalCtrl.create(VideoModalPage);
+    videoModal.present();
   }
 
  }

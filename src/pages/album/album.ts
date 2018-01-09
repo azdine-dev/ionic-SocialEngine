@@ -12,7 +12,6 @@ import {CommentPage} from "../comment/comment";
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-album',
   templateUrl: 'album.html',

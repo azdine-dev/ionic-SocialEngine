@@ -178,4 +178,15 @@ ion-item.item-block.item-no-border {
       }
     }
   }
+  modal-wrapper {
+    position: absolute;
+    top: 80px;
+    left: 45px;
+    display: block;
+    width: 70%;
+    height: 62%;
+    padding: 30px;
+    background: red;
+  }
+
 }

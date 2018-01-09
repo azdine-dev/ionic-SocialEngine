@@ -39,6 +39,8 @@ import {AlbumService} from "../services/album-service";
 import {IonicImageViewerModule} from "ionic-img-viewer";
 import {AlbumPage} from "../pages/album/album";
 import {PhotosPage} from "../pages/photos/photos";
+import {ShareModalPage} from "../pages/share-modal/share-modal";
+import {VideoModalPage} from "../pages/video-modal/video-modal";
 
 // end import pages
 
@@ -61,7 +63,9 @@ import {PhotosPage} from "../pages/photos/photos";
     ExpressionPage,
     InfoPage,
     AlbumPage,
-    PhotosPage
+    PhotosPage,
+    ShareModalPage,
+    VideoModalPage
   ],
   imports: [
     BrowserModule,HttpClientModule,
@@ -87,7 +91,9 @@ import {PhotosPage} from "../pages/photos/photos";
     CommentPage,
     InfoPage,
     AlbumPage,
-    PhotosPage
+    PhotosPage,
+    ShareModalPage,
+    VideoModalPage
   ],
   providers: [
     FileTransfer,

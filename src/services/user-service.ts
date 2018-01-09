@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {USERS} from "./mock-users";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 let membersUrl = 'intaliq.novway.com/api/v1/users/';
 let param = '?';
@@ -66,6 +66,21 @@ export class UserService {
       this.http.get(membersUrl+userId+param+'access_token='+this.accessToken+'&fields='+userInfoFields).subscribe(res=>{
         resolve(res);
 
+      },err=>{
+        reject(err);
+      })
+    });
+  }
+
+  // ***********************************************PROFILE***************************
+
+  makeProfilePicture(photoId){
+    return new Promise((resolve,reject)=>{
+      let headers = new HttpHeaders();
+      headers.append('Content-Type', 'multipart/form-data');
+      this.http.post(membersUrl+'me/external_photo'+param+'access_token='+this.accessToken+'&photo_id='+photoId
+        ,{headers}).subscribe(data=>{
+        resolve(data);
       },err=>{
         reject(err);
       })

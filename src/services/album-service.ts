@@ -37,6 +37,14 @@ export class AlbumService {
     })
   }
 
+
+
+
+  likeAlbum(album_id){
+
+  }
+
+  // ***********************PHOTO SERVICE *********************************
   getPhoto(photo_id){
     return new Promise((resolve,reject)=>{
       this.http.get(albumUrl+'photos/'+photo_id+param+'access_token='+this.accessToken+'&fields='+photoFields).subscribe(data=>{
@@ -46,9 +54,25 @@ export class AlbumService {
       })
     })
   }
-
-
-  likeAlbum(album_id){
+  likePhoto(){
 
   }
+  unlikePhoto(){
+
+  }
+  reportPhoto(){
+
+  }
+  deletePhoto(photoId){
+    return new Promise((resolve, reject) => {
+
+      this.http.delete(albumUrl+'photos/'+photoId+ param + 'access_token=' + this.accessToken).subscribe(res => {
+        resolve(res);
+      }, err => {
+        reject(err);
+      })
+
+    });
+  }
+
 }

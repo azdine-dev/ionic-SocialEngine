@@ -30,8 +30,8 @@ export class ExpressionPage implements OnInit{
     sourceType : this.camera.PictureSourceType.CAMERA,
     destinationType : this.camera.DestinationType.FILE_URI,
     quality : 100,
-    targetWidth : 500,
-    targetHeight : 500,
+    targetWidth : 1024,
+    targetHeight : 768,
     encodingType : this.camera.EncodingType.JPEG,
     correctOrientation : true
   };
@@ -39,8 +39,8 @@ export class ExpressionPage implements OnInit{
     sourceType : this.camera.PictureSourceType.PHOTOLIBRARY,
     destinationType: this.camera.DestinationType.FILE_URI,
     quality: 100,
-    targetWidth: 1000,
-    targetHeight: 1000,
+    targetWidth: 1024,
+    targetHeight: 768,
     encodingType: this.camera.EncodingType.JPEG,
     correctOrientation: true
   };

@@ -1,4 +1,4 @@
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 
 let videoUrl = 'intaliq.novway.com/api/v1/videos/';
@@ -64,5 +64,32 @@ export class VideoService {
         reject(err);
       })
     })
+  }
+  postVido(videoData){
+    return new Promise((resolve,reject)=>{
+      let headers = new HttpHeaders();
+      headers.append('Content-Type', 'application/json');
+
+      this.http.post(videoUrl+param+'access_token='+this.accessToken+param_delimiter,headers).subscribe(res=>{
+        resolve(res);
+      },err =>{
+        reject(err);
+      })
+
+    });
+  }
+
+  composeUploadVideo(video_type,video_url){
+    return new Promise((resolve,reject)=>{
+      let headers = new HttpHeaders();
+      headers.append('Content-Type', 'application/json');
+
+      this.http.post(videoUrl+'compose_upload'+param+'access_token='+this.accessToken+'&type='+video_type+'&uri='+video_url,headers).subscribe(res=>{
+        resolve(res);
+      },err =>{
+        reject(err);
+      })
+
+    });
   }
 }

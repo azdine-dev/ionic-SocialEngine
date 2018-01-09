@@ -101,9 +101,9 @@ export class PostService {
 
       this.http.delete(likeUrl + param + 'access_token=' + this.accessToken + param_delimiter + 'item_id=' + item_id + param_delimiter +
         'item_type=' + item_type).subscribe(res => {
-          resolve(res);
+        resolve(res);
       }, err => {
-          reject(err);
+        reject(err);
       })
 
     });
@@ -197,7 +197,8 @@ export class PostService {
       return new Promise((resolve, reject )=>{
 
 
-        this.http.get(commentUrl+param+'access_token='+this.accessToken+param_delimiter+'fields='+this.fields)
+        this.http.get(commentUrl+param+'access_token='+this.accessToken+param_delimiter+'item_id='+item_id+
+        '&item_type='+item_type+'&fields='+this.fields)
           .subscribe( res =>{
             resolve(res);
             console.log(res);
@@ -208,4 +209,20 @@ export class PostService {
 
       });
     }
+
+
+  /****************************************SHARING***********************************/
+
+  shareActivity(item_type,item_id,body){
+    return new Promise((resolve,reject)=>{
+      let headers = new HttpHeaders();
+      headers.append('Content-Type', 'multipart/form-data');
+      this.http.post(feedUrl+'/share'+param+'access_token='+this.accessToken+'&item_id='+item_id+
+        '&item_type='+item_type+'&body='+body,{headers}).subscribe(data=>{
+        resolve(data);
+      },err=>{
+        reject(err);
+      })
+    });
+  }
 }
