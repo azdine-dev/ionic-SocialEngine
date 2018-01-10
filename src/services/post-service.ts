@@ -18,6 +18,7 @@ export class PostService {
   private fields = 'owner,id,content,attachments,timestamp,is_liked,can_like,total_like,user_liked,' +
     'can_comment,total_comment,comments,can_delete,can_share,type';
   private composeUploadData : any;
+  private photoUpload : any;
 
   constructor(public http : HttpClient, private composeUploadService : ComposeUploadService) {
     this.posts = POSTS;
@@ -125,7 +126,6 @@ export class PostService {
       if(withAttachment){
          this.composeUploadService.composeUploadPhoto(attachment.Filedata).then(data=>{
            this.composeUploadData = JSON.parse(data['response']);
-           console.log((this.composeUploadData).data.photo_id);
 
          }).then(()=> {
              this.http.post(feedUrl + param + 'access_token=' + this.accessToken + param_delimiter + 'body=' + postBody.bodyText
@@ -224,5 +224,32 @@ export class PostService {
         reject(err);
       })
     });
+  }
+
+  ///////////////////////////////////////////////////////////
+
+  postPhoto(imageData){
+    return new Promise((resolve,reject)=>{
+      let headers = new HttpHeaders();
+      headers.append('Content-Type', 'multipart/form-data');
+
+
+        this.composeUploadService.uploadPhoto(imageData).then(data=>{
+          this.photoUpload = JSON.parse(data['response']);
+          console.log((this.photoUpload).data.photo_id);
+
+        }).then(()=> {
+            this.http.post(feedUrl + param + 'access_token=' + this.accessToken +
+              '&attachment[type]=photo&attachment[photo_id]='+this.photoUpload.data.photo_id,{headers}).subscribe(res=>{
+
+              console.log('POST'+res);
+              resolve(res);
+            },err=>{
+              console.log('ERR'+JSON.stringify(err));
+              reject(err);
+            })
+
+          }
+        )},);
   }
 }

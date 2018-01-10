@@ -41,6 +41,7 @@ import {AlbumPage} from "../pages/album/album";
 import {PhotosPage} from "../pages/photos/photos";
 import {ShareModalPage} from "../pages/share-modal/share-modal";
 import {VideoModalPage} from "../pages/video-modal/video-modal";
+import {PhotoModalPage} from "../pages/photo-modal/photo-modal";
 
 // end import pages
 
@@ -65,7 +66,8 @@ import {VideoModalPage} from "../pages/video-modal/video-modal";
     AlbumPage,
     PhotosPage,
     ShareModalPage,
-    VideoModalPage
+    VideoModalPage,
+    PhotoModalPage
   ],
   imports: [
     BrowserModule,HttpClientModule,
@@ -93,7 +95,9 @@ import {VideoModalPage} from "../pages/video-modal/video-modal";
     AlbumPage,
     PhotosPage,
     ShareModalPage,
-    VideoModalPage
+    VideoModalPage,
+    PhotoModalPage,
+
   ],
   providers: [
     FileTransfer,

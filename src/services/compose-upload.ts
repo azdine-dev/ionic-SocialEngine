@@ -3,6 +3,7 @@ import {inject} from "@angular/core/testing";
 import {forwardRef, Inject} from "@angular/core";
 
 let photoUrl = 'http://intaliq.novway.com/api/v1/albums/compose_upload';
+let photoUpload ='http://intaliq.novway.com/api/v1/albums/photo_upload';
 export class ComposeUploadService {
 
   private transferImageOptions : FileUploadOptions ={
@@ -33,6 +34,16 @@ export class ComposeUploadService {
       })
     });
 
+  }
+  uploadPhoto(imageDta){
+    return new Promise((resolve,reject)=>{
+      const imageTransfer = this.transfer.create();
+      imageTransfer.upload(imageDta,encodeURI(photoUpload+'?access_token='+this.accessToken),this.transferImageOptions).then(data=>{
+        resolve(data);
+      },err=>{
+        reject(err);
+      })
+    });
   }
 
   composeUploadLink(){

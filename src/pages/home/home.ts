@@ -13,6 +13,8 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {VideoService} from "../../services/video-service";
 import {ShareModalPage} from "../share-modal/share-modal";
 import {VideoModalPage} from "../video-modal/video-modal";
+import {Camera, CameraOptions} from "@ionic-native/camera";
+import {PhotoModalPage} from "../photo-modal/photo-modal";
 /*
  Generated class for the LoginPage page.
 
@@ -37,6 +39,15 @@ export class HomePage implements OnInit {
     image : '',
     title :'',
   };
+  private cameraTakerOptions : CameraOptions = {
+    sourceType : this.camera.PictureSourceType.CAMERA,
+    destinationType : this.camera.DestinationType.FILE_URI,
+    quality : 100,
+    targetWidth : 1024,
+    targetHeight : 768,
+    encodingType : this.camera.EncodingType.JPEG,
+    correctOrientation : true
+  };
 
   token = localStorage.getItem('token');
 
@@ -51,7 +62,7 @@ export class HomePage implements OnInit {
   constructor(public nav: NavController, public postService: PostService, public events : Events,public userService : UserService,
               public modalCtrl : ModalController,public alertCtrl : AlertController,
               public sanitizer : DomSanitizer,public videoService : VideoService,public viewCtrl :  ViewController
-              ,public loadingCtrl : LoadingController) {
+              ,public loadingCtrl : LoadingController,private  camera : Camera) {
        this.listenToFeedEvents();
   }
   ngOnInit(){
@@ -219,12 +230,17 @@ export class HomePage implements OnInit {
       this.homeIcon ='white';
     }
 
-    this.content.scrollToTop();
+    this.content.scrollToTop(700);
   }
 
   postNewVideo(){
     let videoModal = this.modalCtrl.create(VideoModalPage);
     videoModal.present();
+  }
+
+  postNewPhoto(){
+   let photoModal = this.modalCtrl.create(PhotoModalPage);
+   photoModal.present();
   }
 
  }

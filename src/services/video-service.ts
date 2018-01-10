@@ -92,4 +92,31 @@ export class VideoService {
 
     });
   }
+  getVideoInformation(video_type,video_url){
+    return new Promise((resolve,reject)=>{
+      this.http.get(videoUrl+'info'+param+'access_token='+this.accessToken+'&type='+video_type+'&uri='+video_url).subscribe(data=>{
+        resolve(data);
+      },err=>{
+        reject(err);
+      })
+    })
+  }
+
+
+  postVideo(videoData){
+    return new Promise((resolve,reject)=>{
+      let headers = new HttpHeaders();
+      headers.append('Content-Type', 'multipart/form-data');
+
+      this.http.post(videoUrl+param+'access_token='+this.accessToken+'&title='+videoData.title+'&type='+videoData.type+
+        '&url='+videoData.url+'&description='+videoData.description+'&auth_view='+videoData.auth_view
+        +'&auth_comment='+videoData.auth_comment, headers).subscribe(res=>{
+        resolve(res);
+      },err =>{
+        reject(err);
+      })
+
+    });
+  }
+
 }
