@@ -5,6 +5,7 @@ import {RegisterPage} from '../register/register';
 import {HomePage} from '../home/home';
 import {AuthServiceProvider} from "../../services/auth-service";
 import {ContactsPage} from "../contacts/contacts";
+import {CacheService} from "ionic-cache";
 
 /*
  Generated class for the LoginPage page.
@@ -20,7 +21,7 @@ export class LoginPage {
   loading: Modal;
   loginData = {
     grant_type: "password",
-    scope :"activities basic albums videos blogs settings",
+    scope :"activities basic albums videos blogs settings friends",
     email: "aben@novway.com",
     client_id: "tmyfu3Hg5nua08I",
     client_secret: "Ur3Obk6bvW6tdAbWAEfAwzC1DfjMW1wy",
@@ -39,34 +40,27 @@ export class LoginPage {
   }
 
   login() {
-
+     let load = this.showLoader('authentification ..');
+     load.present();
     this.authService.login(this.loginData).then((result) => {
       // this.loading.dismiss();
       this.data = result;
       localStorage.setItem('token',this.data.access_token);
       localStorage.setItem('refresh_token', this.data.refresh_token);
       localStorage.setItem('user-id',this.data.user_id);
-      this.showLoader(HomePage);
+      load.dismiss();
+      this.nav.setRoot(HomePage);
     }, (err) => {
-      console.log( 'ERROR ==>',err["statusText"]);
-      this.presentToast(err["statusText"]);
+      load.dismiss();
+      this.presentToast(err["error"].data.message);
     });
 
   }
-   showLoader(page){
+   showLoader(content){
     let load = this.loadingCtrl.create({
-      content : 'Authenticating ...'
+      content : content
     });
-    load.present({});
-
-    setTimeout(()=>{
-      this.nav.setRoot(page);
-    },1000);
-
-     setTimeout(() => {
-       load.dismiss();
-     }, 1000);
-     console.log("DISMISS");
+    return load;
    }
 
   presentToast(msg) {
@@ -76,10 +70,7 @@ export class LoginPage {
       position: 'bottom',
       dismissOnPageChange: true
     });
-
-    toast.onDidDismiss(() => {
-      console.log('Dismissed toast');
-    });
+    toast.present();
 
   }
 }

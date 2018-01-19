@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {NavController} from 'ionic-angular';
 import {UserService} from '../../services/user-service';
 import {UserPage} from '../user/user';
@@ -9,14 +9,15 @@ import {UserPage} from '../user/user';
   templateUrl: 'contacts.html'
 })
 export class ContactsPage {
-
   public contacts: any;
-  public members : any;
+  public members : Array<{}>;
+  private pageNumber = 1;
   constructor(public nav: NavController, public userService: UserService) {
     this.contacts = userService.getAll();
     this.getAllMembers();
 
   }
+  /***assets/img/thumb/ben.png**/
 
   // on click, go to user timeline
   viewUser(userId) {
@@ -24,17 +25,27 @@ export class ContactsPage {
   }
 
   getAllMembers(){
-      this.userService.getAllMembers().then((result) =>{
+      this.userService.getAllMembers(10,this.pageNumber).then((result) =>{
        this.members = result["data"];
-
-       for( let member of this.members){
-          Object.assign(member, {
-            face : 'assets/img/thumb/ben.png',
-            groupe : 'Family',
-
-          })
-       }
-
       });
   }
+
+  getDefaultImage(image,contact){
+    if(contact.gender_label == 'Female'){
+      image.src = 'assets/img/female.png';
+    }else{
+      image.src = 'assets/img/user.png';
+    }
+
+  }
+  refrechUser(refrecher,page){
+    page++;
+    setTimeout(()=>{
+      refrecher.complete();
+    },500)
+    this.userService.getAllMembers(10,page).then((result) =>{
+      this.members.push(result["data"]);
+    });
+  }
+  approxItemHeight//
 }

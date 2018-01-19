@@ -9,32 +9,32 @@
     <button  ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Contacts</ion-title>
+    <ion-title>Amis de {{user.title}} </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <div class="search-form">
     <ion-icon name="ios-search"></ion-icon>
-    <ion-input type="text" placeholder="{{ contacts.length }} contacts"></ion-input>
+    <ion-input type="text" placeholder="contacts"></ion-input>
   </div>
 
-  <ion-list class="list-full-border" [virtualScroll]="members" approxItemHeight="60px" >
+  <ion-list [virtualScroll]="friends" approxItemHeight="60px" >
 
     <ion-item-sliding *virtualItem="let contact">
 
       <ion-item >
         <ion-avatar item-left (click)="viewUser(contact.id)">
-          <img  *ngIf="contact.imgs.icon" #image (error)="getDefaultImage(image,contact)" class="profile-picture" src="{{ contact.imgs.icon }}" alt=""/>
+        <img  #image (error)="getDefaultImage(image)" class="friends-picture"  src="{{ contact.imgs.normal }}" alt="">
         </ion-avatar>
 
-        <div>
+        <ion-avatar>
           <h3 ion-text color="primary"  (click)="viewUser(contact.id)">{{ contact.title }}</h3>
-          <ion-badge primay *ngIf="contact.group == 'Family'">Family</ion-badge>
-          <ion-badge color="green"  *ngIf="contact.group == 'Friend'">Friend</ion-badge>
-        </div>
-
-
+        </ion-avatar>
+        <ion-avatar (click)="joinMember(contact)" item-end>
+         {{getFriendState(contact)}}
+          <ion-icon  name="ios-person-add"  style="zoom:1.2;"  item-start></ion-icon>
+        </ion-avatar>
       </ion-item>
 
       <ion-item-options>

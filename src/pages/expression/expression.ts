@@ -11,7 +11,6 @@ import {ComposeUploadService} from "../../services/compose-upload";
 import {AttachementClass} from "../../Data/attachement.interface";
 import {HomePage} from "../home/home";
 
-let accessToken = localStorage.getItem('token');
 
 @Component({
   selector: 'page-expression',
@@ -51,7 +50,6 @@ export class ExpressionPage implements OnInit{
   constructor(public nav: NavController, public postService: PostService, private  camera : Camera,
               public loadingCtrl : LoadingController, public toastCtrl : ToastController,public navParams :NavParams,
               public events :Events) {
-    console.log(localStorage.getItem('token'));
     this.ownerName = this.navParams.get('ownerName');
     this.ownerPhoto = this.navParams.get('ownerPhoto');
   }

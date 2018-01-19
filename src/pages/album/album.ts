@@ -72,6 +72,8 @@ export class AlbumPage {
     let cmntModal = this.modalCtrl.create(CommentPage,{post : post});
     cmntModal.present();
   }
-
+  getDefaultImage(image,contact){
+    image.src = 'assets/img/cover.png';
+  }
 
 }

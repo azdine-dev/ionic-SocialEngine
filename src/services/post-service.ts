@@ -14,7 +14,8 @@ let param_delimiter = '&';
 @Injectable()
 export class PostService {
   private posts: any;
-  private accessToken = localStorage.getItem('token');
+  private refrechToken = localStorage.getItem('refresh_token');
+  private accessToken = localStorage.getItem('token')+'&refresh_token='+this.refrechToken;
   private fields = 'owner,id,content,attachments,timestamp,is_liked,can_like,total_like,user_liked,' +
     'can_comment,total_comment,comments,can_delete,can_share,type';
   private composeUploadData : any;
@@ -35,11 +36,11 @@ export class PostService {
     }
     return null;
   }
-  getAllFeed(){
+  getAllFeed(limit:number = 10,maxId?){
     return new Promise((resolve, reject )=>{
 
 
-      this.http.get(feedUrl+param+'access_token='+this.accessToken+param_delimiter+'fields='+this.fields)
+      this.http.get(feedUrl+param+'access_token='+this.accessToken+'&limit='+limit+'&maxid='+maxId+param_delimiter+'fields='+this.fields)
         .subscribe( res =>{
           resolve(res);
           console.log(res);
@@ -49,6 +50,9 @@ export class PostService {
 
 
     });
+  }
+  getAllFeedV2(){
+    return this.http.get(feedUrl+param+'access_token='+this.accessToken+param_delimiter+'fields='+this.fields)
   }
 
   getUserFeed(userId){

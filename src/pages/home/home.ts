@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {
   AlertController, Content, Events, LoadingController, ModalController, NavController,
+  ToastController,
   ViewController
 } from 'ionic-angular';
 import {PostService} from '../../services/post-service';
@@ -15,6 +16,8 @@ import {ShareModalPage} from "../share-modal/share-modal";
 import {VideoModalPage} from "../video-modal/video-modal";
 import {Camera, CameraOptions} from "@ionic-native/camera";
 import {PhotoModalPage} from "../photo-modal/photo-modal";
+import {CacheService} from "ionic-cache";
+import {Observable} from "rxjs/Observable";
 /*
  Generated class for the LoginPage page.
 
@@ -28,9 +31,12 @@ import {PhotoModalPage} from "../photo-modal/photo-modal";
 export class HomePage implements OnInit {
   @ViewChild(Content) content: Content;
   public post: any;
-  public feed : Array<{}>;
-  public feedInfo : any;
+  public feed : Array <any>;
+  public feed2 : Array <any>;
+  public feedInfo : Array<{}>;
+  private endOfFeed : boolean = false;
   private homeIcon = 'white';
+  private defultImage = '/assets/img/default-image.png'
 
   private videoFeedMap : Map <number,SafeUrl> = new Map <number,SafeUrl>();
   private videos : Array<{}>;
@@ -49,7 +55,6 @@ export class HomePage implements OnInit {
     correctOrientation : true
   };
 
-  token = localStorage.getItem('token');
 
   private userEvents  = [
     'unlike-profile',
@@ -62,17 +67,12 @@ export class HomePage implements OnInit {
   constructor(public nav: NavController, public postService: PostService, public events : Events,public userService : UserService,
               public modalCtrl : ModalController,public alertCtrl : AlertController,
               public sanitizer : DomSanitizer,public videoService : VideoService,public viewCtrl :  ViewController
-              ,public loadingCtrl : LoadingController,private  camera : Camera) {
-       this.listenToFeedEvents();
+              ,public toastCtrl : ToastController,private  camera : Camera,public cach : CacheService) {
   }
   ngOnInit(){
-    this.getFeed();
+    this.getFeedV2();
     this.getAuthUser();
-  }
-  ionViewDidLoad(){
-    let x = document.getElementsByClassName('feed_item_username');
-    let y = document.getElementById('wdez');
-    console.log(x);
+    this.listenToFeedEvents();
   }
   toggleLike(post) {
     // if user liked
@@ -85,7 +85,6 @@ export class HomePage implements OnInit {
     post.is_liked = !post.is_liked
   }
 
-  // on click, go to post detail
   viewComment(post) {
     let cmntModal = this.modalCtrl.create(CommentPage,{post : post,},{cssClass:'wez'});
     cmntModal.present();
@@ -99,20 +98,85 @@ export class HomePage implements OnInit {
     cmntModal.present();
   }
 
-  // on click, go to user timeline
-  viewUser(userId) {
-    this.nav.push(UserPage, {id: userId})
+  viewUser(user) {
+    this.nav.push(UserPage, {owner: user})
   }
-  getFeed() {
-    this.postService.getAllFeed().then((result) => {
-      this.feedInfo = result["data"];
-      this.feed = result["data"]["items"];
-      this.getFeedAttchmentVideos(this.feed);
 
-    },(err) => {
-      console.log(err);
-    })
 
+
+  getFeedV2(refresher ?){
+
+    if(refresher){
+      if(typeof refresher !="boolean")
+      setTimeout(() => {
+        refresher.complete();
+      }, 300);
+
+      this.postService.getAllFeed(10).then(result=>{
+        this.feed = result['data']['items'];
+        this.cach.saveItem('feed', this.feed);
+
+        this.getFeedAttchmentVideos(this.feed).then(data=>{
+          this.videoFeedMap = data as Map <number,SafeUrl>;
+
+
+        })
+
+      })
+    }
+    else {
+      this.cach.getItem('feed').catch(() => {
+        this.postService.getAllFeed(10).then(result => {
+          this.feed = result['data']['items'];
+          this.cach.saveItem('feed', this.feed);
+
+          this.getFeedAttchmentVideos(this.feed).then(data => {
+            this.videoFeedMap = data as Map<number, SafeUrl>;
+          })
+
+        })
+
+      }).then(data => {
+
+        this.feed = data;
+
+      });
+
+
+    }
+  }
+   /*****Refrecher Events ***/
+  doRefreshFeed(refrecher){
+     this.getFeedV2(refrecher);
+  }
+
+  loadFeed2(refrecher){
+    let maxid = this.feed[this.feed.length-1].id;
+    if(this.endOfFeed){
+      setTimeout(()=>{
+        this.presentToast('end of feed');
+        refrecher.complete();
+      },300);
+    }
+    else {
+
+      this.postService.getAllFeed(10, maxid).then(res => {
+        this.endOfFeed = res['data']['end_of_feed'];
+        this.feed2 = res['data']['items'];
+        this.feed2.shift();
+        this.feed = this.feed.concat(this.feed2);
+        refrecher.complete();
+        this.cach.saveItem('feed',this.feed);
+
+      },err=>{
+        this.presentToast(JSON.stringify(err));
+        setTimeout(()=>{
+          console.log('rejedcted');
+
+          refrecher.complete();
+        },300);
+      })
+    }
   }
   likePost(post){
     post.total_like ++ ;
@@ -123,6 +187,7 @@ export class HomePage implements OnInit {
     });
 
   }
+
   unlikePost(post){
     post.total_like -- ;
     this.postService.unlikePost(post.id,post.type).then((result)=>{
@@ -155,7 +220,7 @@ export class HomePage implements OnInit {
   }
   deletePost(post){
      this.postService.deletePost(post).then(result =>{
-          this.events.publish('delete-user');
+          this.events.publish('delete-user',post);
        }, err =>{
 
      });
@@ -164,7 +229,7 @@ export class HomePage implements OnInit {
   getAuthUser(){
     this.userService.getAuthorizedUser().then(res=>{
      this.authUser.title = res['data']['title'];
-     this.authUser.image = res['data']['imgs']['profile'];
+     this.authUser.image = res['data']['imgs']['normal'];
 
     })
   }
@@ -180,7 +245,7 @@ export class HomePage implements OnInit {
 
     for(let event of this.userEvents){
       this.events.subscribe(event, () => {
-        this.getFeed();
+        this.getFeedV2(true);
       });
     }
 
@@ -201,25 +266,27 @@ export class HomePage implements OnInit {
   }
 
   getFeedAttchmentVideos(feed){
-    for(let activity of feed){
-      if( activity.attachments.length > 0){
-           if(activity.attachments[0].type =='video') {
+    return new Promise((resolve,reject)=>{
+      let videos =new Map <number,SafeUrl>();
+      for(let activity of feed){
+        if( activity.attachments.length > 0){
+          if(activity.attachments[0].type =='video') {
 
-             this.videoService.getEmbedVideo(activity.attachments[0].id).then( res=>{
-               this.initVideoMap(activity.attachments[0].id,res['data']['code']);
-               })
+            this.videoService.getVideo(activity.attachments[0].id).then( res=>{
+              this.initVideoMap(activity.attachments[0].id,res['data']['video_src'],videos);
+            })
 
-           }
+          }
 
+        }
       }
-    }
-    console.log(this.videoFeedMap,'MAAAP')
-
+      resolve(videos);
+    })
 
   }
-  initVideoMap(videoId,videoCode){
+  initVideoMap(videoId,videoSrc,video : Map <number,SafeUrl>){
 
-      this.videoFeedMap.set(videoId,this.sanitizer.bypassSecurityTrustHtml(videoCode));
+      video.set(videoId,this.sanitizer.bypassSecurityTrustHtml(videoSrc));
 
   }
   scrollToTop(){
@@ -243,4 +310,33 @@ export class HomePage implements OnInit {
    photoModal.present();
   }
 
+  getDefaultImage(image,contact){
+      image.src = 'assets/img/user.png';
+  }
+
+  trustHtmlSrc(src){
+    this.sanitizer.bypassSecurityTrustHtml(src);
+    return src;
+  }
+
+  getVideoSrc(video_id){
+    this.videoService.getVideo(video_id).then(res=>{
+      this.sanitizer.bypassSecurityTrustResourceUrl(res['data']['video_src'])
+      return res['data']['video_src'];
+    })
+  }
+
+  presentToast(msg) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 1000,
+      position: 'bottom',
+      dismissOnPageChange: true
+    });
+    toast.present();
+
+  }
+  trustVideo(src){
+    return this.sanitizer.bypassSecurityTrustResourceUrl(src);
+  }
  }

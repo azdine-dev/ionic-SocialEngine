@@ -10,17 +10,18 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content #container>
+
   <div text-center class="user-profile primary-bg">
 
-    <img class="profile-picture" src="{{ userImage.profile}}">
-    <h4 class="light">{{ user.title }}</h4>
+    <img #im (error)="getDefaultImage(im)" class="profile-picture" imageViewer src="{{ owner.imgs.normal}}">
+    <h4 class="light">{{ owner.title }}</h4>
 
-    <ion-grid>
+    <ion-grid *ngIf=" userSession != owner.id" >
       <ion-row>
-        <ion-col >
-          <ion-icon name="md-person-add"></ion-icon> <br>
-          <span>Ajouter à mes contacts </span>
+        <ion-col (click)="joinMember(user)" >
+          <ion-icon name="md-person-add" [color]=" user.friend_status =='is_friend' || user.friend_status =='is_sent_request' ? 'primary' : '' " ></ion-icon> <br>
+          <span>{{getFriendState(user)}}</span>
         </ion-col>
 
         <ion-col>
@@ -33,9 +34,9 @@
           <span>amis en commun</span>
         </ion-col>
 
-        <ion-col >
-          <ion-icon ios="ios-hand" md="md-hand"></ion-icon><br>
-          <span>Bloquer Membre </span>
+        <ion-col (click)="toggleBlockUser(user)" >
+          <ion-icon  ios="ios-hand" md="md-hand" [color]="user.block_status == 'no_block' ? '':'primary'"></ion-icon><br>
+          <span>{{user.block_status == 'no_block' ? 'Bloquer':'Débloquer'}} le Membre </span>
         </ion-col>
 
         <ion-col>
@@ -44,6 +45,8 @@
         </ion-col>
       </ion-row>
       </ion-grid>
+
+
 
      <ion-card>
        <ion-segment [(ngModel)]="infoUser">
@@ -97,7 +100,12 @@
      </ion-card>
     <ion-grid>
       <ion-row>
-        <ion-col (click)="getUserFriends(user.id,user.title)" >
+
+        <ion-col *ngIf="userSession == owner.id " (click)="getUserFriends(user)" >
+          <span>Modifier mon profile </span>
+        </ion-col>
+
+        <ion-col (click)="getUserFriends(user)" >
           <span>Contacts </span>
         </ion-col>
 
@@ -110,7 +118,7 @@
         </ion-col>
 
         <ion-col >
-          <span (click)="getUserVideos(user.id,user.title)">Videos</span>
+          <span (click)="getUserVideos(owner.id,owner.title)">Videos</span>
         </ion-col>
 
         <ion-col>
@@ -120,11 +128,15 @@
     </ion-grid>
 
   </div>
-
-  <ion-card   *ngFor="let post of userFeed " >
+  <ion-item item-right>
+  <ion-spinner  name="circles" *ngIf="!userFeed">
+  </ion-spinner>
+  </ion-item>
+  <ion-list *ngFor="let post of userFeed">
+  <ion-card>
     <ion-item>
       <ion-avatar item-left (click)="viewUser(post.owner.id)">
-        <img src="{{ post.owner.imgs.icon}}">
+        <img (error)="getDefaultImage(img)" imageViewer #img  src="{{ post.owner.imgs.icon}}">
       </ion-avatar>
       <ion-label>{{post.owner.title}}</ion-label>
       <p>{{ post.time }}</p>
@@ -136,8 +148,11 @@
         <div  *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
           <ion-item  [innerHtml]="videoFeedMap.get(post.attachments[0].id)"  ></ion-item>
         </div>
-        <img class="full-image" *ngIf="post.attachments.length && post.attachments[0].type=='album_photo' " src="{{ post.attachments[0].img }}">
+        <img #imAtt (error)="getDefaultImage(imAtt)" imageViewer class="full-image"
+             *ngIf="post.attachments.length && post.attachments[0].type=='album_photo' " src="{{ post.attachments[0].img }}">
         <!--<p padding-top padding-bottom>{{ post.content }}</p>-->
+        <!--<img imageViewer *ngIf="post.attachments.length && post.attachments[0].type=='album_photo'" [defaultImage]= "defultImage"-->
+             <!--[lazyLoad]="post.attachments[0].img" >-->
       </div>
 
       <div>
@@ -164,5 +179,5 @@
       </ion-row>
     </ion-grid>
   </ion-card>
-
+  </ion-list>
 </ion-content>

@@ -19,6 +19,8 @@ import {ExpressionPage} from "../pages/expression/expression";
 import {CommentPage} from "../pages/comment/comment";
 import {UserService} from "../services/user-service";
 import {AlbumPage} from "../pages/album/album";
+import {CacheService} from "ionic-cache";
+import {ImageLoaderConfig} from "ionic-image-loader";
 
 @Component({
   templateUrl: 'app.component.html',
@@ -32,6 +34,7 @@ export class MyApp {
 
   public nav: any;
   private profilePicture ='';
+  private profileNme = '';
   private userId ='';
 
   public pages = [
@@ -85,23 +88,33 @@ export class MyApp {
     }
   ];
 
-  constructor(public platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen,public userService : UserService) {
+  constructor(public platform: Platform, statusBar: StatusBar,
+              splashScreen: SplashScreen,public userService : UserService,public cach : CacheService,
+              private imageLoaderConfig: ImageLoaderConfig) {
     this.rootPage = LoginPage;
 
     platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
+      cach.setDefaultTTL(60*60*12);
+      cach.setOfflineInvalidate(false);
       statusBar.styleDefault();
       splashScreen.hide();
-      this.getProfilePicture();
       this.userId = localStorage.getItem('user-id');
+      imageLoaderConfig.setImageReturnType('base64');
     });
+
   }
 
   openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
+    if(page.component == LoginPage){
+       localStorage.clear();
+       sessionStorage.clear();
+       this.cach.clearAll();
+
+       this.nav.setRoot(page.component);
+    }else{
+      this.nav.setRoot(page.component);
+    }
+
   }
 
   // on click, go to user timeline
@@ -109,12 +122,6 @@ export class MyApp {
     this.nav.push(UserPage, {id: userId})
   }
 
-  getProfilePicture(){
-    this.userService.getAuthorizedUser().then(res=>{
-      this.profilePicture = res['data']['imgs']['icon'];
-    },err=>{
-      console.log(err,'ERRRd PROFILE PIC')
-    })
-  }
+
 }
 

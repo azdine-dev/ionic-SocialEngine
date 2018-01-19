@@ -21,6 +21,9 @@ export class InfoPage {
   private userVideos : Array<{}>;
   private userId : any;
   private userName : any;
+  private showIframe = false;
+  private imageSrc ='assets/img/adam.jpg'
+
 
   constructor(public navParams: NavParams, public userService: UserService,
               public postService: PostService,public videoService : VideoService,public sanitizer : DomSanitizer,
@@ -44,5 +47,8 @@ export class InfoPage {
   trustResourceUrl(src){
     return this.sanitizer.bypassSecurityTrustResourceUrl(src);
   }
-
+ playVideo(iframe){
+  this.showIframe = true;
+   console.log(iframe)
+ }
 }

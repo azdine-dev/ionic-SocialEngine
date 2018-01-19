@@ -7,52 +7,90 @@
 <ion-header >
 
   <ion-navbar color="primary"  class="no-border">
-    <ion-title> Videos</ion-title>
+    <ion-title> Videos de {{userName}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding #container>
 
-  <ion-list *ngFor="let vid of userVideos">
+   <ion-list *ngFor="let vid of userVideos" >
+  <ion-card  >
+    <div  class="youtube" >
 
+    <img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="vid.thumb" [scrollObservable]="container.ionScroll">
+    <iframe *ngIf="showIframe"   [src]="trustResourceUrl(vid.video_src)"
+    allowfullscreen frameBorder="0"
+    width="450" height="200" >
 
-    <ion-card>
-      <iframe  [src]="trustResourceUrl(vid.video_src)" allowfullscreen frameBorder="0">
+    </iframe>
+    <div (click)="playVideo(iframe)" *ngIf="!showIframe" #iframe  class="play-button">
+    </div>
+    </div>
+  <ion-card-content>
 
-      </iframe>
+  <p>
+  {{vid.title}}
+  </p>
+  </ion-card-content>
 
-
-    <ion-card-content>
-
-      <p>
-        {{vid.title}}
-      </p>
-    </ion-card-content>
-
-    <ion-row no-padding>
-      <ion-col>
-        <button ion-button clear small color="danger" icon-start>
-          <ion-icon name='star'></ion-icon>
-          Favorite
-        </button>
-      </ion-col>
-      <ion-col text-center>
-        <button ion-button clear small color="danger" icon-start>
-          <ion-icon name='musical-notes'></ion-icon>
-          Listen
-        </button>
-      </ion-col>
-      <ion-col text-right>
-        <button ion-button clear small color="danger" icon-start>
-          <ion-icon name='share-alt'></ion-icon>
-          Share
-        </button>
-      </ion-col>
-    </ion-row>
+  <ion-row no-padding>
+  <ion-col>
+  <button ion-button clear small color="danger" icon-start>
+  <ion-icon name='star'></ion-icon>
+  Favorite
+  </button>
+  </ion-col>
+  <ion-col text-center>
+  <button ion-button clear small color="danger" icon-start>
+  <ion-icon name='musical-notes'></ion-icon>
+  Listen
+  </button>
+  </ion-col>
+  <ion-col text-right>
+  <button ion-button clear small color="danger" icon-start>
+  <ion-icon name='share-alt'></ion-icon>
+  Share
+  </button>
+  </ion-col>
+  </ion-row>
 
   </ion-card>
   </ion-list>
+<!--<ion-list *ngFor="let vid of userVideos; let odd=odd; let even=even">-->
 
+      <!--<ion-grid>-->
+        <!--<ion-row>-->
+          <!--<ion-col width-50 >-->
+            <!--<div  class="youtube" >-->
+
+              <!--<img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="vid.thumb" [scrollObservable]="container.ionScroll">-->
+              <!--<iframe *ngIf="showIframe"   [src]="trustResourceUrl(vid.video_src)"-->
+                      <!--allowfullscreen frameBorder="0"-->
+                      <!--width="350" height="200" >-->
+
+              <!--</iframe>-->
+              <!--<div (click)="playVideo(iframe)" *ngIf="!showIframe" #iframe  class="play-button">-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</ion-col>-->
+          <!--<ion-col width-50 >-->
+            <!--<div  class="youtube" >-->
+
+              <!--<img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="vid.thumb" [scrollObservable]="container.ionScroll">-->
+              <!--<iframe *ngIf="showIframe"   [src]="trustResourceUrl(vid.video_src)"-->
+                      <!--allowfullscreen frameBorder="0"-->
+                      <!--width="350" height="200" >-->
+
+              <!--</iframe>-->
+              <!--<div (click)="playVideo(iframe)" *ngIf="!showIframe" #iframe  class="play-button">-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</ion-col>-->
+        <!--</ion-row>-->
+      <!--</ion-grid>-->
+
+
+<!--</ion-list>-->
 </ion-content>

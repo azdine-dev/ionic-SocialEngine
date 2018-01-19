@@ -1,5 +1,8 @@
 import {Component} from '@angular/core';
-import {AlertController, Events, ModalController, NavController, NavParams} from 'ionic-angular';
+import {
+  AlertController, Events, LoadingController, ModalController, NavController, NavParams,
+  ToastController
+} from 'ionic-angular';
 import {UserService} from '../../services/user-service';
 import {PostService} from '../../services/post-service';
 import {PostPage} from '../post/post';
@@ -8,6 +11,7 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {CommentPage} from "../comment/comment";
 import {InfoPage} from "../info/info";
 import {AlbumPage} from "../album/album";
+import {FriendsPage} from "../friends/friends";
 
 /*
  Generated class for the LoginPage page.
@@ -20,22 +24,28 @@ import {AlbumPage} from "../album/album";
   templateUrl: 'user.html'
 })
 export class UserPage {
+  defultImage ='/assets/img/default-image.png'
   private infoUser ='';
-  public user ={};
-  public userId : any ;
+  public user ={
+  };
+  public owner : any;
+  private friendColor : any;
+  private userSession :any;
   private userFeed : Array<{}>;
-  private userImage='';
   private videoFeedMap : Map <number,SafeUrl> = new Map <number,SafeUrl>();
 
   constructor(public nav: NavController, public navParams: NavParams, public userService: UserService,
               public postService: PostService,public videoService : VideoService,public sanitizer : DomSanitizer,
-              public modalCtrl : ModalController,public alertCtrl :AlertController,public events : Events) {
+              public modalCtrl : ModalController,public alertCtrl :AlertController,public events : Events,
+              public loadingCtrl : LoadingController,public toastCtrl : ToastController) {
 
-    this.userId = (navParams.get('id'));
-    this.getUserProfileInfo(this.userId);
+    this.userSession =localStorage.getItem('user-id');
+    this.owner = (navParams.get('owner'));
+    this.getUserProfileInfo(this.owner.id);
     this.getUserFeed();
     this.listenToFeedEvents();
-    this.infoUser ='infoPer'
+    this.infoUser ='infoPer';
+
   }
 
   toggleLike(post) {
@@ -61,14 +71,22 @@ export class UserPage {
   }
 
   getUserProfileInfo(userId){
-    this.userService.getUserInfo(userId).then(data=>{
+    if(userId == this.userSession){
+      this.userService.getAuthorizedUser().then(data=>{
         this.user = data['data'];
-        this.userImage = this.user['imgs'];
-    },err=>{
-    })
+      },err=>{
+      })
+    }
+    else{
+      this.userService.getUserInfo(userId).then(data=>{
+        this.user = data['data'];
+      },err=>{
+      })
+    }
+
   }
   getUserFeed() {
-    this.postService.getUserFeed(this.userId).then((result) => {
+    this.postService.getUserFeed(this.owner.id).then((result) => {
       this.userFeed = result["data"]["items"];
       this.getFeedAttchmentVideos(this.userFeed);
     },(err) => {
@@ -97,6 +115,7 @@ export class UserPage {
   }
 
   processHtmlContent(post){
+    this.sanitizer.bypassSecurityTrustHtml(post.content);
     return post.content;
   }
   likePost(post){
@@ -161,7 +180,11 @@ export class UserPage {
     this.events.subscribe('new-activity',()=>{
       this.getUserFeed();
     });
-  }
+      this.events.subscribe('new-state',()=>{
+        this.getUserProfileInfo(this.owner.id);
+      });
+
+    }
 
 
   getUserVideos(userId,userName){
@@ -170,10 +193,196 @@ export class UserPage {
       name : userName
     });
   }
+  getUserFriends(user){
+    this.nav.push(FriendsPage,{
+      owner: user,
+    });
+  }
   getUserAlbums(userId,userName){
     this.nav.push(AlbumPage,{
       id: userId,
       name : userName
     });
   }
+  getDefaultImage(image,contact){
+    image.src = 'assets/img/user.png';
+  }
+
+  ///////////////////****FRIENDS OPERATIONS***//////////////////////////////
+
+  getFriendState(contact){
+    if(contact.friend_status =='not_friend'){
+      return 'ajouter comme contact';
+    }
+    else if(contact.friend_status =='is_sent_request'){
+      return 'Invitation envoyée';
+    }
+    else if(contact.friend_status =='is_friend'){
+      return 'Amis'
+    }
+    else if(contact.friend_status = 'is_sent_request_by'){
+      return 'accepter';
+    }
+  }
+
+  joinMember(contact){
+    console.log(contact.friend_status,'wez');
+    switch (contact.friend_status){
+      case 'not_friend':{
+        this.showFriendsDialog('ajouter a la liste des amis ?',contact,'sendFriendRequest');
+        break;
+      }
+      case 'is_sent_request_by':{
+        this.showFriendsDialog('confirmer linvitation ?',contact,'approuveFriendsRequest');
+        break;
+      }
+      case 'is_friend':{
+        this.showFriendsDialog('retirer de la liste des amis ?',contact,'removeFromFriendsList');
+        break;
+      }
+      case 'is_sent_request':{
+        this.showFriendsDialog('annuler linvitation ?',contact,'cancelFriendRequest');
+        break;
+      }
+    }
+  }
+  showFriendsDialog(message,contact,handler,title?){
+    let confirmDelActivity = this.alertCtrl.create({
+      title : title,
+      message: message,
+      buttons: [
+
+        {
+          text: 'Annuler',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Oui',
+          handler: () => {
+            this.getHandler(handler,contact);
+          }
+        }
+      ]
+    });
+
+    confirmDelActivity.present();
+  }
+
+  getHandler(handler,param){
+    if(this[handler]){
+      this[handler](param);
+    }
+  }
+
+  showLoader(message?){
+    let load = this.loadingCtrl.create({
+      content : message,
+    });
+
+    return load;
+  }
+
+  presentToast(msg) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration : 2000,
+      position: 'bottom',
+      dismissOnPageChange: true
+    });
+    toast.present();
+
+  }
+
+  sendFriendRequest(contact){
+    let load = this.showLoader('demande en cours..');
+    load.present();
+    this.userService.sendFriendRequest(contact.id).then(data=>{
+      load.dismiss();
+      this.presentToast(data['data'].message);
+      contact.friend_status ='is_sent_request';
+    },err=>{
+      load.dismiss();
+      this.presentToast(err.error.data.message);
+    })
+  }
+
+  cancelFriendRequest(contact){
+    let load = this.showLoader('annulation en cours..');
+    load.present();
+    this.userService.cancelFriendRequest(contact.id).then(res=>{
+      load.dismiss();
+      this.presentToast(res['data'].message);
+      contact.friend_status = 'not_friend';
+    },err=>{
+      load.dismiss();
+      this.presentToast(err.error.data.message);
+    })
+  }
+
+  approuveFriendsRequest(contact){
+    let load = this.showLoader('approuver la demande..');
+    load.present();
+    this.userService.approuveFriendRequest(contact.id).then(res=>{
+      load.dismiss();
+      this.presentToast(res['data'].message);
+      contact.friend_status = 'is_friend';
+    },err=>{
+      load.dismiss();
+      this.presentToast(err.error.data.message);
+    })
+  }
+
+  removeFromFriendsList(contact){
+    let load = this.showLoader('retirer de la liste des amis');
+    load.present();
+    this.userService.removeFromFriendsList(contact.id).then(res=>{
+      load.dismiss();
+      this.presentToast(res['data'].message);
+      contact.friend_status = 'not_friend';
+    },err=>{
+      load.dismiss();
+      this.presentToast(err.error.data.message);
+    })
+  }
+
+
+  //////////////////////////////******OTHER OPERATION ***//////////////////////
+
+  blockUserService(user){
+    let load = this.showLoader('operation en cours ..');
+    load.present();
+     this.userService.blockUsesr(user.id).then(res=>{
+       load.dismiss();
+       user.block_status='is_blocked'
+       this.presentToast(res['data'].message);
+     },()=>{
+       load.dismiss();
+     })
+  }
+  unblockUserService(user){
+    let load = this.showLoader('operation en cours ..');
+    load.present();
+    this.userService.unBlockUsesr(user.id).then(res=>{
+      load.dismiss();
+      user.block_status='no_block'
+      this.presentToast(res['data'].message);
+
+    },err=>{
+      load.dismiss();
+      this.presentToast(JSON.stringify(err));
+    })
+  }
+
+
+  toggleBlockUser(user){
+    console.log(user.block_status);
+     if(user.block_status == 'no_block'){
+       this.showFriendsDialog('voulez-vous bloquer '+user.title+'?',user,'blockUserService','Bloquer le membre');
+     }
+     else if(user.block_status =='is_blocked'){
+       this.showFriendsDialog('débloquer '+user.title+'?',user,'unblockUserService','Débloquer le membre');
+     }
+  }
+
 }

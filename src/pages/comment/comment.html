@@ -7,7 +7,7 @@
 <ion-content no-bounce *ngIf= " post.type =='activity_action'" >
   <ion-item  class="item-no-border">
     <ion-avatar item-left (click)="viewUser(post.user_id)">
-      <img src="{{ post.owner.imgs.profile }}">
+      <img   #imgAuthor  (error)="getDefaultImage(imgAuthor)" src="{{ post.owner.imgs.profile }}">
     </ion-avatar>
     <h2 ion-text color="primary"  class="post-author" (click)="viewUser(post.user_id)">{{ post.owner.title }}</h2>
     <span class="post-time">
@@ -18,10 +18,10 @@
     <div padding>
     <ion-item    class="post-comment" *ngFor="let comment of post.comments" (press)="showDeleteCommentDialog(comment)">
       <ion-avatar item-left (click)="viewUser(comment.user_id)">
-        <img src="{{ comment.owner.imgs.profile }}">
+        <img #image (error)="getDefaultImage(image)" src="{{ comment.owner.imgs.profile }}">
       </ion-avatar>
 
-      <h3 ion-text color="primary"  class="post-author">
+      <h3 ion-text color="primary"  class="post-author-comment post-author">
         {{ comment.owner.title }}
       </h3>
       <p text-wrap>{{ comment.body}}</p>

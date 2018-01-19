@@ -29,22 +29,30 @@
     <form  #f="ngForm" >
       <ion-list>
          <ion-item>
-            <ion-label fixed></ion-label>
-            <ion-input  required [(ngModel)]="body.bodyText"  text-wrap type="text" placeholder="Exprimez-vous" name="bodyText"  ></ion-input>
+            <ion-textarea required [(ngModel)]="body.bodyText"  text-wrap type="text" placeholder="Exprimez-vous" name="bodyText"  ></ion-textarea>
          </ion-item>
-        <ion-item>
-          <button ion-button color="secondary" type="button" full round large (click)="selectPhoto()">Galeries </button>
+        <ion-item (click)="selectPhoto()">
+          <ion-icon name='ios-images-outline' color="coffee"  item-start></ion-icon>
+          Galerie
+          <ion-note item-end>
+            selectionner une photo
+          </ion-note>
         </ion-item>
-        <ion-item>
-        <button ion-button color="secondary" type="button" full round large (click)="takePicture()">Take Picture</button>
+        <ion-item (click)="takePicture()">
+          <ion-icon name='ios-camera-outline' color="coffee"  item-start></ion-icon>
+          Caméra
+          <ion-note item-end>
+            prendre une photo
+          </ion-note>
         </ion-item>
       </ion-list>
     </form>
-    <ion-card>
-      <img style="height: 80px;width: 80px" [src]="imgData"/>
+    <ion-card >
+      <img  *ngIf="imgData"  [src]="imgData"/>
+      <ion-card-content>
+
+      </ion-card-content>
     </ion-card>
-   <div>
-     {{imgData}}
-   </div>
+
   </div>
 </ion-content>

@@ -42,6 +42,11 @@ import {PhotosPage} from "../pages/photos/photos";
 import {ShareModalPage} from "../pages/share-modal/share-modal";
 import {VideoModalPage} from "../pages/video-modal/video-modal";
 import {PhotoModalPage} from "../pages/photo-modal/photo-modal";
+import {CacheModule} from "ionic-cache";
+import {FriendsPage} from "../pages/friends/friends";
+import {IonicImageLoader} from "ionic-image-loader";
+import {LazyLoadImageModule} from "ng2-lazyload-image";
+import {CoreService} from "../services/core-service";
 
 // end import pages
 
@@ -67,12 +72,17 @@ import {PhotoModalPage} from "../pages/photo-modal/photo-modal";
     PhotosPage,
     ShareModalPage,
     VideoModalPage,
-    PhotoModalPage
+    PhotoModalPage,
+    FriendsPage,
   ],
   imports: [
     BrowserModule,HttpClientModule,
+    LazyLoadImageModule,
     IonicImageViewerModule,
-    IonicModule.forRoot(MyApp)
+    CacheModule.forRoot(),
+    IonicImageLoader.forRoot(),
+    IonicModule.forRoot(MyApp),
+
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -97,6 +107,7 @@ import {PhotoModalPage} from "../pages/photo-modal/photo-modal";
     ShareModalPage,
     VideoModalPage,
     PhotoModalPage,
+    FriendsPage,
 
   ],
   providers: [
@@ -112,6 +123,8 @@ import {PhotoModalPage} from "../pages/photo-modal/photo-modal";
     AuthServiceProvider,
     VideoService,
     AlbumService,
+    CoreService,
+
 
     /* import services */
   ]

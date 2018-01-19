@@ -4,14 +4,14 @@ import {Injectable} from "@angular/core";
 let videoUrl = 'intaliq.novway.com/api/v1/videos/';
 let fields = 'id,title,description,duration,thumb,owner,date,total_comment,' +
   'total_like,total_view,total_vote,rating,is_rated,status,video_type,video_src,category,tags,can_edit,can_delete,can_embed';
-let readVideoFields = 'id,video_type,video_src,description';
+let readVideoFields = 'id,video_type,video_src,description,thumb,total_like,total_view,total_vote,rating,is_rated,status';
 let param = '?';
 let param_delimiter = '&';
 
 @Injectable()
 export class VideoService {
-  private accessToken = localStorage.getItem('token');
-
+  private refrechToken = localStorage.getItem('refresh_token');
+  private accessToken = localStorage.getItem('token')+'&refresh_token='+this.refrechToken;
   constructor(public http :HttpClient){
 
   }

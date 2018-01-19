@@ -25,7 +25,7 @@ export class PhotoModalPage {
 
   private cameraTakerOptions : CameraOptions = {
     sourceType : this.camera.PictureSourceType.CAMERA,
-    destinationType : this.camera.DestinationType.FILE_URI,
+    destinationType : this.camera.DestinationType.DATA_URL,
     quality : 100,
     targetWidth : 1024,
     targetHeight : 768,
@@ -34,7 +34,7 @@ export class PhotoModalPage {
   };
   private cameraOptions: CameraOptions = {
     sourceType : this.camera.PictureSourceType.PHOTOLIBRARY,
-    destinationType: this.camera.DestinationType.FILE_URI,
+    destinationType: this.camera.DestinationType.DATA_URL,
     quality: 100,
     targetWidth: 1024,
     targetHeight: 768,

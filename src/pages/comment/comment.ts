@@ -155,4 +155,7 @@ export class CommentPage {
       console.log(JSON.stringify(err));
     });
   }
+  getDefaultImage(image,contact){
+    image.src = 'assets/img/user.png';
+  }
 }

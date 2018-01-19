@@ -11,7 +11,9 @@ let param_delimiter = '&';
 
 @Injectable()
 export class AlbumService {
-  private accessToken = localStorage.getItem('token');
+
+  private refrechToken = localStorage.getItem('refresh_token');
+  private accessToken = localStorage.getItem('token')+'&refresh_token='+this.refrechToken;
 
   constructor(public http :HttpClient){
 
