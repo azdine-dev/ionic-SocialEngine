@@ -37,6 +37,7 @@ export class HomePage implements OnInit {
   private endOfFeed : boolean = false;
   private homeIcon = 'white';
   private defultImage = '/assets/img/default-image.png'
+  formatDate = 'medium';
 
   private videoFeedMap : Map <number,SafeUrl> = new Map <number,SafeUrl>();
   private videos : Array<{}>;

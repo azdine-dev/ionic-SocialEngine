@@ -72,13 +72,16 @@
       <ion-avatar item-left (click)="viewUser(post.owner)">
         <img  (error)="getDefaultImage(image)" #image src="{{ post.owner.imgs.icon}}">
       </ion-avatar>
-      <ion-label>{{post.owner.title}}</ion-label>
-      <p>{{ post.time }}</p>
+
+        <ion-label>{{post.owner.title}}</ion-label>
+        <ion-note  class="post-date">{{today| date :'short'}}</ion-note>
     </ion-item>
+
 
     <ion-item text-wrap class="post-body">
       <div (click)="viewPost(post.id)">
         <div [innerHtml]="processHtmlContent(post)"></div>
+
           <!--<iframe *ngIf="post.attachments.length && post.attachments[0].type=='video'" src="https://www.youtube.com/embed/IJbnG6KDaF0"-->
         <!--allowfullscreen frameBorder="0"-->
         <!--width="350" height="200" style="overflow:hidden;">-->
@@ -93,6 +96,7 @@
       </div>
 
       <div>
+
         <a (click)="viewPost(post.id)" class="subdued">{{ post.total_like}} Likes</a>
         <a (click)="viewPost(post.id)" class="subdued" margin-left>{{ post.total_comment}} Comments</a>
       </div>

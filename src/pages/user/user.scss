@@ -24,4 +24,27 @@ page-user,
       margin-right: 5px;
     }
   }
+
+  div.show-image {
+    position: relative;
+
+
+  }
+  div.show-image img{
+    margin-top: 7px;
+      opacity:0.8;
+      width : 6em;
+      height: 6em;
+    }
+div.show-image ion-icon {
+
+    display: block;
+    position:absolute;
+  }
+  div.show-image ion-icon.update{
+    top : 0px;
+    right: 6em;
+
+
+  }
 }

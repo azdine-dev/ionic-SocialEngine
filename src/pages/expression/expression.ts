@@ -88,4 +88,8 @@ export class ExpressionPage implements OnInit{
      })
   }
 
+  deletePhoto(){
+    this.imgData = null;
+  }
+
 }

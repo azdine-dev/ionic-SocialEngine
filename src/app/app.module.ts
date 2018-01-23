@@ -47,6 +47,11 @@ import {FriendsPage} from "../pages/friends/friends";
 import {IonicImageLoader} from "ionic-image-loader";
 import {LazyLoadImageModule} from "ng2-lazyload-image";
 import {CoreService} from "../services/core-service";
+import {OptionsPage} from "../pages/options/options";
+import {ProfilePage} from "../pages/profile/profile";
+import {EventsPage} from "../pages/events/events";
+import {EventsDetailPage} from "../pages/events-detail/events-detail";
+import {EventService} from "../services/event-service";
 
 // end import pages
 
@@ -74,6 +79,10 @@ import {CoreService} from "../services/core-service";
     VideoModalPage,
     PhotoModalPage,
     FriendsPage,
+    OptionsPage,
+    ProfilePage,
+    EventsPage,
+    EventsDetailPage,
   ],
   imports: [
     BrowserModule,HttpClientModule,
@@ -108,6 +117,10 @@ import {CoreService} from "../services/core-service";
     VideoModalPage,
     PhotoModalPage,
     FriendsPage,
+    OptionsPage,
+    ProfilePage,
+    EventsPage,
+    EventsDetailPage
 
   ],
   providers: [
@@ -124,6 +137,7 @@ import {CoreService} from "../services/core-service";
     VideoService,
     AlbumService,
     CoreService,
+    EventService,
 
 
     /* import services */

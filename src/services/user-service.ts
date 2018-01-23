@@ -2,6 +2,7 @@ import {forwardRef, Inject, Injectable} from "@angular/core";
 import {USERS} from "./mock-users";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {FileTransfer} from "@ionic-native/file-transfer";
+import {ComposeUploadService} from "./compose-upload";
 
 let membersUrl = 'intaliq.novway.com/api/v1/users/';
 let param = '?';
@@ -15,8 +16,9 @@ export class UserService {
   private refrechToken: any;
   private accessToken: any;
   private users;
+  private composeUploadData;
 
-  constructor(public http: HttpClient) {
+  constructor(public http: HttpClient,public composeUploadService : ComposeUploadService) {
     this.users = USERS;
     this.refrechToken = localStorage.getItem('refresh_token');
     this.accessToken = localStorage.getItem('token') + '&refresh_token=' + this.refrechToken;
@@ -116,8 +118,22 @@ export class UserService {
         reject(err);
       })
     });
-  }
 
+  }
+  updateProfilePicture(imageData){
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'multipart/form-data');
+
+    return new Promise((resolve,reject)=>{
+      this.composeUploadService.composeUploadPhoto(imageData).then(res=> {
+        this.composeUploadData = JSON.parse(res['response']);
+        console.log(this.composeUploadData,'HHHHHHHH');
+        resolve(res);
+      }).catch(err=>{
+        reject(err);
+      })
+      });
+  }
 
   getUserFriends(userId){
     return new Promise((resolve, reject) => {

@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-navbar color="primary" >
+    <ion-row>
+
+      <ion-title>Photo du profile</ion-title>
+      <button icon-only [disabled]="!imgData" (click)="updatePicture()">UTILISER</button>
+    </ion-row>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-card >
+      <img imageViewer  *ngIf="imgData"  [src]="imgData"/>
+      <ion-card-content>
+      </ion-card-content>
+    </ion-card>
+
+</ion-content>

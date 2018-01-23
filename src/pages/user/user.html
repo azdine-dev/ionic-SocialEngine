@@ -6,20 +6,23 @@
 -->
 <ion-header>
   <ion-navbar color="primary"  class="no-border">
-    <ion-title>{{user.title}}</ion-title>
+    <ion-title>{{owner.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content #container>
 
   <div text-center class="user-profile primary-bg">
+    <div class="show-image">
+      <img #im (error)="getDefaultImage(im)"   imageViewer src="{{ owner.imgs.normal}}">
+      <ion-icon  *ngIf=" userSession == owner.id" name="md-camera" class="update" (click)="updatePicture($event)"></ion-icon>
 
-    <img #im (error)="getDefaultImage(im)" class="profile-picture" imageViewer src="{{ owner.imgs.normal}}">
+    </div>
     <h4 class="light">{{ owner.title }}</h4>
 
-    <ion-grid *ngIf=" userSession != owner.id" >
-      <ion-row>
-        <ion-col (click)="joinMember(user)" >
+    <ion-grid  *ngIf=" userSession != owner.id">
+      <ion-row >
+        <ion-col   >
           <ion-icon name="md-person-add" [color]=" user.friend_status =='is_friend' || user.friend_status =='is_sent_request' ? 'primary' : '' " ></ion-icon> <br>
           <span>{{getFriendState(user)}}</span>
         </ion-col>
@@ -36,7 +39,7 @@
 
         <ion-col (click)="toggleBlockUser(user)" >
           <ion-icon  ios="ios-hand" md="md-hand" [color]="user.block_status == 'no_block' ? '':'primary'"></ion-icon><br>
-          <span>{{user.block_status == 'no_block' ? 'Bloquer':'Débloquer'}} le Membre </span>
+          <span>{{user.block_status == 'no_block' ? 'Bloquer?':'Débloquer'}} le Membre </span>
         </ion-col>
 
         <ion-col>
@@ -98,19 +101,19 @@
        </div>
 
      </ion-card>
-    <ion-grid>
+    <ion-grid >
       <ion-row>
 
-        <ion-col *ngIf="userSession == owner.id " (click)="getUserFriends(user)" >
+        <ion-col *ngIf=" userSession == owner.id" (click)="getUserFriends(owner)" >
           <span>Modifier mon profile </span>
         </ion-col>
 
-        <ion-col (click)="getUserFriends(user)" >
+        <ion-col (click)="getUserFriends(owner)" >
           <span>Contacts </span>
         </ion-col>
 
         <ion-col>
-          <span (click)="getUserAlbums(user.id,user.title)">Albums</span>
+          <span (click)="getUserAlbums(owner.id,owner.title)">Albums</span>
         </ion-col>
 
         <ion-col >
@@ -122,7 +125,7 @@
         </ion-col>
 
         <ion-col>
-          <span (click)="getUserEvents(user.id)">Evenements</span>
+          <span (click)="getUserEvents(owner.id)">Evenements</span>
         </ion-col>
       </ion-row>
     </ion-grid>

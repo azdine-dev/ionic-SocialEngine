@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {
-  AlertController, Events, LoadingController, ModalController, NavController, NavParams,
+  AlertController, Events, LoadingController, ModalController, NavController, NavParams, PopoverController,
   ToastController
 } from 'ionic-angular';
 import {UserService} from '../../services/user-service';
@@ -12,6 +12,7 @@ import {CommentPage} from "../comment/comment";
 import {InfoPage} from "../info/info";
 import {AlbumPage} from "../album/album";
 import {FriendsPage} from "../friends/friends";
+import {OptionsPage} from "../options/options";
 
 /*
  Generated class for the LoginPage page.
@@ -37,7 +38,7 @@ export class UserPage {
   constructor(public nav: NavController, public navParams: NavParams, public userService: UserService,
               public postService: PostService,public videoService : VideoService,public sanitizer : DomSanitizer,
               public modalCtrl : ModalController,public alertCtrl :AlertController,public events : Events,
-              public loadingCtrl : LoadingController,public toastCtrl : ToastController) {
+              public loadingCtrl : LoadingController,public toastCtrl : ToastController,public popover : PopoverController) {
 
     this.userSession =localStorage.getItem('user-id');
     this.owner = (navParams.get('owner'));
@@ -384,5 +385,16 @@ export class UserPage {
        this.showFriendsDialog('débloquer '+user.title+'?',user,'unblockUserService','Débloquer le membre');
      }
   }
+  updatePicture(myevent,owner){
+   console.log('wzez')
+   let popover = this.popover.create(OptionsPage,{
+     owner : this.owner,
+   });
+   popover.present({
+
+     ev : myevent,
+   });
+  }
+
 
 }

@@ -1,0 +1,157 @@
+<!--
+  Generated template for the UserPage page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar color="primary"  class="no-border">
+    <ion-title>{{event.title}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content #container>
+
+  <div text-center class="user-profile primary-bg">
+    <div class="show-image">
+      <img #im    imageViewer src="{{ owner.imgs.normal}}">
+      <ion-icon  *ngIf=" userSession == owner.id" name="md-camera" class="update" (click)="updatePicture($event)"></ion-icon>
+    </div>
+
+    <h4 class="light">{{ owner.title }}</h4>
+    <button icon-only>
+      <ion-icon name="md-person-add" color="primary" >Inviter des amis </ion-icon>
+    </button>
+
+    <ion-grid  >
+      <ion-row>
+        <ion-col (click)="joinMember(user)" >
+          <ion-icon name="md-person-add" ></ion-icon> <br>
+        </ion-col>
+
+        <ion-col>
+          <ion-icon name="logo-rss"></ion-icon>
+        </ion-col>
+
+        <ion-col >
+          <span>amis en commun</span>
+        </ion-col>
+
+        <ion-col (click)="toggleBlockUser(user)" >
+          <ion-icon  ios="ios-hand" md="md-hand" ></ion-icon><br>
+          <span> le Membre </span>
+        </ion-col>
+
+        <ion-col>
+          <ion-icon ios="ios-flag" md="md-flag"></ion-icon><br>
+          <span>Signaler</span>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+
+
+    <ion-card>
+      <ion-segment [(ngModel)]="eventDefault">
+        <ion-segment-button value="infoPer">
+          Information Personnelle
+        </ion-segment-button>
+
+        <ion-segment-button value="infoContact">
+          Informations de contact
+        </ion-segment-button>
+
+      </ion-segment>
+      <div [ngSwitch]="eventDefault">
+
+        <ion-list *ngSwitchCase="'infoPer'" inset>
+          <ion-item>
+            <ion-label item-left>Prénom</ion-label>
+            <ion-input disabled item-right type="text" [value]="user.first_name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Nom de famille</ion-label>
+            <ion-input disabled type="text" [value]="user.last_name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Genre</ion-label>
+            <ion-input disabled type="text" [value]="user.gender_label"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Anniversaire</ion-label>
+            <ion-input disabled type="text" [value]="user.birthdate"></ion-input>
+          </ion-item>
+        </ion-list>
+
+        <ion-list *ngSwitchCase="'infoContact'" inset>
+          <ion-item>
+            <ion-label item-left>Secteur d'activité</ion-label>
+            <ion-input disabled item-right type="text" [value]="user.about_me"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Site internet</ion-label>
+            <ion-input disabled type="text" [value]="user.website"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Linkedin</ion-label>
+            <ion-input disabled type="text" [value]="user.aim"></ion-input>
+          </ion-item>
+
+        </ion-list>
+      </div>
+
+    </ion-card>
+
+  </div>
+
+  <ion-item item-right>
+    <ion-spinner  name="circles" *ngIf="!userFeed">
+    </ion-spinner>
+  </ion-item>
+
+  <ion-list *ngIf="eventPosts" >
+    <ion-card *ngFor="let post of eventPosts">
+      <ion-item>
+        <ion-avatar item-left (click)="viewUser(post.owner.id)">
+          <img (error)="getDefaultImage(img)" imageViewer #img  src="{{ post.owner.imgs.icon}}">
+        </ion-avatar>
+        <ion-label>{{post.owner.title}}</ion-label>
+        <p>{{ post.time }}</p>
+      </ion-item>
+
+      <ion-item text-wrap class="post-body">
+        <div (click)="viewPost(post.id)">
+          <div [innerHtml]="processHtmlContent(post)"></div>
+          <div  *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
+            <ion-item  [innerHtml]="videoFeedMap.get(post.attachments[0].id)"  ></ion-item>
+          </div>
+          <img #imAtt (error)="getDefaultImage(imAtt)" imageViewer class="full-image"
+               *ngIf="post.attachments.length && post.attachments[0].type=='album_photo' " src="{{ post.attachments[0].img }}">
+        </div>
+
+        <div>
+          <a (click)="viewPost(post.id)" class="subdued">{{ post.total_like}} Likes</a>
+          <a (click)="viewPost(post.id)" class="subdued" margin-left>{{ post.total_comment}} Comments</a>
+        </div>
+      </ion-item>
+
+      <ion-grid class="post-actions">
+        <ion-row>
+          <ion-col  *ngIf="post.can_like"text-center (click)="toggleLike(post)">
+            <ion-icon name="thumbs-up" color="primary"  *ngIf="post.is_liked"></ion-icon>
+            <ion-icon name="thumbs-up" *ngIf="!post.is_liked"></ion-icon>
+          </ion-col>
+          <ion-col  *ngIf="post.can_comment"text-center (click)="viewPost(post)">
+            <ion-icon name="chatboxes"></ion-icon>
+          </ion-col>
+          <ion-col *ngIf="post.can_share" text-center (click)="sharePost(post)">
+            <ion-icon name="share-alt"></ion-icon>
+          </ion-col>
+          <ion-col *ngIf="post.can_delete" text-center (click)="showDeletePostDialog(post)">
+            <ion-icon name="ios-trash-outline" ></ion-icon>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </ion-list>
+</ion-content>

@@ -24,14 +24,12 @@
     <ion-item-sliding *virtualItem="let contact">
 
       <ion-item >
-        <ion-avatar item-left (click)="viewUser(contact.id)">
+        <ion-avatar item-left (click)="viewUser(contact)">
           <img  *ngIf="contact.imgs.icon" #image (error)="getDefaultImage(image,contact)" class="profile-picture" src="{{ contact.imgs.icon }}" alt=""/>
         </ion-avatar>
 
         <div>
-          <h3 ion-text color="primary"  (click)="viewUser(contact.id)">{{ contact.title }}</h3>
-          <ion-badge primay *ngIf="contact.group == 'Family'">Family</ion-badge>
-          <ion-badge color="green"  *ngIf="contact.group == 'Friend'">Friend</ion-badge>
+          <h3 ion-text color="primary"  (click)="viewUser(contact)">{{ contact.title }}</h3>
         </div>
 
 

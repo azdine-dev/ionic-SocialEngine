@@ -5,6 +5,7 @@ import {VideoService} from "../../services/video-service";
 import {Camera, CameraOptions} from "@ionic-native/camera";
 import {ComposeUploadService} from "../../services/compose-upload";
 import {PostService} from "../../services/post-service";
+import {ExpressionPage} from "../expression/expression";
 
 /**
  * Generated class for the PhotoModalPage page.
@@ -20,6 +21,10 @@ import {PostService} from "../../services/post-service";
 })
 export class PhotoModalPage {
   private imgData : any;
+  private title :any;
+  private post :any;
+  private profile :any;
+  private buttons :any;
   private cameraCheck : boolean;
   private galerieCheck : boolean;
 
@@ -45,6 +50,13 @@ export class PhotoModalPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public videoService : VideoService, public toastCtrl : ToastController,public loadingCtrl :  LoadingController,
               public viewCtrl : ViewController,private  camera : Camera,public postService : PostService) {
+
+    if(this.navParams.data){
+      this.buttons = false;
+      this.imgData = this.navParams.get('img');
+      this.title = 'modifier la photo de profile';
+      this.profile =true;
+    }
   }
 
 

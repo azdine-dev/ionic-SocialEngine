@@ -20,8 +20,9 @@ export class ContactsPage {
   /***assets/img/thumb/ben.png**/
 
   // on click, go to user timeline
-  viewUser(userId) {
-    this.nav.push(UserPage, {id: userId})
+  viewUser(user) {
+    console.log(user);
+    this.nav.push(UserPage, {owner: user})
   }
 
   getAllMembers(){

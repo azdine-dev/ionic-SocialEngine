@@ -21,6 +21,7 @@ import {UserService} from "../services/user-service";
 import {AlbumPage} from "../pages/album/album";
 import {CacheService} from "ionic-cache";
 import {ImageLoaderConfig} from "ionic-image-loader";
+import {EventsPage} from "../pages/events/events";
 
 @Component({
   templateUrl: 'app.component.html',
@@ -56,6 +57,13 @@ export class MyApp {
       count: 2,
       component: ChatsPage
     },
+    {
+      title: 'Evénements',
+      icon: 'md-calendar',
+      count: 0,
+      component: EventsPage
+    },
+
     {
       title: 'Notifications',
       icon: 'ios-notifications-outline',
@@ -112,7 +120,7 @@ export class MyApp {
 
        this.nav.setRoot(page.component);
     }else{
-      this.nav.setRoot(page.component);
+      this.nav.push(page.component);
     }
 
   }

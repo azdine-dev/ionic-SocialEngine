@@ -9,7 +9,7 @@
     <ion-row>
 
      <ion-title>Créer une publication</ion-title>
-     <button [disabled]="!f.valid"(click)="partager()">Partager</button>
+     <button icon-only [disabled]="!f.valid"(click)="partager()">Partager</button>
     </ion-row>
   </ion-navbar>
 </ion-header>
@@ -48,7 +48,7 @@
       </ion-list>
     </form>
     <ion-card >
-      <img  *ngIf="imgData"  [src]="imgData"/>
+      <img imageViewer  *ngIf="imgData"  [src]="imgData"/>
       <ion-card-content>
 
       </ion-card-content>
