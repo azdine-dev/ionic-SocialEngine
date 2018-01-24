@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Events, LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
+import {Events, LoadingController, NavController, NavParams, ToastController, ViewController} from 'ionic-angular';
 import {PostService} from '../../services/post-service';
 import {UserPage} from '../user/user';
 import {FormControl, NgForm} from "@angular/forms";
@@ -18,8 +18,13 @@ import {HomePage} from "../home/home";
 })
 export class ExpressionPage implements OnInit{
   private imgData : any;
+  private title : any;
+  private source;
   private ownerPhoto;
   private ownerName;
+  private subjectType ;
+  private subjectId;
+
   private attachement =new AttachementClass();
   public body = {
     bodyText : "",
@@ -49,9 +54,13 @@ export class ExpressionPage implements OnInit{
 
   constructor(public nav: NavController, public postService: PostService, private  camera : Camera,
               public loadingCtrl : LoadingController, public toastCtrl : ToastController,public navParams :NavParams,
-              public events :Events) {
+              public events :Events,private viewCtrl : ViewController) {
     this.ownerName = this.navParams.get('ownerName');
     this.ownerPhoto = this.navParams.get('ownerPhoto');
+    this.subjectId = this.navParams.get('subjectId')
+    this.subjectType = this.navParams.get('subjectType')
+    this.title = this.navParams.get('title');
+    this.source = this.navParams.get('source')
   }
   ngOnInit(){
     this.body.bodyText='';
@@ -80,9 +89,9 @@ export class ExpressionPage implements OnInit{
 
 
   partager(){
-     this.postService.postNewActivity(this.body,(this.imgData),this.attachement).then(data=>{
+     this.postService.postNewActivity(this.body,(this.imgData),this.attachement,this.subjectType,this.subjectId).then(data=>{
            this.events.publish('new-activity');
-           this.nav.setRoot(HomePage);
+           this.nav.pop();
        },err=>{
 
      })

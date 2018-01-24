@@ -8,7 +8,7 @@
   <ion-navbar color="primary" >
     <ion-row>
 
-     <ion-title>Créer une publication</ion-title>
+     <ion-title>{{title}}</ion-title>
      <button icon-only [disabled]="!f.valid"(click)="partager()">Partager</button>
     </ion-row>
   </ion-navbar>
@@ -16,7 +16,7 @@
 
 <ion-content>
 
-  <ion-item class="item-no-border">
+  <ion-item class="item-no-border" *ngIf="ownerName">
     <ion-avatar item-left >
       <img [src]="ownerPhoto">
     </ion-avatar>
@@ -33,7 +33,7 @@
          </ion-item>
         <ion-item (click)="selectPhoto()">
           <ion-icon name='ios-images-outline' color="coffee"  item-start></ion-icon>
-          Galerie
+          Galerie {{subjectId}} {{subjectType}}
           <ion-note item-end>
             selectionner une photo
           </ion-note>

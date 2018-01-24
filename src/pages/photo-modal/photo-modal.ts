@@ -20,6 +20,7 @@ import {ExpressionPage} from "../expression/expression";
   templateUrl: 'photo-modal.html',
 })
 export class PhotoModalPage {
+  private photo : any;
   private imgData : any;
   private title :any;
   private post :any;
@@ -52,9 +53,10 @@ export class PhotoModalPage {
               public viewCtrl : ViewController,private  camera : Camera,public postService : PostService) {
 
     if(this.navParams.data){
+      this.photo = this.navParams.get('photo');
       this.buttons = false;
       this.imgData = this.navParams.get('img');
-      this.title = 'modifier la photo de profile';
+      this.title = this.navParams.get('title');
       this.profile =true;
     }
   }
@@ -127,5 +129,7 @@ export class PhotoModalPage {
     }, 1000);
   }
 
-
+  dismissView(){
+    this.viewCtrl.dismiss();
+  }
 }

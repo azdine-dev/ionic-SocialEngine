@@ -6,7 +6,7 @@
 -->
 <ion-header>
   <ion-navbar color="primary"  class="no-border">
-    <ion-title>{{event.title}}</ion-title>
+    <ion-title>Evénement :{{event.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -14,114 +14,179 @@
 
   <div text-center class="user-profile primary-bg">
     <div class="show-image">
-      <img #im    imageViewer src="{{ owner.imgs.normal}}">
-      <ion-icon  *ngIf=" userSession == owner.id" name="md-camera" class="update" (click)="updatePicture($event)"></ion-icon>
+      <img #im    imageViewer src="{{ event.thumb}}">
     </div>
 
-    <h4 class="light">{{ owner.title }}</h4>
-    <button icon-only>
-      <ion-icon name="md-person-add" color="primary" >Inviter des amis </ion-icon>
-    </button>
+    <h4 class="light">{{ event.title }}</h4>
 
-    <ion-grid  >
-      <ion-row>
-        <ion-col (click)="joinMember(user)" >
-          <ion-icon name="md-person-add" ></ion-icon> <br>
+    <ion-card>
+    <ion-grid color="white" >
+      <ion-row >
+        <ion-col *ngIf="event.owner.id !=userSession" (click)="participate(event)">
+          <ion-icon name="ios-star-outline" ></ion-icon><br>
+          <ion-note>intéressé(e)</ion-note>
         </ion-col>
 
-        <ion-col>
-          <ion-icon name="logo-rss"></ion-icon>
+        <ion-col *ngIf="event.owner.id !=userSession">
+          <ion-icon name="ios-checkmark-circle-outline"></ion-icon><br>
+          <ion-note> Participer</ion-note>
         </ion-col>
 
-        <ion-col >
-          <span>amis en commun</span>
+        <ion-col *ngIf="event.owner.id ==userSession" >
+          <ion-icon name="ios-redo-outline"> </ion-icon>
+          <ion-note>Ajouter des invités</ion-note>
         </ion-col>
 
-        <ion-col (click)="toggleBlockUser(user)" >
-          <ion-icon  ios="ios-hand" md="md-hand" ></ion-icon><br>
-          <span> le Membre </span>
+        <ion-col (click)="shareEvent(event)" >
+          <ion-icon  name="md-share"></ion-icon><br>
+          <ion-note>Partagez cet évenement</ion-note>
         </ion-col>
 
-        <ion-col>
-          <ion-icon ios="ios-flag" md="md-flag"></ion-icon><br>
-          <span>Signaler</span>
-        </ion-col>
       </ion-row>
     </ion-grid>
+    </ion-card>
+
+    <ion-card>
+      <ion-list>
+        <ion-item >
+          <ion-icon name='ios-clock-outline'  item-start></ion-icon>
+          {{event.start_datetime}}--{{event.start_date}} à {{event.end_time}}<br>
+          <ion-note >
+            date
+          </ion-note>
+        </ion-item>
+        <ion-item *ngIf="event.location">
+          <ion-icon name='ios-pin-outline'   item-start></ion-icon>
+          {{event.location}}<br>
+          <ion-note >
+           Location
+          </ion-note>
+        </ion-item>
+        <ion-item *ngIf="event.host">
+          <ion-icon name='ios-grid-outline'   item-start></ion-icon>
+          {{event.host}}<br>
+          <ion-note >
+            Hôte
+          </ion-note>
+        </ion-item>
+
+
+      </ion-list>
+
+    </ion-card>
+
+
+
 
 
 
     <ion-card>
       <ion-segment [(ngModel)]="eventDefault">
-        <ion-segment-button value="infoPer">
-          Information Personnelle
+        <ion-segment-button value="about" (click)="showEventsFeed(false)">
+          A propos
         </ion-segment-button>
 
-        <ion-segment-button value="infoContact">
-          Informations de contact
+        <ion-segment-button value="feed" (click)="showEventsFeed(true)">
+          Mise à jour
+        </ion-segment-button>
+        <ion-segment-button value="photos" (click)="showEventsFeed(false)">
+          Photos
+        </ion-segment-button>
+        <ion-segment-button value="invited" (click)="showEventsFeed(false)">
+          Discussion({{event.total_member}})
         </ion-segment-button>
 
       </ion-segment>
       <div [ngSwitch]="eventDefault">
+        <div  *ngSwitchCase="'about'">
+          <ion-card>
+            <ion-item item-start>
+              <h6 ion-text > Détails</h6>
+            </ion-item>
 
-        <ion-list *ngSwitchCase="'infoPer'" inset>
-          <ion-item>
-            <ion-label item-left>Prénom</ion-label>
-            <ion-input disabled item-right type="text" [value]="user.first_name"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>Nom de famille</ion-label>
-            <ion-input disabled type="text" [value]="user.last_name"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>Genre</ion-label>
-            <ion-input disabled type="text" [value]="user.gender_label"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>Anniversaire</ion-label>
-            <ion-input disabled type="text" [value]="user.birthdate"></ion-input>
-          </ion-item>
-        </ion-list>
+            <p ion-item item-start>
+            {{event.description}}
+            </p>
+          </ion-card>
+          <ion-card>
+            <ion-grid (click)="getInvitedMembers()">
+              <ion-row>
+                <ion-col col-3 col-md-3 col-sm-3>
+                  Je participe
+               </ion-col>
+                <ion-col col-3 col-md-3 col-sm-3>
+                  Je participerai peut-être
+                </ion-col>
+                <ion-col col-3 col-md-3 col-sm-3>
+                  Je ne participe pas
+                </ion-col>
+                <ion-col col-3 col-md-3 col-sm-3>
+                  En attente de réponse
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col col-3 col-md-3 col-sm-3>
+                  {{event.attending_count}}
+                </ion-col>
+                <ion-col col-3 col-md-3 col-sm-3>
+                  {{event.maybe_count}}
+                </ion-col>
+                <ion-col col-3 col-md-3 col-sm-3>
+                  {{event.not_attending_count}}
+                </ion-col>
+                <ion-col col-3 col-md-3 col-sm-3>
+                  {{event.awaiting_reply_count}}
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
 
-        <ion-list *ngSwitchCase="'infoContact'" inset>
-          <ion-item>
-            <ion-label item-left>Secteur d'activité</ion-label>
-            <ion-input disabled item-right type="text" [value]="user.about_me"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>Site internet</ion-label>
-            <ion-input disabled type="text" [value]="user.website"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>Linkedin</ion-label>
-            <ion-input disabled type="text" [value]="user.aim"></ion-input>
-          </ion-item>
+        </div>
 
-        </ion-list>
+
       </div>
 
     </ion-card>
 
   </div>
 
-  <ion-item item-right>
-    <ion-spinner  name="circles" *ngIf="!userFeed">
-    </ion-spinner>
-  </ion-item>
-
-  <ion-list *ngIf="eventPosts" >
-    <ion-card *ngFor="let post of eventPosts">
+    <ion-card *ngIf="showFeed">
       <ion-item>
-        <ion-avatar item-left (click)="viewUser(post.owner.id)">
-          <img (error)="getDefaultImage(img)" imageViewer #img  src="{{ post.owner.imgs.icon}}">
+        <ion-label color="primary" stacked></ion-label>
+        <ion-input type="email" (ionFocus)="goToExpress(event.id)" placeholder="Exprime toi .."></ion-input>
+      </ion-item>
+      <div style="background-color: #f4f4f4" color="light" >
+        <ion-grid>
+          <ion-row>
+
+            <ion-col col-4 col-md-4 col-sm-4 (click)="postNewPhoto()">
+              <ion-icon name="md-camera"  color="gray"></ion-icon>
+            </ion-col>
+            <ion-col col-4 col-md-4 col-sm-4 (click)="postNewVideo()" >
+              <ion-icon   name="md-videocam" color="gray"></ion-icon>
+            </ion-col>
+            <ion-col col-4 col-md-4 col-sm-4 (click)="postNewLink()">
+              <ion-icon name="md-link" color="gray"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-card>
+    <ion-list *ngIf="eventPosts && showFeed">
+    <ion-card *ngFor="let post of eventPosts">
+
+
+      <ion-item>
+        <ion-avatar item-left (click)="viewUser(post.owner)">
+          <img (error)="getDefaultImage(img)"  #img  src="{{ post.owner.imgs.icon}}">
         </ion-avatar>
         <ion-label>{{post.owner.title}}</ion-label>
         <p>{{ post.time }}</p>
       </ion-item>
 
       <ion-item text-wrap class="post-body">
-        <div (click)="viewPost(post.id)">
-          <div [innerHtml]="processHtmlContent(post)"></div>
+        <div >
+          <div [innerHtml]="processHtmlContent(post.content)"></div>
           <div  *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
             <ion-item  [innerHtml]="videoFeedMap.get(post.attachments[0].id)"  ></ion-item>
           </div>
@@ -153,5 +218,5 @@
         </ion-row>
       </ion-grid>
     </ion-card>
-  </ion-list>
+    </ion-list>
 </ion-content>

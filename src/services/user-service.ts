@@ -13,8 +13,8 @@ let userInfoFields ='id,title,about_me,aim,birthdate,block_status,can_comment,ca
 
 @Injectable()
 export class UserService {
-  private refrechToken: any;
-  private accessToken: any;
+  private refrechToken = localStorage.getItem('refresh_token');
+  private accessToken = localStorage.getItem('token')+'&refresh_token='+this.refrechToken;
   private users;
   private composeUploadData;
 

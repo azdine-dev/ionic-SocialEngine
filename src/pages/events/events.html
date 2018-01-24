@@ -6,8 +6,8 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>events</ion-title>
+  <ion-navbar  color="primary" class="no-border">
+    <ion-title>Evénements</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -38,17 +38,20 @@
       <ion-list *ngSwitchCase="'futur-events'" inset>
         <ion-grid *ngIf="events">
         <ion-row >
-        <ion-col  *ngFor="let event of events; let index = index" col-4 >
-        <ion-card  >
+        <ion-col  *ngFor="let event of events; let index = index"  >
+        <ion-card  (click)="goToEventDetail(event)" >
+
            <img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="event.thumb" [scrollObservable]="container.ionScroll">
           <ion-card-header>
+            <h3 color="primary" ion-text>{{event.title}}</h3>
             <ion-note   name="ios-calendar-outline">{{event.start_datetime}}</ion-note>
           </ion-card-header>
           <ion-card-content>
+
                <h3 ion-text color="primary">{{event.owner.title}}</h3>
                <ion-note>{{event.total_member}} visteur {{event.total_member > 1 ? '(s)':''}}</ion-note>
                <ion-icon  *ngIf="event.location" name="ios-pin-outline">{{event.location}}</ion-icon>
-               <ion-icon  *ngIf="!event.location" hidden name="ios-pin-outline">RABAT</ion-icon>
+               <ion-icon  *ngIf="!event.location" hidden name="ios-pin-outline"></ion-icon>
              </ion-card-content>
         </ion-card>
         </ion-col>

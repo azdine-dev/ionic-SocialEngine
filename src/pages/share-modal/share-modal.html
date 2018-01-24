@@ -60,8 +60,34 @@
       <ion-input [(ngModel)]="item_post.body" type="text" placeholder="votre message..." ></ion-input>
       <br>
       <br>
+      <button ion-button   [disabled]="!item_post.body" (click)="shareActivity(item_type,item.id,item_post.body)">Partager</button>
+      <button ion-button (click)="dismiss()">Annuler</button>
+    </ion-grid>
+  </div>
+</ion-content>
+
+<ion-content padding  *ngIf="item_type == 'event'" >
+  <h2 ion-text color="primary"  class="post-author" >Partager(act)</h2>
+  <p>Partagez ceci en le ré-affichant avec votre propre message.</p>
+
+  <ion-card>
+    <!--<img  src="{{item_attachment.img}}" imageViewer>-->
+    <ion-card-content>
+      <div class="no-attachment" >
+        {{item.description}}
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <div padding>
+    <ion-grid class="post-actions"  >
+
+      <ion-input [(ngModel)]="item_post.body" type="text" placeholder="votre message..." ></ion-input>
+      <br>
+      <br>
       <button ion-button   [disabled]="!item_post.body" >Partager</button>
       <button ion-button (click)="dismiss()">Annuler</button>
     </ion-grid>
   </div>
 </ion-content>
+

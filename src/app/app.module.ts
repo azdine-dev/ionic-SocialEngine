@@ -52,6 +52,7 @@ import {ProfilePage} from "../pages/profile/profile";
 import {EventsPage} from "../pages/events/events";
 import {EventsDetailPage} from "../pages/events-detail/events-detail";
 import {EventService} from "../services/event-service";
+import {ParticipantsPage} from "../pages/participants/participants";
 
 // end import pages
 
@@ -83,6 +84,7 @@ import {EventService} from "../services/event-service";
     ProfilePage,
     EventsPage,
     EventsDetailPage,
+    ParticipantsPage,
   ],
   imports: [
     BrowserModule,HttpClientModule,
@@ -120,7 +122,8 @@ import {EventService} from "../services/event-service";
     OptionsPage,
     ProfilePage,
     EventsPage,
-    EventsDetailPage
+    EventsDetailPage,
+    ParticipantsPage
 
   ],
   providers: [

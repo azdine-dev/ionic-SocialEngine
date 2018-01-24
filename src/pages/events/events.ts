@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {EventService} from "../../services/event-service";
+import {EventsDetailPage} from "../events-detail/events-detail";
 
 /**
  * Generated class for the EventsPage page.
@@ -22,13 +23,15 @@ export class EventsPage {
     this.getEvents();
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad EventsPage');
-  }
-
   getEvents(){
     this.eventService.getEvents().then(res=>{
       this.events = res['data'];
+    })
+  }
+
+  goToEventDetail(event){
+    this.navCtrl.push(EventsDetailPage,{
+      event : event,
     })
   }
 }

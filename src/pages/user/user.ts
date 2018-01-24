@@ -31,7 +31,7 @@ export class UserPage {
   };
   public owner : any;
   private friendColor : any;
-  private userSession :any;
+  private userSession =localStorage.getItem('user-id');
   private userFeed : Array<{}>;
   private videoFeedMap : Map <number,SafeUrl> = new Map <number,SafeUrl>();
 
@@ -40,7 +40,6 @@ export class UserPage {
               public modalCtrl : ModalController,public alertCtrl :AlertController,public events : Events,
               public loadingCtrl : LoadingController,public toastCtrl : ToastController,public popover : PopoverController) {
 
-    this.userSession =localStorage.getItem('user-id');
     this.owner = (navParams.get('owner'));
     this.getUserProfileInfo(this.owner.id);
     this.getUserFeed();
@@ -61,8 +60,9 @@ export class UserPage {
   }
 
   // on click, go to user timeline
-  viewUser(userId) {
-    this.nav.push(UserPage, {id: userId})
+  viewUser(user) {
+    if(this.owner.id != user.id)
+    this.nav.push(UserPage, {owner: user})
   }
 
   // on click, go to post detail

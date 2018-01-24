@@ -239,6 +239,8 @@ export class HomePage implements OnInit {
     this.nav.push(ExpressionPage,{
       ownerName :this.authUser.title,
       ownerPhoto :this.authUser.image,
+      title :'Créer une publication',
+      source : HomePage,
     });
   }
 
@@ -307,8 +309,18 @@ export class HomePage implements OnInit {
   }
 
   postNewPhoto(){
-   let photoModal = this.modalCtrl.create(PhotoModalPage);
+   let photoModal = this.modalCtrl.create(PhotoModalPage,{
+     photo : true,
+     title :'publier une photo',
+   });
    photoModal.present();
+  }
+
+  postNewLink(){
+    let linkModal = this.modalCtrl.create(PhotoModalPage,{
+      photo : false,
+    });
+    linkModal.present();
   }
 
   getDefaultImage(image,contact){

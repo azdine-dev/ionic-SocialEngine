@@ -45,7 +45,7 @@
   <ion-card>
     <ion-item>
       <ion-label color="primary" stacked></ion-label>
-      <ion-input type="email" (ionFocus)="goToExpress(post)" placeholder="Exprime toi .."></ion-input>
+      <ion-input type="text" (ionFocus)="goToExpress()" placeholder="Exprime toi .."></ion-input>
     </ion-item>
     <div style="background-color: #f4f4f4" color="light" >
       <ion-grid>
@@ -53,13 +53,10 @@
           <ion-col width-25 (click)="postNewPhoto()">
             <ion-icon name="md-camera"  color="gray"></ion-icon>
           </ion-col>
-          <ion-col width-25>
-            <ion-icon name="md-link" color="gray"></ion-icon>
-          </ion-col>
           <ion-col (click)="postNewVideo()" width-25>
             <ion-icon   name="md-videocam" color="gray"></ion-icon>
           </ion-col>
-          <ion-col width-25>
+          <ion-col width-25 (click)="postNewLink()">
             <ion-icon name="md-link" color="gray"></ion-icon>
           </ion-col>
         </ion-row>

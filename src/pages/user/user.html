@@ -138,8 +138,8 @@
   <ion-list *ngFor="let post of userFeed">
   <ion-card>
     <ion-item>
-      <ion-avatar item-left (click)="viewUser(post.owner.id)">
-        <img (error)="getDefaultImage(img)" imageViewer #img  src="{{ post.owner.imgs.icon}}">
+      <ion-avatar item-left (click)="viewUser(post.owner)">
+        <img (error)="getDefaultImage(img)"  #img  src="{{ post.owner.imgs.icon}}">
       </ion-avatar>
       <ion-label>{{post.owner.title}}</ion-label>
       <p>{{ post.time }}</p>

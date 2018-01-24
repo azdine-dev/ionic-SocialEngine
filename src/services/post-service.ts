@@ -122,7 +122,7 @@ export class PostService {
        });
     })
   }
-  postNewActivity(postBody,withAttachment : boolean, attachment : AttachementClass){
+  postNewActivity(postBody,withAttachment : boolean, attachment : AttachementClass,subject_type?,subject_id?){
     return new Promise((resolve,reject)=>{
       let headers = new HttpHeaders();
       headers.append('Content-Type', 'multipart/form-data');
@@ -133,12 +133,12 @@ export class PostService {
 
          }).then(()=> {
              this.http.post(feedUrl + param + 'access_token=' + this.accessToken + param_delimiter + 'body=' + postBody.bodyText
-               +param_delimiter+'attachment[type]=photo&attachment[photo_id]='+this.composeUploadData.data.photo_id,{headers}).subscribe(res=>{
-
-                 console.log('POST'+res);
+               +param_delimiter+'subject_type='+subject_type+'&subject_id='+subject_id+'&attachment[type]=photo&attachment[photo_id]='
+               +this.composeUploadData.data.photo_id,{headers}).subscribe(res=>{
+               resolve(res);
              },err=>{
-                console.log('ERR'+err);
-             })
+                reject(err);
+               })
 
            }
          )
@@ -146,7 +146,8 @@ export class PostService {
 
       }else {
 
-        this.http.post(feedUrl + param + 'access_token=' + this.accessToken + param_delimiter + 'body=' + postBody.bodyText
+        this.http.post(feedUrl + param + 'access_token=' + this.accessToken + param_delimiter +
+          'subject_type='+subject_type+'&subject_id='+subject_id+'&body=' + postBody.bodyText
           , {headers}).subscribe(res => {
           resolve(res);
         }, err => {

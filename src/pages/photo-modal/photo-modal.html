@@ -1,4 +1,4 @@
-<ion-content padding  >
+<ion-content padding  *ngIf="photo" >
   <h2 ion-text color="primary"  class="post-author" >{{title}} </h2>
 
 
@@ -14,7 +14,6 @@
 </ion-grid>
 
   <ion-card>
-    <img [src]="owner.imgs.normal">
     <img  src="{{imgData}}" imageViewer>
     <ion-card-content>
 
@@ -25,58 +24,11 @@
 
       <button ion-button *ngIf="post" (click)="postPhoto(imgData)"> publier la photo</button>
       <button ion-button *ngIf="profile" (click)="postPhoto(imgData)"> modifier</button>
-      <button ion-button>Annuler</button>
+      <button ion-button (click)="dismissView()">Annuler</button>
   </div>
 
-  <!--<ion-item>-->
-    <!--<ion-input  [(ngModel)]="videoData.url" (change)="loadVideoInfo()" type="text" placeholder="entrer l'URL .."></ion-input>-->
-  <!--</ion-item>-->
 
-  <!--<ion-item *ngIf="videoData.title">-->
-    <!--<ion-input type="text"  [(ngModel)]="videoData.title" placeholder="le titre du video ..."></ion-input>-->
-  <!--</ion-item>-->
-
-  <!--<ion-item *ngIf="videoData.description">-->
-    <!--<ion-textarea  [(ngModel)]="videoData.description" type="text" placeholder="description .."></ion-textarea>-->
-  <!--</ion-item>-->
-
-  <!--<ion-item>-->
-    <!--<ion-item-divider></ion-item-divider>-->
-  <!--</ion-item>-->
-
-  <!--<ion-item *ngIf="videoData.error" color="light">-->
-    <!--<ion-input  [(ngModel)]="videoData.error" diabled type="text" placeholder="description .."></ion-input>-->
-  <!--</ion-item>-->
-
-  <!--<ion-item>-->
-    <!--<ion-label> Afficher cette vidéo dans les résultats de la recherche</ion-label>-->
-    <!--<ion-checkbox [(ngModel)]="videoData.allow_search"  color="dark" (checked)="videoData.allow_search"></ion-checkbox>-->
-  <!--</ion-item>-->
-
-
-  <!--<ion-item>-->
-    <!--<ion-label>Vie Privée</ion-label>-->
-    <!--<ion-select [(ngModel)]="videoData.auth_view" >-->
-      <!--<ion-option value="everyone">Tout le monde</ion-option>-->
-      <!--<ion-option value="owner_network">Contacts et Réseaux</ion-option>-->
-      <!--<ion-option value="owner_member_member">Contacts de mes contacts</ion-option>-->
-      <!--<ion-option value="owner_member">Uniquement mes contacts</ion-option>-->
-      <!--<ion-option value="owner">Juste Moi</ion-option>-->
-    <!--</ion-select>-->
-  <!--</ion-item>-->
-
-  <!--<ion-item>-->
-    <!--<ion-label> commentaires</ion-label>-->
-    <!--<ion-select  [(ngModel)]="videoData.auth_comment" >-->
-      <!--<ion-option value="everyone">Tout le monde</ion-option>-->
-      <!--<ion-option value="owner_network">Contacts et Réseaux</ion-option>-->
-      <!--<ion-option value="owner_member_member">Contacts de mes contacts</ion-option>-->
-      <!--<ion-option value="owner_member">Uniquement mes contacts</ion-option>-->
-      <!--<ion-option value="owner">Juste Moi</ion-option>-->
-    <!--</ion-select>-->
-  <!--</ion-item>-->
-  <!--<ion-item>-->
-    <!--<button  (click)="postVideo(videoData)"  [disabled]="!validFields(videoData)" ion-button>Publier</button>-->
-  <!--</ion-item>-->
-
+</ion-content>
+<ion-content  *ngIf="!photo">
+  <h1>LINK PREVIEW</h1>
 </ion-content>
