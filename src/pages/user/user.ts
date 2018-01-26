@@ -89,7 +89,7 @@ export class UserPage {
   getUserFeed() {
     this.postService.getUserFeed(this.owner.id).then((result) => {
       this.userFeed = result["data"]["items"];
-      this.getFeedAttchmentVideos(this.userFeed);
+      // this.getFeedAttchmentVideos(this.userFeed);
     },(err) => {
     });
 

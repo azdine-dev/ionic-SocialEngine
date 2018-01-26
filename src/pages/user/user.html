@@ -22,7 +22,7 @@
 
     <ion-grid  *ngIf=" userSession != owner.id">
       <ion-row >
-        <ion-col   >
+        <ion-col  (click)="joinMember(user)">
           <ion-icon name="md-person-add" [color]=" user.friend_status =='is_friend' || user.friend_status =='is_sent_request' ? 'primary' : '' " ></ion-icon> <br>
           <span>{{getFriendState(user)}}</span>
         </ion-col>

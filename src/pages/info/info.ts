@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {AlertController, Events, IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
 import {PostService} from "../../services/post-service";
 import {DomSanitizer} from "@angular/platform-browser";
@@ -18,6 +18,8 @@ import {UserService} from "../../services/user-service";
   templateUrl: 'info.html',
 })
 export class InfoPage {
+  @ViewChild("iframe", {read: ElementRef}) iframe: ElementRef;
+  private ready =false;
   private userVideos : Array<{}>;
   private userId : any;
   private userName : any;
@@ -33,6 +35,11 @@ export class InfoPage {
   this.userName =this.navParams.get('name');
   this.getUserVideos(this.userId);
   }
+  ionViewDidLoad(){
+    setTimeout( ()=>{
+       this.ready=false;
+    },1000)
+  }
 
 
   getUserVideos(userId){
@@ -47,8 +54,10 @@ export class InfoPage {
   trustResourceUrl(src){
     return this.sanitizer.bypassSecurityTrustResourceUrl(src);
   }
- playVideo(iframe){
+ playVideo(index,iframe,event){
   this.showIframe = true;
-   console.log(iframe)
+ }
+ iframeShow(){
+    return (this.iframe.nativeElement.attributes['clicked'].value);
  }
 }

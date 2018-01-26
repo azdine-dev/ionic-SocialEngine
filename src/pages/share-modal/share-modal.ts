@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {IonicPage, LoadingController, NavController, NavParams, ViewController} from 'ionic-angular';
+import {IonicPage, LoadingController, NavController, NavParams, ToastController, ViewController} from 'ionic-angular';
 import {PostService} from "../../services/post-service";
 import {DomSanitizer} from "@angular/platform-browser";
 
@@ -23,7 +23,7 @@ export class ShareModalPage {
   };
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl :  ViewController,public postService : PostService,
-  public sanitizer : DomSanitizer, public  loadingCtrl : LoadingController) {
+  public sanitizer : DomSanitizer, public  loadingCtrl : LoadingController,private toastCtrl : ToastController) {
     this.item_attachment ={
       type :'not_found',
     };
@@ -54,11 +54,14 @@ export class ShareModalPage {
     this.viewCtrl.dismiss();
   }
   shareActivity(type,id,body){
+    let load = this.showLoader('veuillez patienter ..');
+    load.present();
    this.postService.shareActivity(type,id,body).then(res=>{
-     console.log('share success');
-    this.showLoader();
+     load.dismiss();
+     this.presentToast(res['data'].message);
+     this.navCtrl.pop();
    },err=>{
-     JSON.stringify(err);
+     this.presentToast(err.error.data.message);
    })
   }
 
@@ -67,18 +70,21 @@ export class ShareModalPage {
     return html;
   }
 
-  showLoader(){
+  showLoader(content?){
     let load = this.loadingCtrl.create({
-      content : 'Contenu Partagé ...'
+      content : content
     });
-    load.present({});
+    return load;
+  }
 
-    setTimeout(()=>{
-      this.viewCtrl.dismiss();
-    },1000);
+  presentToast(msg) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration : 2000,
+      position: 'bottom',
+      dismissOnPageChange: true
+    });
+    toast.present();
 
-    setTimeout(() => {
-      load.dismiss();
-    }, 1000);
   }
 }

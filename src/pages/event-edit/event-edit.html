@@ -1,0 +1,121 @@
+<!--
+  Generated template for the EventEditPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary" class="no-border">
+    <ion-title>Créer un Nouvel Evénement</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding  >
+  <div class="imageWrapper">
+    <img  width="800" height="100" [defaultImage]= "'/assets/img/default-event.png'" [lazyLoad]="eventData.image">
+    <button (click)="selectPhoto()"  style="color: #000" class="image-button" icon-only>
+      <ion-icon style="zoom: 0.7" name="ios-images-outline"> Ajouter une photo </ion-icon>
+    </button>
+    <ion-icon  *ngIf="eventData.image" name="md-create" class="update" ></ion-icon>
+  </div>
+
+
+  <ion-item>
+    <ion-input  [(ngModel)]="eventData.title"  type="text" placeholder="Nom de l'évènement .."></ion-input>
+  </ion-item>
+
+  <ion-list  no-lines>
+
+    <ion-item >
+      <ion-icon name='ios-clock-outline'   item-start></ion-icon>
+      <ion-datetime item-start displayFormat="YYYY-DD-MM" [(ngModel)]="eventData.start_date"></ion-datetime>
+      <ion-datetime item-end displayFormat="HH:mm" [(ngModel)]="eventData.start_hour"></ion-datetime>
+      <ion-note item-end>Début</ion-note>
+    </ion-item>
+    <ion-item >
+      <ion-icon name='md-time'   item-start></ion-icon>
+
+      <ion-datetime item-start displayFormat="YYYY-DD-MM" [(ngModel)]="eventData.end_date" [min]="eventData.start_date" ></ion-datetime>
+      <ion-datetime item-end displayFormat="HH:mm" [(ngModel)]="eventData.start_hour" [min]="eventData.start_hour" ></ion-datetime>
+      <ion-note item-end>Fin</ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-icon name='ios-pin-outline'   item-start></ion-icon>
+      <ion-input  [(ngModel)]="eventData.local"  type="text" placeholder="Emplacement .."></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-icon name='ios-home-outline'   item-start></ion-icon>
+      <ion-input  [(ngModel)]="eventData.hote"  type="text" placeholder="Hôte .."></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon item-start name="md-briefcase"></ion-icon>
+    <ion-label>Catégories</ion-label>
+      <ion-select [(ngModel)]="eventData.categorieId" >
+       <ion-option *ngFor=" let cat of eventCategories" [value]="cat.id">{{cat.title}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-icon item-start name="ios-search-outline"></ion-icon>
+      <ion-checkbox item-end [(ngModel)]="eventData.allow_search"  color="dark" (checked)="eventData.allow_search"></ion-checkbox>
+      <ion-label text-wrap>Les utilisateurs peuvent rechercher cet événement</ion-label>
+
+    </ion-item>
+
+    <ion-item>
+      <ion-icon item-start name="ios-people-outline"></ion-icon>
+      <ion-label text-wrap>Les personnes doivent être invitées (RSVP) pour cet événement</ion-label>
+      <ion-checkbox item-end [(ngModel)]="eventData.approval"  color="dark" (checked)="eventData.approuval"></ion-checkbox>
+    </ion-item>
+    <ion-item>
+      <ion-icon item-start name="md-eye"></ion-icon>
+      <ion-label>Vie Privée</ion-label>
+    <ion-select [(ngModel)]="eventData.auth_view" >
+    <ion-option value="everyone" >Tout le monde</ion-option>
+    <ion-option value="owner_network">Contacts et Réseaux</ion-option>
+    <ion-option value="owner_member_member">Contacts de mes contacts</ion-option>
+    <ion-option value="owner_member">Uniquement mes contacts</ion-option>
+    <ion-option value="owner">Juste Moi</ion-option>
+    </ion-select>
+    </ion-item>
+
+    <ion-item>
+
+      <ion-icon item-start name="md-code-working"></ion-icon>
+      <ion-label>Confidentialité des commentaires</ion-label>
+      <ion-select [(ngModel)]="eventData.auth_comment" >
+        <ion-option value="everyone">Tout le monde</ion-option>
+        <ion-option value="owner_network">Contacts et Réseaux</ion-option>
+        <ion-option value="owner_member_member">Contacts de mes contacts</ion-option>
+        <ion-option value="owner_member">Uniquement mes contacts</ion-option>
+        <ion-option value="owner">Juste Moi</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+
+      <ion-icon item-start name="md-images"></ion-icon>
+      <ion-label>Téléchargement de photos</ion-label>
+      <ion-select [(ngModel)]="eventData.auth_photo" >
+        <ion-option value="everyone">Tout le monde</ion-option>
+        <ion-option value="owner_network">Contacts et Réseaux</ion-option>
+        <ion-option value="owner_member_member">Contacts de mes contacts</ion-option>
+        <ion-option value="owner_member">Uniquement mes contacts</ion-option>
+        <ion-option value="owner">Juste Moi</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+
+
+</ion-content>
+<ion-footer>
+
+
+    <button ion-button  [disabled]="!eventData.title" (click)="createEvent()">
+      Enregistrer les modifications
+      <ion-icon name="send" color="primary"></ion-icon>
+    </button>
+</ion-footer>

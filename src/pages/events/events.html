@@ -14,32 +14,13 @@
 
 
 <ion-content padding #container>
-  <ion-card>
-    <ion-segment [(ngModel)]="defautEvent">
-      <ion-segment-button value="futur-events">
-        Evénements à venir
-      </ion-segment-button>
+  <ion-fab right bottom>
+    <button ion-fab color="primary" (click)="createEvent()"><ion-icon name="md-clipboard"></ion-icon></button>
+  </ion-fab>
 
-      <ion-segment-button value="past-events">
-        Evénements Passés
-      </ion-segment-button>
+<ion-list *ngFor="let event of events">
 
-      <ion-segment-button value="my-events">
-        Mes Evénements
-      </ion-segment-button>
-
-      <ion-segment-button value="create-event">
-        Créer un Nouvel Evénement
-      </ion-segment-button>
-
-    </ion-segment>
-    <div [ngSwitch]="defautEvent">
-
-      <ion-list *ngSwitchCase="'futur-events'" inset>
-        <ion-grid *ngIf="events">
-        <ion-row >
-        <ion-col  *ngFor="let event of events; let index = index"  >
-        <ion-card  (click)="goToEventDetail(event)" >
+        <ion-card  *ngIf="events" (click)="goToEventDetail(event)" >
 
            <img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="event.thumb" [scrollObservable]="container.ionScroll">
           <ion-card-header>
@@ -54,28 +35,10 @@
                <ion-icon  *ngIf="!event.location" hidden name="ios-pin-outline"></ion-icon>
              </ion-card-content>
         </ion-card>
-        </ion-col>
-        </ion-row>
-        </ion-grid>
-      </ion-list>
 
-      <ion-list *ngSwitchCase="'past-events'" inset>
-        <ion-item>
-          <ion-label item-left>Secteur d'activité</ion-label>
-          <ion-input disabled item-right type="text" ></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label>Site internet</ion-label>
-          <ion-input disabled type="text" ></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label>Linkedin</ion-label>
-          <ion-input disabled type="text" ></ion-input>
-        </ion-item>
 
-      </ion-list>
-    </div>
-  </ion-card>
+</ion-list>
+
 
 
 </ion-content>

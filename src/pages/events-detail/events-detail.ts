@@ -12,6 +12,7 @@ import {PostService} from "../../services/post-service";
 import {UserPage} from "../user/user";
 import {ParticipantsPage} from "../participants/participants";
 import {HomePage} from "../home/home";
+import {ShareModalPage} from "../share-modal/share-modal";
 
 /**
  * Generated class for the EventsDetailPage page.
@@ -40,7 +41,6 @@ export class EventsDetailPage {
     this.listenToEvents();
 
   }
-
 
   getEventFeed(eventId){
     this.eventService.getEventFeed(eventId).then(res=>{
@@ -132,9 +132,65 @@ export class EventsDetailPage {
       this.getEventFeed(this.event.id);
     })
   }
+  shareEvent(event){
+   let eventShare = this.modalCtrl.create(ShareModalPage,{
+      item :event,
+      type :'event',
+    });
+   eventShare.present();
+  }
+  toggleJoinEvent(event){
+    console.log(event.can_join,'event');
+    if(event.can_leave){
+      this.showEventDialog('Souhaitez-vous vraiment quitter cet événement?',event,'leaveEvent','Quitter lévènement ?');
+    }
+    else if(event.can_join) {
+      this.showRadioDialogEvent('Participer ?','Souhaitez-vous participer à cet événement?',event);
+    }
+
+  }
+  joinEvent(event,rsvp){
+    this.eventService.joinEvent(event.id,rsvp).then(res=>{
+      event.can_leave = true;
+      this.events.publish('update-event');
+      this.presentToast(res['data'].message);
+    },err=>{
+      this.presentToast(err.error.data.message);
+    });
+  }
+  leaveEvent(event){
+    this.eventService.leaveEvent(event.id).then(res=>{
+      event.can_leave = false;
+      this.events.publish('update-event');
+      this.presentToast(res['data'].message);
+    },err=>{
+      this.presentToast(err.error.data.message);
+    });
+  }
+
+  ondeletlick(event){
+    this.showEventDialog('Souhaitez-vous vraiment supprimer cet événement?',event,'deleteEvent','Supprimer');
+  }
+
+  deleteEvent(event){
+    let load =this.showLoader('veuillez patientez ..');
+    load.present();
+    this.eventService.deleteEvent(event.id).then(res=>{
+      load.dismiss();
+      this.presentToast(res['data'].message,3000);
+      this.events.publish('event-delete');
+      this.viewCtrl.dismiss();
+    },err=>{
+      load.dismiss();
+      this.presentToast(err.error.data.message);
+    })
+  }
+  editEvent(event){
+
+  }
   /////////////////////****/////////////////////////
 
-  showEventDialog(message,contact,handler,title?){
+  showEventDialog(message,object,handler,title?){
     let confirmDelActivity = this.alertCtrl.create({
       title : title,
       message: message,
@@ -148,7 +204,7 @@ export class EventsDetailPage {
         {
           text: 'Oui',
           handler: () => {
-            this.getHandler(handler,contact);
+            this.getHandler(handler,object);
           }
         }
       ]
@@ -156,10 +212,46 @@ export class EventsDetailPage {
 
     confirmDelActivity.present();
   }
+  showRadioDialogEvent(title,message,event){
+    let alert = this.alertCtrl.create({
+      title : title,
+      message: message,
 
-  getHandler(handler,param){
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Je participe',
+      value: 'attending',
+      checked: true
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Je participerai peut-être',
+      value: 'maybe_attending'
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Je ne participe pas',
+      value: 'not_attending'
+    });
+
+    alert.addButton('Cancel');
+    alert.addButton({
+      text: 'Ok',
+      handler: data => {
+       this.joinEvent(event,data);
+      }
+    })
+    alert.present();
+  }
+
+
+  getHandler(handler,param1){
     if(this[handler]){
-      this[handler](param);
+      this[handler](param1);
     }
   }
 
@@ -171,10 +263,10 @@ export class EventsDetailPage {
     return load;
   }
 
-  presentToast(msg) {
+  presentToast(msg,duration=2000) {
     let toast = this.toastCtrl.create({
       message: msg,
-      duration : 2000,
+      duration : duration,
       position: 'bottom',
       dismissOnPageChange: true
     });

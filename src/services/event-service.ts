@@ -58,7 +58,23 @@ export class EventService {
 
 
   createEvent(eventData){
+    return new Promise((resolve,reject)=>{
+      let headers = new HttpHeaders();
+      headers.append('Content-Type', 'multipart/form-data');
 
+      let postEventUrl = eventsUrl+'?access_token='+this.accessToken+'&title='+eventData.title
+        +'&start_time='+eventData.start_time+'&end_time='+eventData.end_time+'&allow_search='+eventData.allow_search+'&auth_invite='+eventData.auth_invite
+        +'&auth_view='+eventData.auth_view+'&auth_comment='+eventData.auth_comment+'&auth_photo='+eventData.auth_photo+'&approval='+eventData.approval
+      if(eventData.categorieId){
+        postEventUrl+= '&category_id='+eventData.categorieId;
+      }
+
+      this.http.post(postEventUrl,{headers}).subscribe(data=>{
+        resolve(data);
+      },err=>{
+        reject(err);
+      })
+    });
   }
 
   getEvent(eventId){
@@ -94,18 +110,39 @@ export class EventService {
     });
   }
 
-  leaveEvent(eventId,rsvp){
+  leaveEvent(eventId){
     return new Promise((resolve,reject)=>{
       let headers = new HttpHeaders();
       headers.append('Content-Type', 'multipart/form-data');
-      this.http.post(eventsUrl+'join'+'?access_token='+this.accessToken+'&id='+eventId+'&rsvp='+rsvp,{headers}).subscribe(data=>{
+      this.http.post(eventsUrl+'leave'+'?access_token='+this.accessToken+'&id='+eventId,{headers}).subscribe(data=>{
         resolve(data);
       },err=>{
         reject(err);
       })
     });
   }
-  updateRsvp(eventId){
+
+  getEventsCategories(){
+    return new Promise((resolve,reject)=>{
+      this.http.get(eventsUrl+'categories'+'?access_token='+this.accessToken+'&fields='+feedFields).subscribe(data=>{
+        resolve(data);
+      },err=>{
+        reject(err);
+      })
+    })
+  }
+
+  deleteEvent(eventId){
+    return new Promise((resolve,reject)=>{
+      this.http.delete(eventsUrl+eventId+'?access_token='+this.accessToken).subscribe(data=>{
+        resolve(data);
+      },err=>{
+        reject(err);
+      })
+    });
+  }
+
+  editEvent(){
 
   }
 }

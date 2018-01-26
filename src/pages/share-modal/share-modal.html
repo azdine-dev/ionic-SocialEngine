@@ -8,16 +8,7 @@
 
     </ion-card-content>
   </ion-card>
-  <div padding>
-    <ion-grid class="post-actions"  >
 
-      <ion-input [(ngModel)]="item_post.body" type="text" placeholder="votre message..." ></ion-input>
-      <br>
-      <br>
-      <button ion-button   [disabled]="!item_post.body" (click)="shareActivity(item_type,item.id,item_post.body)">Partager</button>
-      <button ion-button (click)="dismiss()">Annuler</button>
-    </ion-grid>
-  </div>
 </ion-content>
 
 <ion-content padding  *ngIf="item_attachment.type=='video' || item_attachment.type=='album_photo'">
@@ -31,16 +22,6 @@
     </ion-card-content>
   </ion-card>
 
-  <div padding>
-    <ion-grid class="post-actions"  >
-
-      <ion-input [(ngModel)]="item_post.body" type="text" placeholder="votre message..." ></ion-input>
-      <br>
-      <br>
-      <button ion-button   [disabled]="!item_post.body" (click)="shareActivity(item_type,item.id,item_post.body)">Partager</button>
-      <button ion-button (click)="dismiss()">Annuler</button>
-    </ion-grid>
-  </div>
 </ion-content>
 
 <ion-content padding  *ngIf="item_attachment.type == 'no'" >
@@ -54,40 +35,32 @@
     </ion-card-content>
   </ion-card>
 
-  <div padding>
-    <ion-grid class="post-actions"  >
 
-      <ion-input [(ngModel)]="item_post.body" type="text" placeholder="votre message..." ></ion-input>
-      <br>
-      <br>
-      <button ion-button   [disabled]="!item_post.body" (click)="shareActivity(item_type,item.id,item_post.body)">Partager</button>
-      <button ion-button (click)="dismiss()">Annuler</button>
-    </ion-grid>
-  </div>
 </ion-content>
 
 <ion-content padding  *ngIf="item_type == 'event'" >
-  <h2 ion-text color="primary"  class="post-author" >Partager(act)</h2>
+  <h2 ion-text color="primary"  class="post-author" >Partager cet Evénement</h2>
   <p>Partagez ceci en le ré-affichant avec votre propre message.</p>
 
   <ion-card>
-    <!--<img  src="{{item_attachment.img}}" imageViewer>-->
+    <img  height="200" width="200" [src]="item.thumb" imageViewer>
     <ion-card-content>
-      <div class="no-attachment" >
+      <div class="no-attachment"  >
+        <ion-note color="primary">{{item.title}}</ion-note><br>
         {{item.description}}
       </div>
     </ion-card-content>
   </ion-card>
 
+</ion-content>
+<ion-footer>
   <div padding>
     <ion-grid class="post-actions"  >
 
       <ion-input [(ngModel)]="item_post.body" type="text" placeholder="votre message..." ></ion-input>
-      <br>
-      <br>
-      <button ion-button   [disabled]="!item_post.body" >Partager</button>
+
+      <button ion-button   [disabled]="!item_post.body" (click)="shareActivity(item_type,item.id,item_post.body)">Partager</button>
       <button ion-button (click)="dismiss()">Annuler</button>
     </ion-grid>
   </div>
-</ion-content>
-
+</ion-footer>

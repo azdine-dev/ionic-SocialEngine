@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {Events, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {EventService} from "../../services/event-service";
 import {EventsDetailPage} from "../events-detail/events-detail";
+import {EventEditPage} from "../event-edit/event-edit";
 
 /**
  * Generated class for the EventsPage page.
@@ -19,8 +20,9 @@ export class EventsPage {
   private events : Array<any>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-              private eventService : EventService) {
+              private eventService : EventService,private eventSubscriber: Events) {
     this.getEvents();
+    this.listenToEvents();
   }
 
   getEvents(){
@@ -33,5 +35,21 @@ export class EventsPage {
     this.navCtrl.push(EventsDetailPage,{
       event : event,
     })
+  }
+
+  listenToEvents(){
+    this.eventSubscriber.subscribe('update-event',()=>{
+      this.getEvents();
+    });
+    this.eventSubscriber.subscribe('event-delete',()=>{
+      this.getEvents();
+    });
+    this.eventSubscriber.subscribe('create-event',()=>{
+      this.getEvents();
+    });
+  }
+
+  createEvent(){
+    this.navCtrl.push(EventEditPage);
   }
 }

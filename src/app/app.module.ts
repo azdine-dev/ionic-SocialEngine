@@ -53,6 +53,8 @@ import {EventsPage} from "../pages/events/events";
 import {EventsDetailPage} from "../pages/events-detail/events-detail";
 import {EventService} from "../services/event-service";
 import {ParticipantsPage} from "../pages/participants/participants";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {EventEditPage} from "../pages/event-edit/event-edit";
 
 // end import pages
 
@@ -85,6 +87,7 @@ import {ParticipantsPage} from "../pages/participants/participants";
     EventsPage,
     EventsDetailPage,
     ParticipantsPage,
+    EventEditPage,
   ],
   imports: [
     BrowserModule,HttpClientModule,
@@ -92,6 +95,7 @@ import {ParticipantsPage} from "../pages/participants/participants";
     IonicImageViewerModule,
     CacheModule.forRoot(),
     IonicImageLoader.forRoot(),
+    BrowserAnimationsModule,
     IonicModule.forRoot(MyApp),
 
   ],
@@ -123,7 +127,8 @@ import {ParticipantsPage} from "../pages/participants/participants";
     ProfilePage,
     EventsPage,
     EventsDetailPage,
-    ParticipantsPage
+    ParticipantsPage,
+    EventEditPage
 
   ],
   providers: [

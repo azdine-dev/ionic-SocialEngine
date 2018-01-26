@@ -27,20 +27,31 @@
           <ion-note>intéressé(e)</ion-note>
         </ion-col>
 
-        <ion-col *ngIf="event.owner.id !=userSession">
-          <ion-icon name="ios-checkmark-circle-outline"></ion-icon><br>
-          <ion-note> Participer</ion-note>
+        <ion-col   *ngIf="event.owner.id !=userSession" (click)="toggleJoinEvent(event)">
+          <ion-icon name="ios-checkmark-circle-outline" [color]="event.can_leave ? 'primary':''"></ion-icon><br>
+          <ion-note [color]="event.can_leave ? 'primary':''"> Participe</ion-note>
         </ion-col>
 
         <ion-col *ngIf="event.owner.id ==userSession" >
-          <ion-icon name="ios-redo-outline"> </ion-icon>
+          <ion-icon name="ios-redo-outline"> </ion-icon><br>
           <ion-note>Ajouter des invités</ion-note>
         </ion-col>
 
         <ion-col (click)="shareEvent(event)" >
           <ion-icon  name="md-share"></ion-icon><br>
-          <ion-note>Partagez cet évenement</ion-note>
+          <ion-note>Partagez </ion-note>
         </ion-col>
+
+        <ion-col *ngIf="event.can_delete" (click)="ondeletlick(event)" >
+          <ion-icon name="ios-trash-outline"> </ion-icon><br>
+          <ion-note>Supprimer</ion-note>
+        </ion-col>
+
+        <ion-col *ngIf="event.can_edit" (click)="editEvent(event)">
+          <ion-icon   name="md-create"> </ion-icon><br>
+          <ion-note>Modifier</ion-note>
+        </ion-col>
+
 
       </ion-row>
     </ion-grid>

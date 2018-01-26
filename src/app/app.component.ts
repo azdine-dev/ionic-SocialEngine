@@ -22,6 +22,7 @@ import {AlbumPage} from "../pages/album/album";
 import {CacheService} from "ionic-cache";
 import {ImageLoaderConfig} from "ionic-image-loader";
 import {EventsPage} from "../pages/events/events";
+import {EventEditPage} from "../pages/event-edit/event-edit";
 
 @Component({
   templateUrl: 'app.component.html',
@@ -113,13 +114,17 @@ export class MyApp {
   }
 
   openPage(page) {
-    if(page.component == LoginPage){
+    if(page.component == LoginPage ){
        localStorage.clear();
        sessionStorage.clear();
        this.cach.clearAll();
 
        this.nav.setRoot(page.component);
-    }else{
+    }
+    else if(page.component == HomePage){
+      this.nav.setRoot(page.component);
+    }
+    else{
       this.nav.push(page.component);
     }
 

@@ -1,0 +1,46 @@
+page-event-edit {
+  ion-datetime {
+    button {
+      position: relative !important;
+    }
+
+    .datetime-text {
+      overflow: visible;
+    }
+
+    flex: 1;
+  }
+  ion-icon.icon-hiden{
+    display: none;
+  }
+  .allow{
+    font-size: 70%;
+  }
+
+  .imagewrap {
+    display:inline-block;position:relative;
+    width: 10px;
+    height: 10px;
+  padding-left: 0px;
+
+  }
+
+
+  .image-button{
+    position:absolute;
+    right:30%;
+    top:13%;
+  }
+
+   ion-icon.update{
+     position:absolute;
+     right:4%;
+     top:21%;
+     opacity: 0.5;
+     background-color: mintcream;
+     zoom: 1.2;
+
+  }
+
+
+}

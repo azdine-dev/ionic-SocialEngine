@@ -15,9 +15,9 @@
 
 <ion-content padding #container>
 
-   <ion-list *ngFor="let vid of userVideos" >
+   <ion-list *ngFor="let vid of userVideos;let index = index" >
   <ion-card  >
-    <div  class="youtube" >
+    <div  class="youtube"  >
 
     <img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="vid.thumb" [scrollObservable]="container.ionScroll">
     <iframe *ngIf="showIframe"   [src]="trustResourceUrl(vid.video_src)"
@@ -25,9 +25,11 @@
     width="450" height="200" >
 
     </iframe>
-    <div (click)="playVideo(iframe)" *ngIf="!showIframe" #iframe  class="play-button">
+    <div  *ngIf="!showIframe" #iframe clicked="false" class="play-button">
     </div>
+
     </div>
+    <button (click)="playVideo(index,iframe)">wez</button>
   <ion-card-content>
 
   <p>
