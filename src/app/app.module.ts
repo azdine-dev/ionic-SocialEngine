@@ -55,6 +55,8 @@ import {EventService} from "../services/event-service";
 import {ParticipantsPage} from "../pages/participants/participants";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {EventEditPage} from "../pages/event-edit/event-edit";
+import {MessageService} from "../services/message-service";
+import {MessageCreatePage} from "../pages/message-create/message-create";
 
 // end import pages
 
@@ -88,6 +90,7 @@ import {EventEditPage} from "../pages/event-edit/event-edit";
     EventsDetailPage,
     ParticipantsPage,
     EventEditPage,
+    MessageCreatePage,
   ],
   imports: [
     BrowserModule,HttpClientModule,
@@ -128,7 +131,8 @@ import {EventEditPage} from "../pages/event-edit/event-edit";
     EventsPage,
     EventsDetailPage,
     ParticipantsPage,
-    EventEditPage
+    EventEditPage,
+    MessageCreatePage,
 
   ],
   providers: [
@@ -146,6 +150,7 @@ import {EventEditPage} from "../pages/event-edit/event-edit";
     AlbumService,
     CoreService,
     EventService,
+    MessageService,
 
 
     /* import services */

@@ -389,6 +389,7 @@ export class UserPage {
    console.log('wzez')
    let popover = this.popover.create(OptionsPage,{
      owner : this.owner,
+     type :'camera'
    });
    popover.present({
 

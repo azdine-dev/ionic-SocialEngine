@@ -6,23 +6,34 @@
 -->
 <ion-header>
   <ion-navbar color="primary" >
-    <button  ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Chats</ion-title>
+    <ion-buttons right>
+
+      <button  class="toggle" icon-only  ion-button  (click)="toggleMessages()" >
+        <ion-icon name="md-apps"></ion-icon>
+      </button>
+
+    </ion-buttons>
+
+
+    <ion-title>{{pageTitle}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-list class="list-full-border">
-    <ion-item-sliding *ngFor="let chat of chats">
+  <ion-fab right bottom>
+    <button ion-fab color="secondary" (click)="composeMessage()"><ion-icon name="md-create"></ion-icon></button>
+  </ion-fab>
 
-      <ion-item text-wrap (click)="viewChat(chat.id)">
+  <ion-list class="list-full-border">
+    <ion-item-sliding *ngFor="let message of inbox">
+
+      <ion-item text-wrap (click)="viewConversation(message.id)">
         <ion-avatar item-left>
-          <img class="profile-picture" src="{{ chat.face }}" alt=""/>
+          <img class="profile-picture" #img src="{{ message.participant.img }}" (error)="getDefaultImage(img)" alt=""/>
         </ion-avatar>
-        <h2 ion-text color="primary" >{{chat.name}}</h2>
-        <p>{{chat.lastText}}</p>
+        <h2 ion-text color="primary" >{{message.participant.title}}</h2>
+        <h6 ion-text class="to" color="dark">{{message.title}}</h6>
+        <p style="font-size: 80%">{{message.body}}</p>
       </ion-item>
 
       <ion-item-options>

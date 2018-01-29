@@ -5,6 +5,7 @@ import {Expression} from "@angular/compiler/src/output/output_ast";
 import {ExpressionPage} from "../expression/expression";
 import {PhotoModalPage} from "../photo-modal/photo-modal";
 import {ProfilePage} from "../profile/profile";
+import {UserService} from "../../services/user-service";
 
 /**
  * Generated class for the OptionsPage page.
@@ -20,6 +21,11 @@ import {ProfilePage} from "../profile/profile";
 })
 export class OptionsPage {
   private owner;
+  private userId;
+  private keyword : string;
+  private type ;
+  private users : Array<{}>;
+
   private imgData;
   private cameraTakerOptions : CameraOptions = {
     sourceType : this.camera.PictureSourceType.CAMERA,
@@ -40,8 +46,12 @@ export class OptionsPage {
     correctOrientation: true
   };
   constructor(public navCtrl: NavController, public navParams: NavParams,private  camera :Camera,
-              public viewCtrl : ViewController) {
-    this.owner = this.navParams.get('owner')
+              public viewCtrl : ViewController,public userService : UserService) {
+
+
+    this.owner = this.navParams.get('owner');
+    this.type = this.navParams.get('type');
+    this.users = this.navParams.get('users');
   }
 
   selectPhoto(){
@@ -65,5 +75,20 @@ export class OptionsPage {
     })
   }
 
+  initCall(){
+    if(this.type =='users'){
+      this.userService.getAllMembers(this.keyword).then(res=>{
+        this.users = res['data'];
+      })
+    }
+  }
 
+  getDefaultImage(image){
+    image.src = 'assets/img/user.png';
+  }
+
+  selectItem(item){
+    let contact = item;
+    this.viewCtrl.dismiss(contact);
+  }
 }

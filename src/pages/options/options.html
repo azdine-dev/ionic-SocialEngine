@@ -6,7 +6,7 @@
 -->
 
 
-<ion-list class="option-list" no-lines>
+<ion-list class="option-list" no-lines *ngIf="type=='camera'">
   <ion-item (click)="selectPhoto()">
     <ion-icon name='ios-images-outline' color="coffee"  item-start></ion-icon>
     <ion-note item-end>
@@ -20,4 +20,20 @@
       prendre une photo
     </ion-note>
   </ion-item>
+</ion-list>
+
+<ion-list *ngIf="type =='users' && users">
+  <div *ngFor="let contact of users">
+  <ion-item *ngIf="contact.can_send_message">
+
+    <ion-avatar item-left (click)="selectItem(contact)" >
+      <img  *ngIf="contact.imgs.icon" #image (error)="getDefaultImage(image)" class="profile-picture" src="{{ contact.imgs.icon }}" alt=""/>
+    </ion-avatar>
+
+    <div >
+      <h3 ion-text color="primary"  (click)="selectItem(contact)">{{ contact.title }}</h3>
+    </div>
+  </ion-item>
+  </div>
+
 </ion-list>

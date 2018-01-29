@@ -8,12 +8,10 @@ let photoFields = 'id,type,thumb,img,title,description,date,album,photo_index,ne
   'can_tag,can_edit,can_delete,can_share,can_report,can_make_profile_photo';
 let param = '?';
 let param_delimiter = '&';
-
+let refrechToken = localStorage.getItem('refresh_token');
+let accessToken = localStorage.getItem('token')+'&refresh_token='+this.refrechToken;
 @Injectable()
 export class AlbumService {
-
-  private refrechToken = localStorage.getItem('refresh_token');
-  private accessToken = localStorage.getItem('token')+'&refresh_token='+this.refrechToken;
 
   constructor(public http :HttpClient){
 
@@ -21,7 +19,7 @@ export class AlbumService {
 
   getUserAlbums(user_id){
    return new Promise((resolve,reject)=>{
-     this.http.get(albumUrl+param+'access_token='+this.accessToken+'&user_id='+user_id+'&fields='+fields).subscribe(data=>{
+     this.http.get(albumUrl+param+'access_token='+accessToken+'&user_id='+user_id+'&fields='+fields).subscribe(data=>{
        resolve(data);
      },err=>{
        reject(err);
@@ -31,7 +29,7 @@ export class AlbumService {
 
   getAlbumPhotos(album_id){
     return new Promise((resolve,reject)=>{
-      this.http.get(albumUrl+album_id+param+'access_token='+this.accessToken+'&fields='+fields+'&photo_fields='+photos).subscribe(data=>{
+      this.http.get(albumUrl+album_id+param+'access_token='+accessToken+'&fields='+fields+'&photo_fields='+photos).subscribe(data=>{
         resolve(data);
       },err=>{
         reject(err);
@@ -49,7 +47,7 @@ export class AlbumService {
   // ***********************PHOTO SERVICE *********************************
   getPhoto(photo_id){
     return new Promise((resolve,reject)=>{
-      this.http.get(albumUrl+'photos/'+photo_id+param+'access_token='+this.accessToken+'&fields='+photoFields).subscribe(data=>{
+      this.http.get(albumUrl+'photos/'+photo_id+param+'access_token='+accessToken+'&fields='+photoFields).subscribe(data=>{
         resolve(data);
       },err=>{
         reject(err);
@@ -68,7 +66,7 @@ export class AlbumService {
   deletePhoto(photoId){
     return new Promise((resolve, reject) => {
 
-      this.http.delete(albumUrl+'photos/'+photoId+ param + 'access_token=' + this.accessToken).subscribe(res => {
+      this.http.delete(albumUrl+'photos/'+photoId+ param + 'access_token=' + accessToken).subscribe(res => {
         resolve(res);
       }, err => {
         reject(err);

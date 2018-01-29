@@ -14,10 +14,10 @@
 </ion-header>
 
 <ion-content>
-  <div class="search-form">
-    <ion-icon name="ios-search"></ion-icon>
-    <ion-input type="text" placeholder="{{ contacts.length }} contacts"></ion-input>
-  </div>
+    <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="searchUsers()" ></ion-searchbar>
+    <div *ngIf="searching" class="spinner-container">
+      <ion-spinner></ion-spinner>
+    </div>
 
   <ion-list class="list-full-border" [virtualScroll]="members" approxItemHeight="60px" >
 
@@ -49,4 +49,9 @@
     </ion-item-sliding>
 
   </ion-list>
+  <ion-infinite-scroll (ionInfinite)="loadUsers($event)">
+    <ion-infinite-scroll-content>
+
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

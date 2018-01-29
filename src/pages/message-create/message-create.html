@@ -1,0 +1,44 @@
+<!--
+  Generated template for the MessageCreatePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-buttons right>
+      <button   icon-only  ion-button   >
+        <ion-icon name="md-link"></ion-icon>
+      </button>
+
+      <button   icon-only  ion-button  (click)="toggleMessages()" >
+        <ion-icon name="md-send"></ion-icon>
+      </button>
+
+    </ion-buttons>
+    <ion-title>Nouveau message</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <ion-list  no-lines>
+
+      <ion-item >
+        <ion-label  fixed>À</ion-label>
+        <ion-input (ionChange)="getPossibleUesr($event)" [(ngModel)]="messageData.to" [formControl]="searchUsersControl"></ion-input>
+      </ion-item>
+       <ion-note >{{selectedUesrs.title}}</ion-note>
+      <ion-item >
+        <ion-input placeholder="Objet" (ionInput)="getUserFriends()" [(ngModel)]="messageData.title"></ion-input>
+      </ion-item>
+
+      <ion-item >
+        <ion-textarea placeholder="Rédigez votre message" [(ngModel)]="messageData.body"></ion-textarea>
+      </ion-item>
+
+  </ion-list>
+
+</ion-content>
