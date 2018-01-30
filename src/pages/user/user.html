@@ -11,6 +11,11 @@
 </ion-header>
 
 <ion-content #container>
+  <ion-refresher (ionRefresh)="doRefreshFeed($event)" refreshingSpinner="circles">
+    <ion-refresher-content>
+
+    </ion-refresher-content>
+  </ion-refresher>
 
   <div text-center class="user-profile primary-bg">
     <div class="show-image">
@@ -21,6 +26,11 @@
     <h4 class="light">{{ owner.title }}</h4>
 
     <ion-grid  *ngIf=" userSession != owner.id">
+
+      <div *ngIf="!user" class="spinner-container">
+        <ion-spinner  name="circles" >
+        </ion-spinner>
+      </div>
       <ion-row >
         <ion-col  (click)="joinMember(user)">
           <ion-icon name="md-person-add" [color]=" user.friend_status =='is_friend' || user.friend_status =='is_sent_request' ? 'primary' : '' " ></ion-icon> <br>
@@ -65,6 +75,10 @@
        <div [ngSwitch]="infoUser">
 
          <ion-list *ngSwitchCase="'infoPer'" inset>
+           <div *ngIf="!user" class="spinner-container">
+             <ion-spinner  name="circles" >
+             </ion-spinner>
+           </div>
               <ion-item>
              <ion-label item-left>Prénom</ion-label>
                 <ion-input disabled item-right type="text" [value]="user.first_name"></ion-input>
@@ -84,6 +98,10 @@
          </ion-list>
 
          <ion-list *ngSwitchCase="'infoContact'" inset>
+           <div *ngIf="!user" class="spinner-container">
+             <ion-spinner  name="circles" >
+             </ion-spinner>
+           </div>
            <ion-item>
              <ion-label item-left>Secteur d'activité</ion-label>
              <ion-input disabled item-right type="text" [value]="user.about_me"></ion-input>
@@ -132,8 +150,10 @@
 
   </div>
   <ion-item item-right>
-  <ion-spinner  name="circles" *ngIf="!userFeed">
-  </ion-spinner>
+    <div *ngIf="!userFeed" class="spinner-container">
+      <ion-spinner  name="circles" >
+      </ion-spinner>
+    </div>
   </ion-item>
   <ion-list *ngFor="let post of userFeed">
   <ion-card>

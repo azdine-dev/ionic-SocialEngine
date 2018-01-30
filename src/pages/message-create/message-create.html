@@ -8,11 +8,11 @@
 
   <ion-navbar color="primary">
     <ion-buttons right>
-      <button   icon-only  ion-button   >
+      <button   icon-only  ion-button (click)="addAttachment($event)">
         <ion-icon name="md-link"></ion-icon>
       </button>
 
-      <button   icon-only  ion-button  (click)="toggleMessages()" >
+      <button   icon-only  ion-button  (click)="sendMessage()" >
         <ion-icon name="md-send"></ion-icon>
       </button>
 
@@ -28,11 +28,16 @@
 
       <ion-item >
         <ion-label  fixed>À</ion-label>
-        <ion-input (ionChange)="getPossibleUesr($event)" [(ngModel)]="messageData.to" [formControl]="searchUsersControl"></ion-input>
+        <ion-input (input)="getPossibleUesr($event)" [(ngModel)]="messageData.to" [formControl]="searchUsersControl"></ion-input>
+
       </ion-item>
-       <ion-note >{{selectedUesrs.title}}</ion-note>
+      <ion-buttons *ngIf="selectedUesrs" >
+        <button  class="to-user" ion-button round  small="true" icon-only *ngFor="let user of selectedUesrs" (click)="removeUser(user)">
+          <ion-icon name="md-close">{{user.title}}</ion-icon>
+        </button>
+      </ion-buttons>
       <ion-item >
-        <ion-input placeholder="Objet" (ionInput)="getUserFriends()" [(ngModel)]="messageData.title"></ion-input>
+        <ion-input placeholder="Objet" (change)="getUserFriends()" [(ngModel)]="messageData.title"></ion-input>
       </ion-item>
 
       <ion-item >

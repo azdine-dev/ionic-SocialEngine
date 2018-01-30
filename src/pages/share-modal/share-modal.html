@@ -16,7 +16,7 @@
   <p>Partagez ceci en le ré-affichant avec votre propre message.</p>
 
   <ion-card>
-    <img  src="{{item_attachment.img}}" imageViewer>
+    <img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="item_attachment.img" imageViewer>
     <ion-card-content>
 
     </ion-card-content>
@@ -51,8 +51,8 @@
       </div>
     </ion-card-content>
   </ion-card>
-
 </ion-content>
+
 <ion-footer>
   <div padding>
     <ion-grid class="post-actions"  >

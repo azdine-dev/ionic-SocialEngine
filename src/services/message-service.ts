@@ -1,5 +1,6 @@
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from "@angular/core";
+import {AttachementClass} from "../Data/attachement.interface";
 
 let messageFields = 'id,title,body,participant,date,read,attachment,from,conversation';
 let messageDetailsFields='id,title,body,recipients,date,read,messages,can_reply';
@@ -89,6 +90,30 @@ export class MessageService {
         reject(err);
       })
     });
+  }
+
+
+
+
+  sendNewMessage(messageData,withAttachment : boolean){
+    return new Promise((resolve,reject)=>{
+      let headers = new HttpHeaders();
+      headers.append('Content-Type', 'multipart/form-data');
+
+      if(withAttachment){
+
+      }else {
+
+        this.http.post(messageUrl +'?access_token=' +this.accessToken+'&to='+messageData.toUser+'&title='+messageData.title+'&body='+messageData.body
+
+          , {headers}).subscribe(data => {
+          resolve(data);
+        }, err => {
+          reject(err);
+        })
+      }
+    },);
+
   }
 
 }

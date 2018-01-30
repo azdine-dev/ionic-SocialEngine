@@ -85,8 +85,7 @@
       "android"
     ]
   },
-
   "config": {
-    "ionic_copy":"./config/copy.config.js"
+    "ionic_copy": "./config/copy.config.js"
   }
 }

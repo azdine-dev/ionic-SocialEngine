@@ -5,13 +5,16 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar color="primary" >
+  <ion-navbar [color]="navBarColor" >
     <ion-buttons right>
 
-      <button  class="toggle" icon-only  ion-button  (click)="toggleMessages()" >
+      <button  class="toggle" icon-only  ion-button  *ngIf="!activateDelete" (click)="toggleMessages()" >
         <ion-icon name="md-apps"></ion-icon>
       </button>
 
+      <button  class="toggle" icon-only  ion-button (click)="deleteMessage(message)" *ngIf="activateDelete">
+        <ion-icon name="md-trash"></ion-icon>
+      </button>
     </ion-buttons>
 
 
@@ -27,21 +30,24 @@
   <ion-list class="list-full-border">
     <ion-item-sliding *ngFor="let message of inbox">
 
-      <ion-item text-wrap (click)="viewConversation(message.id)">
+      <ion-item text-wrap (press)="selectItemTodelete()">
         <ion-avatar item-left>
-          <img class="profile-picture" #img src="{{ message.participant.img }}" (error)="getDefaultImage(img)" alt=""/>
+          <img *ngIf="!activateDelete"  #img src="{{ message.participant.img }}" (error)="getDefaultImage(img)" alt=""/>
+          <ion-checkbox item-left *ngIf="activateDelete"   (ionChange)="selectItem($event,message)" checked="false"></ion-checkbox>
+
+
         </ion-avatar>
-        <h2 ion-text color="primary" >{{message.participant.title}}</h2>
-        <h6 ion-text class="to" color="dark">{{message.title}}</h6>
-        <p style="font-size: 80%">{{message.body}}</p>
+
+          <h2  ion-text color="primary" >{{message.participant.title}}</h2>
+          <h6   ion-text class="to" color="dark">{{message.title}}</h6>
+          <p  style="font-size: 80%">{{message.body}}</p>
+
       </ion-item>
 
+
       <ion-item-options>
-        <button  ion-button color="yellow" >
-          Mute
-        </button>
         <button  ion-button color="danger" >
-          Delete
+          Supprimer
         </button>
       </ion-item-options>
     </ion-item-sliding>

@@ -17,7 +17,7 @@
    <h1>Faire tourner les photos</h1>
   <ion-slides>
     <ion-slide *ngFor="let image of albumPhotos " >
-      <img src="{{image.thumb}}" class="thumb-img" imageViewer>
+      <img [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="image.thumb" class="thumb-img" imageViewer>
       <ion-grid >
         <ion-row class="post-actions">
 

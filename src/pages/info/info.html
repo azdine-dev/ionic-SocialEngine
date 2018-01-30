@@ -20,16 +20,15 @@
     <div  class="youtube"  >
 
     <img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="vid.thumb" [scrollObservable]="container.ionScroll">
-    <iframe *ngIf="showIframe"   [src]="trustResourceUrl(vid.video_src)"
+    <iframe *ngIf="vid.clicked"   [src]="trustResourceUrl(vid.video_src)"
     allowfullscreen frameBorder="0"
     width="450" height="200" >
 
     </iframe>
-    <div  *ngIf="!showIframe" #iframe clicked="false" class="play-button">
+    <div  *ngIf="!vid.clicked" (click)="playVideo(vid)" #iframe clicked="false" class="play-button">
     </div>
 
     </div>
-    <button (click)="playVideo(index,iframe)">wez</button>
   <ion-card-content>
 
   <p>
@@ -39,39 +38,11 @@
 
   </ion-card>
   </ion-list>
-<!--<ion-list *ngFor="let vid of userVideos; let odd=odd; let even=even">-->
 
-      <!--<ion-grid>-->
-        <!--<ion-row>-->
-          <!--<ion-col width-50 >-->
-            <!--<div  class="youtube" >-->
+  <ion-infinite-scroll (ionInfinite)="loadVideos($event)">
+    <ion-infinite-scroll-content>
 
-              <!--<img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="vid.thumb" [scrollObservable]="container.ionScroll">-->
-              <!--<iframe *ngIf="showIframe"   [src]="trustResourceUrl(vid.video_src)"-->
-                      <!--allowfullscreen frameBorder="0"-->
-                      <!--width="350" height="200" >-->
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
-              <!--</iframe>-->
-              <!--<div (click)="playVideo(iframe)" *ngIf="!showIframe" #iframe  class="play-button">-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</ion-col>-->
-          <!--<ion-col width-50 >-->
-            <!--<div  class="youtube" >-->
-
-              <!--<img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="vid.thumb" [scrollObservable]="container.ionScroll">-->
-              <!--<iframe *ngIf="showIframe"   [src]="trustResourceUrl(vid.video_src)"-->
-                      <!--allowfullscreen frameBorder="0"-->
-                      <!--width="350" height="200" >-->
-
-              <!--</iframe>-->
-              <!--<div (click)="playVideo(iframe)" *ngIf="!showIframe" #iframe  class="play-button">-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</ion-col>-->
-        <!--</ion-row>-->
-      <!--</ion-grid>-->
-
-
-<!--</ion-list>-->
 </ion-content>

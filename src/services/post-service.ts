@@ -55,11 +55,11 @@ export class PostService {
     return this.http.get(feedUrl+param+'access_token='+this.accessToken+param_delimiter+'fields='+this.fields)
   }
 
-  getUserFeed(userId){
+  getUserFeed(userId,limit:number = 10,maxId?){
     return new Promise((resolve, reject )=>{
 
 
-      this.http.get(feedUrl+param+'access_token='+this.accessToken+param_delimiter+'fields='+this.fields+
+      this.http.get(feedUrl+param+'access_token='+this.accessToken+param_delimiter+'limit='+limit+'&maxid='+maxId+'fields='+this.fields+
         '&subject_type=user'+'&subject_id='+userId)
         .subscribe( res =>{
           resolve(res);

@@ -37,3 +37,26 @@
   </div>
 
 </ion-list>
+
+<ion-list class="option-list" no-lines *ngIf="type=='message'">
+  <ion-item (click)="selectPhoto()">
+    <ion-icon name='ios-images-outline' color="dark"  item-start></ion-icon>
+    <ion-note item-end>
+      selectionner photo
+    </ion-note>
+  </ion-item>
+
+  <ion-item (click)="takePicture()">
+    <ion-icon name='ios-camera-outline' color="dark"  item-start></ion-icon>
+    <ion-note item-end>
+      prendre une photo
+    </ion-note>
+  </ion-item>
+
+  <ion-item>
+    <ion-icon name='ios-link-outline' color="dark"  item-start></ion-icon>
+    <ion-note item-end>
+     Ajouter un lien
+    </ion-note>
+  </ion-item>
+</ion-list>

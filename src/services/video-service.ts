@@ -35,10 +35,10 @@ export class VideoService {
       })
     })
   }
-  getUserVideos(userId){
+  getUserVideos(userId,page,limit:number=5){
     return new Promise((resolve,reject)=>{
       this.http.get(videoUrl+param+'access_token='+this.accessToken+
-        '&user_id='+userId+'&fields='+readVideoFields).subscribe(data=>{
+        '&user_id='+userId+'&page='+page+'&limit='+limit+'&fields='+readVideoFields).subscribe(data=>{
         resolve(data);
       },err=>{
         reject(err);

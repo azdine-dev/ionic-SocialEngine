@@ -123,6 +123,12 @@ export class MyApp {
     }
     else if(page.component == HomePage){
       this.nav.setRoot(page.component);
+    }else if(page.component == ChatsPage){
+      this.nav.push(page.component,{
+        navBarColor : 'primary',
+        activateDelete :false,
+        type :'inbox',
+      });
     }
     else{
       this.nav.push(page.component);

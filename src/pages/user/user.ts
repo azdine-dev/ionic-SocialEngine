@@ -13,6 +13,7 @@ import {InfoPage} from "../info/info";
 import {AlbumPage} from "../album/album";
 import {FriendsPage} from "../friends/friends";
 import {OptionsPage} from "../options/options";
+import {ShareModalPage} from "../share-modal/share-modal";
 
 /*
  Generated class for the LoginPage page.
@@ -42,7 +43,7 @@ export class UserPage {
 
     this.owner = (navParams.get('owner'));
     this.getUserProfileInfo(this.owner.id);
-    this.getUserFeed();
+    this.getUserFeedV2();
     this.listenToFeedEvents();
     this.infoUser ='infoPer';
 
@@ -94,6 +95,28 @@ export class UserPage {
     });
 
   }
+  getUserFeedV2(refresher ?) {
+
+    if (refresher) {
+      if (typeof refresher != "boolean")
+        setTimeout(() => {
+          refresher.complete();
+        }, 300);
+
+      this.postService.getUserFeed(this.owner.id,10).then(result => {
+        this.userFeed = result['data']['items'];
+      })
+    }
+    else {
+
+      this.postService.getAllFeed(10).then(result => {
+        this.userFeed = result['data']['items'];
+
+      });
+
+    }
+  }
+
   getFeedAttchmentVideos(feed) {
     for (let activity of feed) {
       if (activity.attachments.length > 0) {
@@ -170,16 +193,16 @@ export class UserPage {
 
   private listenToFeedEvents(){
     this.events.subscribe('delete-user',()=>{
-      this.getUserFeed();
+      this.getUserFeedV2();
     });
     this.events.subscribe('new-comment',()=>{
-      this.getUserFeed();
+      this.getUserFeedV2();
     });
     this.events.subscribe('delete-comment',()=>{
-      this.getUserFeed();
+      this.getUserFeedV2();
     });
     this.events.subscribe('new-activity',()=>{
-      this.getUserFeed();
+      this.getUserFeedV2();
     });
       this.events.subscribe('new-state',()=>{
         this.getUserProfileInfo(this.owner.id);
@@ -397,5 +420,17 @@ export class UserPage {
    });
   }
 
+  doRefreshFeed(refrecher){
+    this.getUserFeedV2(refrecher);
+  }
 
+
+  sharePost(post){
+    console.log(post.type,'POST USER TYPE');
+    let cmntModal = this.modalCtrl.create(ShareModalPage,{
+      item : post,
+      type : post.type,
+    });
+    cmntModal.present();
+  }
 }
