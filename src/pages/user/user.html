@@ -190,7 +190,7 @@
           <ion-icon name="thumbs-up" color="primary"  *ngIf="post.is_liked"></ion-icon>
           <ion-icon name="thumbs-up" *ngIf="!post.is_liked"></ion-icon>
         </ion-col>
-        <ion-col  *ngIf="post.can_comment"text-center (click)="viewPost(post)">
+        <ion-col  *ngIf="post.can_comment"text-center (click)="commentPost(post)">
           <ion-icon name="chatboxes"></ion-icon>
         </ion-col>
         <ion-col *ngIf="post.can_share" text-center (click)="sharePost(post)">

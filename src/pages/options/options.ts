@@ -6,6 +6,8 @@ import {ExpressionPage} from "../expression/expression";
 import {PhotoModalPage} from "../photo-modal/photo-modal";
 import {ProfilePage} from "../profile/profile";
 import {UserService} from "../../services/user-service";
+import {NotificationsService} from "../../services/notifications-service";
+import {DomSanitizer} from "@angular/platform-browser";
 
 /**
  * Generated class for the OptionsPage page.
@@ -25,6 +27,7 @@ export class OptionsPage {
   private keyword : string;
   private type ;
   private users : Array<{}>;
+  private notification : Array<{}>;
 
   private imgData;
   private cameraTakerOptions : CameraOptions = {
@@ -46,12 +49,15 @@ export class OptionsPage {
     correctOrientation: true
   };
   constructor(public navCtrl: NavController, public navParams: NavParams,private  camera :Camera,
-              public viewCtrl : ViewController,public userService : UserService) {
+              public viewCtrl : ViewController,public userService : UserService,private notifs : NotificationsService,
+              private sanitize :DomSanitizer) {
 
 
     this.owner = this.navParams.get('owner');
     this.type = this.navParams.get('type');
     this.users = this.navParams.get('users');
+
+    this.presentData(this.type);
   }
 
   selectPhoto(){
@@ -90,5 +96,19 @@ export class OptionsPage {
   selectItem(item){
     let contact = item;
     this.viewCtrl.dismiss(contact);
+  }
+
+  presentData(type){
+    if(type=='friend_request' || type=='update'){
+      this.notifs.getAllNotification(type).then(res=>{
+        this.notification = res['data'];
+        console.log(this.notification)
+      })
+    }
+  }
+
+  processHtmlContent(html){
+    this.sanitize.bypassSecurityTrustHtml(html);
+    return (html);
   }
 }

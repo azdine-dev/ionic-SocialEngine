@@ -38,8 +38,8 @@
 
 </ion-content>
 
-<ion-content padding  *ngIf="item_type == 'event'" >
-  <h2 ion-text color="primary"  class="post-author" >Partager cet Evénement</h2>
+<ion-content padding  *ngIf="item_type == 'event' || item_type=='group'" >
+  <h2 ion-text color="primary"  class="post-author" >Partager {{item_type=='event' ? 'cet Evénement':'ce groupe'}}</h2>
   <p>Partagez ceci en le ré-affichant avec votre propre message.</p>
 
   <ion-card>

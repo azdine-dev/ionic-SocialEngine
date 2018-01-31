@@ -21,7 +21,7 @@ export class LoginPage {
   loading: Modal;
   loginData = {
     grant_type: "password",
-    scope :"activities basic albums videos blogs settings friends messages events blogs groups",
+    scope :"activities basic albums videos blogs settings friends messages events classifieds groups",
     email: "aben@novway.com",
     client_id: "tmyfu3Hg5nua08I",
     client_secret: "Ur3Obk6bvW6tdAbWAEfAwzC1DfjMW1wy",
@@ -52,7 +52,7 @@ export class LoginPage {
       this.nav.setRoot(HomePage);
     }, (err) => {
       load.dismiss();
-      this.presentToast(err["error"].data.message);
+      this.presentToast(err["error_description"]);
     });
 
   }
@@ -68,7 +68,6 @@ export class LoginPage {
       message: msg,
       duration: 3000,
       position: 'bottom',
-      dismissOnPageChange: true
     });
     toast.present();
 

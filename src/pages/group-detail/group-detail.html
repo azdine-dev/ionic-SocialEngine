@@ -1,0 +1,193 @@
+<ion-header>
+  <ion-navbar color="primary"  class="no-border">
+    <ion-title>Group :{{group.title}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content #container>
+
+  <div text-center class="user-profile primary-bg">
+    <div class="show-image">
+      <img #im    imageViewer src="{{ group.thumb}}">
+    </div>
+
+    <h4 class="light">{{ group.title }}</h4>
+
+    <ion-card>
+      <ion-grid color="white" >
+        <ion-row >
+          <ion-col *ngIf="group.owner.id !=userSession" (click)="toggleJoinGroup(group)">
+            <ion-icon name="{{group.can_leave? 'ios-close-circle-outline':'ios-redo-outline'}}" ></ion-icon><br>
+            <ion-note>{{group.can_leave? 'Quitter le group':'Joindre le groupe'}}</ion-note>
+          </ion-col>
+
+
+          <ion-col *ngIf="group.owner.id ==userSession" >
+            <ion-icon name="ios-redo-outline"> </ion-icon><br>
+            <ion-note>Inviter des membres</ion-note>
+          </ion-col>
+
+          <ion-col (click)="shareGroupe(group)" >
+            <ion-icon  name="md-share"></ion-icon><br>
+            <ion-note>Partagez le Groupe</ion-note>
+          </ion-col>
+
+          <ion-col *ngIf="group.can_message_members" (click)="editEvent(event)">
+            <ion-icon   name="ios-mail-outline"> </ion-icon><br>
+            <ion-note>Message aux membres</ion-note>
+          </ion-col>
+
+
+          <ion-col *ngIf="group.can_delete" (click)="ondeletlick(group)" >
+            <ion-icon name="ios-trash-outline"> </ion-icon><br>
+            <ion-note>Supprimer le Groupe</ion-note>
+          </ion-col>
+
+
+
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <ion-card>
+      <ion-list>
+
+        <ion-item *ngIf="group.owner">
+          <ion-icon name='ios-contact-outline'   item-start></ion-icon>
+
+          {{group.owner.title}}<br>
+          <ion-note >
+            Dirigé par :
+          </ion-note>
+        </ion-item>
+
+        <ion-item >
+          <ion-icon name='ios-people-outline'   item-start></ion-icon>
+          {{group.total_member}} membre {{group.total_member > 1 ? 's':''}}<br>
+          <ion-note >
+           Membres
+          </ion-note>
+        </ion-item>
+
+        <ion-item >
+          <ion-icon name='ios-eye-outline'  item-start></ion-icon>
+          {{group.total_view}}<br>
+          <ion-note >
+            Vues Total
+          </ion-note>
+        </ion-item>
+
+      </ion-list>
+
+    </ion-card>
+
+
+
+
+
+
+    <ion-card>
+      <ion-segment [(ngModel)]="eventDefault">
+        <ion-segment-button value="about" (click)="showGroupsFeed(false)">
+          A propos
+        </ion-segment-button>
+
+        <ion-segment-button value="feed" (click)="showGroupsFeed(true)">
+          Actualité
+        </ion-segment-button>
+        <ion-segment-button value="photos" (click)="showGroupsFeed(false)">
+          Photos
+        </ion-segment-button>
+        <ion-segment-button value="invited" (click)="showGroupsFeed(false)">
+          Membres({{group.total_member}})
+        </ion-segment-button>
+
+      </ion-segment>
+      <div [ngSwitch]="eventDefault">
+        <div  *ngSwitchCase="'about'">
+          <ion-card>
+            <ion-item item-start>
+              <h6 ion-text > Détails</h6>
+            </ion-item>
+
+            <p ion-item item-start>
+              {{group.description}}
+            </p>
+          </ion-card>
+
+        </div>
+
+
+      </div>
+
+    </ion-card>
+
+  </div>
+
+  <ion-card *ngIf="showFeed">
+    <ion-item>
+      <ion-label color="primary" stacked></ion-label>
+      <ion-input type="email" (ionFocus)="goToExpress(group.id)" placeholder="Exprime toi .."></ion-input>
+    </ion-item>
+    <div style="background-color: #f4f4f4" color="light" >
+      <ion-grid>
+        <ion-row>
+
+          <ion-col col-4 col-md-4 col-sm-4 (click)="postNewPhoto()">
+            <ion-icon name="md-camera"  color="gray"></ion-icon>
+          </ion-col>
+          <ion-col col-4 col-md-4 col-sm-4 (click)="postNewVideo()" >
+            <ion-icon   name="md-videocam" color="gray"></ion-icon>
+          </ion-col>
+          <ion-col col-4 col-md-4 col-sm-4 (click)="postNewLink()">
+            <ion-icon name="md-link" color="gray"></ion-icon>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </ion-card>
+  <ion-list *ngIf="groupPosts && showFeed">
+    <ion-card *ngFor="let post of groupPosts">
+
+
+      <ion-item>
+        <ion-avatar item-left (click)="viewUser(post.owner)">
+          <img (error)="getDefaultImage(img)"  #img  src="{{ post.owner.imgs.icon}}">
+        </ion-avatar>
+        <ion-label>{{post.owner.title}}</ion-label>
+        <p>{{ post.time }}</p>
+      </ion-item>
+
+      <ion-item text-wrap class="post-body">
+        <div >
+          <div [innerHtml]="processHtmlContent(post.content)"></div>
+          <div  *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
+            <ion-item  [innerHtml]="videoFeedMap.get(post.attachments[0].id)"  ></ion-item>
+          </div>
+          <img #imAtt (error)="getDefaultImage(imAtt)" imageViewer class="full-image"
+               *ngIf="post.attachments.length && post.attachments[0].type=='album_photo' " src="{{ post.attachments[0].img }}">
+        </div>
+
+        <div>
+          <a (click)="viewPost(post.id)" class="subdued">{{ post.total_like}} Likes</a>
+          <a (click)="viewPost(post.id)" class="subdued" margin-left>{{ post.total_comment}} Comments</a>
+        </div>
+      </ion-item>
+
+      <ion-grid class="post-actions">
+        <ion-row>
+          <ion-col  *ngIf="post.can_like"text-center (click)="toggleLike(post)">
+            <ion-icon name="thumbs-up" color="primary"  *ngIf="post.is_liked"></ion-icon>
+            <ion-icon name="thumbs-up" *ngIf="!post.is_liked"></ion-icon>
+          </ion-col>
+          <ion-col  *ngIf="post.can_comment"text-center (click)="commentPost(post)">
+            <ion-icon name="chatboxes"></ion-icon>
+          </ion-col>
+          <ion-col *ngIf="post.can_delete" text-center (click)="showDeletePostDialog(post)">
+            <ion-icon name="ios-trash-outline" ></ion-icon>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </ion-list>
+</ion-content>

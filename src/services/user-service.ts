@@ -49,7 +49,6 @@ export class UserService {
       this.http.get(membersUrl + param + 'access_token=' + this.accessToken+'&keywords='+keyword+'&fields='+userInfoFields+'&limit='+limit+'&page='+page)
         .subscribe(res => {
           resolve(res);
-          console.log(res);
         }, (err) => {
           reject(err);
         });
@@ -201,7 +200,7 @@ export class UserService {
     return new Promise((resolve, reject) => {
       let headers = new HttpHeaders();
       headers.append('Content-Type', 'multipart/form-data');
-      this.http.post(membersUrl + 'friends_cancel' + param + 'access_token=' + this.accessToken + '&user_id=' + userId
+      this.http.post(membersUrl + 'friends_ignore' + param + 'access_token=' + this.accessToken + '&user_id=' + userId
         , {headers}).subscribe(data => {
         resolve(data);
       }, err => {

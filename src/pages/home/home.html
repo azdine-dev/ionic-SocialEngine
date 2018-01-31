@@ -11,21 +11,23 @@
     </button>
 
     <ion-row class="home-bar">
-    <ion-col width-25>
+    <ion-col col-4>
       <button  icon-only ion-button clear (click)="scrollToTop()" >
         <ion-icon style="zoom: 1.0" name="ios-home-outline"   color="{{homeIcon}}"></ion-icon>
       </button>
     </ion-col>
-      <ion-col width-40>
-        <button  ion-button icon-only clear >
-          <ion-icon style="zoom: 1.0"name="ios-videocam-outline"  color="white"></ion-icon>
-        </button>
-      </ion-col>
 
-      <ion-col width-25>
-        <button id="notification-button" ion-button icon-only  >
-          <ion-icon id="notif" style="zoom: 1.0" name="ios-notifications-outline" color="white" >
-            <ion-badge id="notifications-badge" color="danger">5</ion-badge>
+
+      <ion-col col-4>
+        <button ion-button icon-only clear (click)="getUpdateNotifications($event)">
+          <ion-icon   name="ios-flag-outline" color="white" >
+          </ion-icon>
+        </button>
+
+      </ion-col>
+      <ion-col col-4>
+        <button ion-button icon-only clear  (click)="getFriendNotifications($event)">
+          <ion-icon   name="ios-person-add-outline" color="white" >
           </ion-icon>
         </button>
 

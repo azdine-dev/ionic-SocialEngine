@@ -67,7 +67,7 @@ export class UserPage {
   }
 
   // on click, go to post detail
-  viewPost(post) {
+  commentPost(post) {
     let cmntModal = this.modalCtrl.create(CommentPage,{post : post});
     cmntModal.present();
   }

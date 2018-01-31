@@ -39,4 +39,48 @@ page-notifications,
       font-size: 0.7em;
     }
   }
+  .notif-read{
+   background-color: #e6f7ff;
+  }
+  .feed_item_username{
+    color: #3EC3D6;
+  }
+  .friend-image{
+    width: 60px;
+    height: 60px;
+  }
+  .upade-image{
+    width: 50px;
+    height: 50px;
+  }
+  .friends-content{
+    margin-left: 75px;
+    margin-top: -65px;
+
+  }
+  .update-content{
+    margin-left: 75px;
+    margin-top: -50px;
+
+  }
+  .add-friend{
+    margin-top: -5px;
+   margin-left: 70px;
+    font-size: 10px;
+    width : 7em;
+    height: 20px;
+
+  }
+
+  .ignore-friend{
+    font-size: 10px;
+    width : 7em;
+    height: 22px;
+    margin-left: 14.5em;
+
+    color: black;
+    font-weight: normal;
+    margin-top: -24px;
+    background-color: #e6e5eb;
+  }
 }

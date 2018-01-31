@@ -29,7 +29,9 @@ a {
 .profile-picture {
   border-radius: 50%;
 }
-
+.profile-picture2 {
+  border-radius: 50%;
+}
 .item-no-border {
 
   .item-inner {
@@ -138,7 +140,11 @@ ion-item.item-block.item-no-border {
     height: 7em;
     margin-top: 0.75em;
   }
-
+  .profile-picture2 {
+    width: 3em;
+    height: 3em;
+    margin-top: 0.75em;
+  }
   .search-form {
     border: none;
   }

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Platform} from 'ionic-angular';
+import {Events, Platform} from 'ionic-angular';
 import {ViewChild} from '@angular/core';
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
@@ -23,6 +23,7 @@ import {CacheService} from "ionic-cache";
 import {ImageLoaderConfig} from "ionic-image-loader";
 import {EventsPage} from "../pages/events/events";
 import {EventEditPage} from "../pages/event-edit/event-edit";
+import {GroupsPage} from "../pages/groups/groups";
 
 @Component({
   templateUrl: 'app.component.html',
@@ -60,10 +61,18 @@ export class MyApp {
     },
     {
       title: 'Evénements',
-      icon: 'md-calendar',
+      icon: 'ios-calendar-outline',
       count: 0,
       component: EventsPage
     },
+
+    {
+      title: 'Groups',
+      icon: 'ios-people-outline',
+      count: 0,
+      component: GroupsPage,
+    },
+
 
     {
       title: 'Notifications',
@@ -99,7 +108,7 @@ export class MyApp {
 
   constructor(public platform: Platform, statusBar: StatusBar,
               splashScreen: SplashScreen,public userService : UserService,public cach : CacheService,
-              private imageLoaderConfig: ImageLoaderConfig) {
+              private imageLoaderConfig: ImageLoaderConfig,private events : Events) {
     this.rootPage = LoginPage;
 
     platform.ready().then(() => {
@@ -109,6 +118,7 @@ export class MyApp {
       splashScreen.hide();
       this.userId = localStorage.getItem('user-id');
       imageLoaderConfig.setImageReturnType('base64');
+      this.listenToCutomEvents();
     });
 
   }
@@ -141,6 +151,14 @@ export class MyApp {
     this.nav.push(UserPage, {id: userId})
   }
 
-
+ listenToCutomEvents(){
+    this.events.subscribe('authorized-user',(data)=>{
+      this.profileNme=data.title;
+      this.profilePicture=data.imgs.normal;
+    })
+ }
+  getDefaultImage(image){
+    image.src = 'assets/img/user.png';
+  }
 }
 

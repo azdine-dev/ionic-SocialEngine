@@ -65,6 +65,7 @@ export class MessageCreatePage {
           users : res['data']
         };
         let result = res['data'];
+        console.log(res,'REEEEES');
         if(result.length >0 && this.selectedUesrs.length <10 ){
         let popover = this.cretePopover(myevent,data);
         popover.onDidDismiss(data=>{

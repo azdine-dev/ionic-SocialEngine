@@ -14,34 +14,62 @@
 </ion-header>
 
 <ion-content>
-  <ion-list class="list-no-border notifications-list">
+  <ion-list>
+<div *ngFor="let notification of notifications">
 
-    <ion-item *ngFor="let notification of notifications">
-      <span class="item-label danger-bg" *ngIf="notification.type == 'liked'">
-        <ion-icon name="heart" color="light" ></ion-icon>
-      </span>
 
-      <span class="item-label secondary-bg" *ngIf="notification.type == 'commented'">
-        <ion-icon name="ios-chatboxes"></ion-icon>
-      </span>
-
-      <span class="item-label green-bg" *ngIf="notification.type == 'friend_request'">
-        <ion-icon name="ios-add"></ion-icon>
-      </span>
-
-      <span ion-text color="primary"  class="post-author">
-        {{ notification.name }}
-      </span>
-      <span class="notifications-content" *ngIf="notification.type == 'liked'">liked your post</span>
-      <span class="notifications-content" *ngIf="notification.type == 'commented'">commented on your post</span>
-      <span class="notifications-content" *ngIf="notification.type == 'friend_request'">
-        wants to be your friend
-      </span>
-
-      <p class="post-time">
-        <ion-icon name="timer-outline"></ion-icon>
-        {{ notification.time }}
-      </p>
+    <ion-item text-wrap  *ngIf="(!notification.read && notification.type=='friend_request') || (notification.type!='friend_request')" (click)="readNotification(notification)"
+               ngClass="{{notification.read ?'':'notif-read'}}">
+        <img   ngClass="{{notification.type == 'friend_request'?'friend-image':'upade-image'}}" #img src="{{ notification.owner.imgs.normal }}" (error)="getDefaultImage(img)" alt=""/>
+      <div ngClass="{{notification.type == 'friend_request'?'friends-content':'update-content'}}" text-wrap>
+       <div [innerHtml]="processHtmlContent(notification.content)"></div>
+      <ion-note   ion-text *ngIf="!notification.type=='friend_request'" >{{notification.timestamp * 1000 | date:'short'}}</ion-note>
+      </div>
+      <ion-buttons align-items-center *ngIf="notification.type=='friend_request'">
+        <button  class="add-friend" ion-button (click)="approuveFriendsRequest(notification)">ajouter</button>
+        <button  class="ignore-friend" color="light" (click)="ignoreFriendRequest(notification)" outline block ion-button>ignorer</button>
+      </ion-buttons>
     </ion-item>
+
+</div>
   </ion-list>
+  <ion-infinite-scroll (ionInfinite)="loadNotifications($event)">
+    <ion-infinite-scroll-content>
+
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
+
+
+
+
+
+
+
+<!--<ion-item *ngFor="let notification of notifications">-->
+<!--<span class="item-label danger-bg" *ngIf="notification.type == 'liked'">-->
+<!--<ion-icon name="heart" color="light" ></ion-icon>-->
+<!--</span>-->
+
+<!--<span class="item-label secondary-bg" *ngIf="notification.type == 'commented'">-->
+<!--<ion-icon name="ios-chatboxes"></ion-icon>-->
+<!--</span>-->
+
+<!--<span class="item-label green-bg" *ngIf="notification.type == 'friend_request'">-->
+<!--<ion-icon name="ios-add"></ion-icon>-->
+<!--</span>-->
+
+<!--<span ion-text color="primary"  class="post-author">-->
+<!--{{ notification.name }}-->
+<!--</span>-->
+<!--<span class="notifications-content" *ngIf="notification.type == 'liked'">liked your post</span>-->
+<!--<span class="notifications-content" *ngIf="notification.type == 'commented'">commented on your post</span>-->
+<!--<span class="notifications-content" *ngIf="notification.type == 'friend_request'">-->
+<!--wants to be your friend-->
+<!--</span>-->
+
+<!--<p class="post-time">-->
+<!--<ion-icon name="timer-outline"></ion-icon>-->
+<!--{{ notification.time }}-->
+<!--</p>-->
+<!--</ion-item>-->

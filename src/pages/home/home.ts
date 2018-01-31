@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {
-  AlertController, Content, Events, LoadingController, ModalController, NavController,
+  AlertController, Content, Events, LoadingController, ModalController, NavController, PopoverController,
   ToastController,
   ViewController
 } from 'ionic-angular';
@@ -18,6 +18,9 @@ import {Camera, CameraOptions} from "@ionic-native/camera";
 import {PhotoModalPage} from "../photo-modal/photo-modal";
 import {CacheService} from "ionic-cache";
 import {Observable} from "rxjs/Observable";
+import {NotificationsService} from "../../services/notifications-service";
+import {OptionsPage} from "../options/options";
+import {NotificationsPage} from "../notifications/notifications";
 /*
  Generated class for the LoginPage page.
 
@@ -68,11 +71,13 @@ export class HomePage implements OnInit {
   constructor(public nav: NavController, public postService: PostService, public events : Events,public userService : UserService,
               public modalCtrl : ModalController,public alertCtrl : AlertController,
               public sanitizer : DomSanitizer,public videoService : VideoService,public viewCtrl :  ViewController
-              ,public toastCtrl : ToastController,private  camera : Camera,public cach : CacheService) {
+              ,public toastCtrl : ToastController,private  camera : Camera,
+              public cach : CacheService,private notifications:NotificationsService,private popover:PopoverController) {
+    this.getAuthUser();
   }
   ngOnInit(){
     this.getFeedV2();
-    this.getAuthUser();
+
     this.listenToFeedEvents();
   }
   toggleLike(post) {
@@ -231,6 +236,8 @@ export class HomePage implements OnInit {
     this.userService.getAuthorizedUser().then(res=>{
      this.authUser.title = res['data']['title'];
      this.authUser.image = res['data']['imgs']['normal'];
+     let user = res['data'];
+     this.events.publish('authorized-user',user)
 
     })
   }
@@ -352,4 +359,17 @@ export class HomePage implements OnInit {
   trustVideo(src){
     return this.sanitizer.bypassSecurityTrustResourceUrl(src);
   }
+
+
+  getUpdateNotifications(myevent){
+   this.nav.push(NotificationsPage,{
+     notification_type:'update',
+   })
+  }
+  getFriendNotifications(myevent){
+    this.nav.push(NotificationsPage,{
+      notification_type:'friend_request',
+    })
+  }
+
  }

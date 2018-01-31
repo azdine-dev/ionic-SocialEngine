@@ -1,0 +1,35 @@
+<ion-header>
+
+  <ion-navbar  color="primary" class="no-border">
+    <ion-title>Groups</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding #container>
+  <ion-fab right bottom>
+    <button ion-fab color="primary" (click)="createGroup()"><ion-icon name="ios-add-circle-outline"></ion-icon></button>
+  </ion-fab>
+
+  <ion-list *ngFor="let group of groups">
+
+    <ion-card  *ngIf="groups" (click)="goToGroupDetails(group)" >
+
+      <img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="group.thumb" [scrollObservable]="container.ionScroll">
+      <ion-card-header>
+        <h3 color="primary" ion-text>{{group.title}}</h3>
+      </ion-card-header>
+      <ion-card-content>
+
+        <h3 ion-text color="primary">{{group.owner.title}}</h3>
+        <ion-note>{{group.total_member}} membre {{group.total_member > 1 ? 's':''}}</ion-note>
+      </ion-card-content>
+    </ion-card>
+
+
+  </ion-list>
+
+
+
+</ion-content>

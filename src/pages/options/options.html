@@ -23,6 +23,7 @@
 </ion-list>
 
 <ion-list *ngIf="type =='users' && users">
+
   <div *ngFor="let contact of users">
   <ion-item *ngIf="contact.can_send_message">
 
@@ -60,3 +61,29 @@
     </ion-note>
   </ion-item>
 </ion-list>
+
+<ion-content *ngIf="type =='friend-request' || type=='update'">
+  <ion-list>
+
+    <div *ngIf="!notification" class="spinner-container">
+      <ion-spinner></ion-spinner>
+    </div>
+    <ion-list *ngFor="let notif of notification">
+      <ion-item >
+
+        <ion-avatar item-left  >
+          <img   #image (error)="getDefaultImage(image)" class="profile-picture" src="{{ notif.owner.imgs.normal }}" alt=""/>
+        </ion-avatar>
+        <div [innerHtml]="processHtmlContent(notif.content)"></div>
+        <div >
+          <h3 ion-text color="primary"  >{{ notif.owner.title }}</h3>
+        </div>
+      </ion-item>
+    </ion-list>
+
+  </ion-list>
+  <ion-card *ngIf="notifications && notification.length ==0">
+    <ion-card-title> NO ITEM</ion-card-title>
+  </ion-card>
+</ion-content>
+

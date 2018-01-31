@@ -2,19 +2,15 @@
 
   <ion-content class="menu-left">
     <!-- User profile -->
-    <div text-center>
-      <a  (click)="viewUser(userId)">
-        <img class="profile-picture" src="{{profilePicture}}">
-        <h4>{{profileNme}}</h4>
-      </a>
+    <ion-item >
+      <ion-avatar  item-left (click)="viewUser(userId)">
+        <img class="profile-picture2" #image (error)="getDefaultImage(image)" src="{{profilePicture}}" >
+      </ion-avatar>
+      <h6>{{profileNme}}</h6>
+      <ion-note>Afficher votre profile</ion-note>
+    </ion-item>
 
-      <div class="search-form">
-        <ion-icon name="ios-search"></ion-icon>
-        <ion-input type="text" placeholder="Search"></ion-input>
-      </div>
-    </div>
-
-    <ion-list class="list-full-border">
+    <ion-list class="list-full-border" no-lines>
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
         <ion-icon item-left name="{{ p.icon }}"></ion-icon>
         {{ p.title }}

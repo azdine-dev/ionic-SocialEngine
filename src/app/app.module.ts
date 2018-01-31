@@ -57,6 +57,11 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {EventEditPage} from "../pages/event-edit/event-edit";
 import {MessageService} from "../services/message-service";
 import {MessageCreatePage} from "../pages/message-create/message-create";
+import {GroupService} from "../services/group-service";
+import {NotificationsService} from "../services/notifications-service";
+import {GroupsPage} from "../pages/groups/groups";
+import {GroupDetailPage} from "../pages/group-detail/group-detail";
+import {MessageModalPage} from "../pages/message-modal/message-modal";
 
 // end import pages
 
@@ -91,6 +96,9 @@ import {MessageCreatePage} from "../pages/message-create/message-create";
     ParticipantsPage,
     EventEditPage,
     MessageCreatePage,
+    GroupsPage,
+    GroupDetailPage,
+    MessageModalPage
   ],
   imports: [
     BrowserModule,HttpClientModule,
@@ -133,6 +141,9 @@ import {MessageCreatePage} from "../pages/message-create/message-create";
     ParticipantsPage,
     EventEditPage,
     MessageCreatePage,
+    GroupsPage,
+    GroupDetailPage,
+    MessageModalPage,
 
   ],
   providers: [
@@ -151,6 +162,8 @@ import {MessageCreatePage} from "../pages/message-create/message-create";
     CoreService,
     EventService,
     MessageService,
+    GroupService,
+    NotificationsService,
 
 
     /* import services */
