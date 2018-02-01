@@ -26,7 +26,12 @@
   <ion-fab right bottom>
     <button ion-fab color="secondary" (click)="composeMessage()"><ion-icon name="md-create"></ion-icon></button>
   </ion-fab>
+  <div class="row" *ngIf="!(inbox?.length > 0)">
+    <ion-icon color="coffee" class="no-messages" name="ios-mail-open-outline">
 
+    </ion-icon><br>
+    No Message To show !
+  </div>
   <ion-list class="list-full-border">
     <ion-item-sliding *ngFor="let message of inbox">
 

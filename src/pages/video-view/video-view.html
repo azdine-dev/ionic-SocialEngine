@@ -1,0 +1,67 @@
+<ion-header >
+
+  <ion-navbar color="primary"  class="no-border">
+    <ion-title> {{vid.title}} </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding #container>
+
+    <ion-card  >
+      <div  class="youtube"  >
+
+        <img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="vid.thumb" >
+        <iframe *ngIf="vid.clicked2"   [src]="trustResourceUrl(vid)"
+                allowfullscreen frameBorder="0"
+                width="450" height="200" >
+
+        </iframe>
+        <div  *ngIf="!vid.clicked2" (click)="playVideo(vid)" #iframe clicked="false" class="play-button">
+        </div>
+
+      </div>
+      <ion-card-content>
+        <ion-card-title>
+          {{vid.title}}
+        </ion-card-title>
+        <ion-label >
+          Publié par : {{vid.owner.title}}
+        </ion-label>
+        <div [innerHtml]="trustHtm(vid.description)"></div>
+      </ion-card-content>
+      <ion-item>
+        <div>
+          <ion-note  class="subdued">{{ vid.total_like}} Likes</ion-note>
+          <ion-note  class="subdued" margin-left>{{ vid.total_comment}} Comments</ion-note>
+          <ion-note  class="subdued" margin-left>{{ vid.total_view}} Vues</ion-note>
+        </div>
+      </ion-item>
+      <ion-grid class="post-actions">
+        <ion-row no-padding>
+
+          <ion-col   text-center (click)="toggleLike(vid)">
+            <ion-icon name="thumbs-up" color="primary"  *ngIf="vid.is_liked"></ion-icon>
+            <ion-icon name="thumbs-up" *ngIf="!vid.is_liked"></ion-icon>
+          </ion-col>
+
+          <ion-col  *ngIf="vid.can_comment"text-center (click)="commentVideo(vid)">
+            <ion-icon name="chatboxes"></ion-icon>
+          </ion-col>
+          <ion-col *ngIf="vid.can_share" text-center (click)="shareVideo(vid)">
+            <ion-icon name="share-alt"></ion-icon>
+          </ion-col>
+
+          <ion-col *ngIf="vid.can_delete" text-center (click)="showDeleteVideoDialog(vid)">
+            <ion-icon name="ios-trash-outline" ></ion-icon>
+          </ion-col>
+
+
+
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+
+</ion-content>

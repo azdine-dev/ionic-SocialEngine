@@ -2,9 +2,9 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 
 let videoUrl = 'intaliq.novway.com/api/v1/videos/';
-let fields = 'id,title,description,duration,thumb,owner,date,total_comment,' +
+let fields = 'id,title,is_liked,can_share,can_comment,can_delete,can_like,description,duration,thumb,owner,date,total_comment,' +
   'total_like,total_view,total_vote,rating,is_rated,status,video_type,video_src,category,tags,can_edit,can_delete,can_embed';
-let readVideoFields = 'id,title,description,video_type,video_src,description,thumb,total_like,total_view,total_vote,rating,is_rated,status';
+let readVideoFields = 'id,title,description,video_type,video_src,description,thumb,total_like,total_view,total_vote,rating,is_rated,status,';
 let param = '?';
 let param_delimiter = '&';
 
@@ -26,14 +26,26 @@ export class VideoService {
    })
   }
 
-  getAllVideos(){
+  getAllVideos(page?,limit?){
     return new Promise((resolve,reject)=>{
-      this.http.get(videoUrl+param+'access_token='+this.accessToken+'&fields='+readVideoFields).subscribe(data=>{
+      this.http.get(videoUrl+param+'access_token='+this.accessToken+'&page='+page+'&limit='+limit+'&fields='+fields).subscribe(data=>{
         resolve(data);
       },err=>{
         reject(err);
       })
     })
+  }
+
+  deleteVideo(videoId){
+    return new Promise((resolve, reject) => {
+
+      this.http.delete(videoUrl +videoId+ param + 'access_token=' + this.accessToken).subscribe(res => {
+        resolve(res);
+      }, err => {
+        reject(err);
+      })
+
+    });
   }
   getUserVideos(userId,page,limit:number=5){
     return new Promise((resolve,reject)=>{
@@ -117,6 +129,10 @@ export class VideoService {
       })
 
     });
+  }
+
+  likeVideo(){
+
   }
 
 }

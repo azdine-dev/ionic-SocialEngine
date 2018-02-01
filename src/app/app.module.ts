@@ -62,6 +62,9 @@ import {NotificationsService} from "../services/notifications-service";
 import {GroupsPage} from "../pages/groups/groups";
 import {GroupDetailPage} from "../pages/group-detail/group-detail";
 import {MessageModalPage} from "../pages/message-modal/message-modal";
+import {VideoViewPage} from "../pages/video-view/video-view";
+import {ProfileEditPage} from "../pages/profile-edit/profile-edit";
+import {MediathequePage} from "../pages/mediatheque/mediatheque";
 
 // end import pages
 
@@ -98,7 +101,10 @@ import {MessageModalPage} from "../pages/message-modal/message-modal";
     MessageCreatePage,
     GroupsPage,
     GroupDetailPage,
-    MessageModalPage
+    MessageModalPage,
+    VideoViewPage,
+    ProfileEditPage,
+    MediathequePage,
   ],
   imports: [
     BrowserModule,HttpClientModule,
@@ -144,6 +150,9 @@ import {MessageModalPage} from "../pages/message-modal/message-modal";
     GroupsPage,
     GroupDetailPage,
     MessageModalPage,
+    VideoViewPage,
+    ProfileEditPage,
+    MediathequePage,
 
   ],
   providers: [

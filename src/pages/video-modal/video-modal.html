@@ -1,8 +1,17 @@
+<ion-header *ngIf="withNavbar" >
+
+  <ion-navbar color="{{videoData.type =='youtube'?'danger':'primary'}}"  class="no-border">
+    <ion-title> publier une  video sur {{videoData.type}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
 <ion-content padding  >
+
   <h2 ion-text color="primary"  class="post-author" >Publier une video </h2>
 
 
-   <div padding>
+   <div padding *ngIf="!withNavbar">
      <label>Source Video</label>
      <select [(ngModel)]="videoData.type">
        <option value="youtube" selected>Youtube</option>
@@ -12,9 +21,11 @@
 
 
   <ion-item>
-    <ion-input  [(ngModel)]="videoData.url" (change)="loadVideoInfo()" type="text" placeholder="entrer l'URL .."></ion-input>
+    <ion-input  [(ngModel)]="videoData.url" (input)="loadVideoInfo()" type="text" placeholder="entrer l'URL .."></ion-input>
   </ion-item>
-
+  <!--<div *ngIf=" ((!videoData.error)  ||(videoData.url &&(!videoData.title || !videoData.description)))" class="spinner-container">-->
+    <!--<ion-spinner></ion-spinner>-->
+  <!--</div>-->
   <ion-item *ngIf="videoData.title">
     <ion-input type="text"  [(ngModel)]="videoData.title" placeholder="le titre du video ..."></ion-input>
   </ion-item>
@@ -27,7 +38,7 @@
     <ion-item-divider></ion-item-divider>
   </ion-item>
 
-  <ion-item *ngIf="videoData.error" color="light">
+  <ion-item *ngIf="videoData.error &&(!videoData.title || !videoData.description) " color="light">
     <ion-input  [(ngModel)]="videoData.error" diabled type="text" placeholder="description .."></ion-input>
   </ion-item>
 

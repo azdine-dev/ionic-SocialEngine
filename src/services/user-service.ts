@@ -22,8 +22,6 @@ export class UserService {
 
   constructor(public http: HttpClient,public composeUploadService : ComposeUploadService) {
     this.users = USERS;
-    this.refrechToken = localStorage.getItem('refresh_token');
-    this.accessToken = localStorage.getItem('token') + '&refresh_token=' + this.refrechToken;
   }
 
   getAll() {

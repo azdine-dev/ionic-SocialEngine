@@ -25,11 +25,19 @@ export class VideoModalPage {
     auth_view :'everyone',
     auth_comment :'everyone',
     error:''
+
   }
+  private withNavbar = false;
+  private videoType:any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public videoService : VideoService, public toastCtrl : ToastController,public loadingCtrl :  LoadingController,
   public viewCtrl : ViewController) {
+    this.withNavbar = this.navParams.get('withNavbar');
+    this.videoType = this.navParams.get('videoType');
+    if(this.withNavbar){
+      this.videoData.type=this.videoType;
+    }
   }
 
   loadVideoInfo(){
@@ -50,8 +58,15 @@ export class VideoModalPage {
 
   getVideoInfo(video_type,video_url){
     this.videoService.getVideoInformation(video_type,video_url).then(res=>{
-      this.videoData.title=res['data'].title;
-      this.videoData.description = res['data'].description;
+      if(video_type =='vimeo'){
+        this.videoData.title=res['data'].title['0'];
+        this.videoData.description = res['data'].description['0'];
+      }else{
+        this.videoData.title=res['data'].title;
+        this.videoData.description = res['data'].description;
+      }
+
+
     },err=>{
       this.videoData.error = 'impossible de trouver la video';
       this.videoData.title ='';
@@ -60,7 +75,7 @@ export class VideoModalPage {
   }
 
   validFields(videoData){
-    return (videoData.title && videoData.type && videoData.url );
+    return (videoData.title && videoData.type && videoData.url  );
   }
 
   postVideo(videoData){

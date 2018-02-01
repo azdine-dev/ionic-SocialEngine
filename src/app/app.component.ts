@@ -24,6 +24,7 @@ import {ImageLoaderConfig} from "ionic-image-loader";
 import {EventsPage} from "../pages/events/events";
 import {EventEditPage} from "../pages/event-edit/event-edit";
 import {GroupsPage} from "../pages/groups/groups";
+import {MediathequePage} from "../pages/mediatheque/mediatheque";
 
 @Component({
   templateUrl: 'app.component.html',
@@ -52,6 +53,13 @@ export class MyApp {
       icon: 'ios-list-box-outline',
       count: 0,
       component: RecentPostsPage
+    },
+
+    {
+      title: 'Mediatheque',
+      icon: 'ios-film-outline',
+      count: 0,
+      component: MediathequePage,
     },
     {
       title: 'Message',

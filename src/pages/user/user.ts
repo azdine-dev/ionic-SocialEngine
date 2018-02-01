@@ -105,12 +105,14 @@ export class UserPage {
 
       this.postService.getUserFeed(this.owner.id,10).then(result => {
         this.userFeed = result['data']['items'];
+        this.assignClickedValues(this.userFeed);
       })
     }
     else {
 
       this.postService.getAllFeed(10).then(result => {
         this.userFeed = result['data']['items'];
+        this.assignClickedValues(this.userFeed);
 
       });
 
@@ -307,11 +309,11 @@ export class UserPage {
     return load;
   }
 
-  presentToast(msg) {
+  presentToast(msg,position:string='bottom') {
     let toast = this.toastCtrl.create({
       message: msg,
       duration : 2000,
-      position: 'bottom',
+      position: position,
       dismissOnPageChange: true
     });
     toast.present();
@@ -432,5 +434,40 @@ export class UserPage {
       type : post.type,
     });
     cmntModal.present();
+  }
+
+  trustResourceUrl(post){
+    let url ='http://intaliq.novway.com'
+    return this.sanitizer.bypassSecurityTrustResourceUrl(post.video_source);
+  }
+
+
+  playVideo(post){
+    this.videoService.getVideo(post.attachments[0].id).then(res=>{
+      post.video_source = res['data']['video_src'];
+      console.log(post.video_source,'vid srrrrc');
+      post.clicked =true;
+      this.stopOtherVideos(post);
+    },err=>{
+      this.presentToast('could not play video','middle');
+    })
+  }
+
+  stopOtherVideos(exceptVideo){
+    let index = this.userFeed.indexOf(exceptVideo,0);
+    for(let i=0;i<this.userFeed.length;i++){
+      if(i!=index){
+        this.userFeed[i]['clicked'] =false;
+      }
+    }
+  }
+
+  assignClickedValues(array :Array<{}>){
+    for(let item of array){
+      Object.assign(item,{
+        clicked :false,
+        video_source :'',
+      })
+    }
   }
 }

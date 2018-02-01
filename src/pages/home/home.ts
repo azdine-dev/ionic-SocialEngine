@@ -38,9 +38,11 @@ export class HomePage implements OnInit {
   public feed2 : Array <any>;
   public feedInfo : Array<{}>;
   private endOfFeed : boolean = false;
+  private userSession =localStorage.getItem('user-id');
   private homeIcon = 'white';
   private defultImage = '/assets/img/default-image.png'
   formatDate = 'medium';
+
 
   private videoFeedMap : Map <number,SafeUrl> = new Map <number,SafeUrl>();
   private videos : Array<{}>;
@@ -120,13 +122,14 @@ export class HomePage implements OnInit {
 
       this.postService.getAllFeed(10).then(result=>{
         this.feed = result['data']['items'];
+        this.assignClickedValues(this.feed);
         this.cach.saveItem('feed', this.feed);
 
-        this.getFeedAttchmentVideos(this.feed).then(data=>{
-          this.videoFeedMap = data as Map <number,SafeUrl>;
-
-
-        })
+        // this.getFeedAttchmentVideos(this.feed).then(data=>{
+        //   // this.videoFeedMap = data as Map <number,SafeUrl>;
+        //
+        //
+        // })
 
       })
     }
@@ -134,11 +137,12 @@ export class HomePage implements OnInit {
       this.cach.getItem('feed').catch(() => {
         this.postService.getAllFeed(10).then(result => {
           this.feed = result['data']['items'];
+          this.assignClickedValues(this.feed);
           this.cach.saveItem('feed', this.feed);
-
-          this.getFeedAttchmentVideos(this.feed).then(data => {
-            this.videoFeedMap = data as Map<number, SafeUrl>;
-          })
+          //
+          // this.getFeedAttchmentVideos(this.feed).then(data => {
+          //   this.videoFeedMap = data as Map<number, SafeUrl>;
+          // })
 
         })
 
@@ -169,6 +173,7 @@ export class HomePage implements OnInit {
       this.postService.getAllFeed(10, maxid).then(res => {
         this.endOfFeed = res['data']['end_of_feed'];
         this.feed2 = res['data']['items'];
+        this.assignClickedValues(this.feed2);
         this.feed2.shift();
         this.feed = this.feed.concat(this.feed2);
         refrecher.complete();
@@ -233,10 +238,11 @@ export class HomePage implements OnInit {
 
   }
   getAuthUser(){
-    this.userService.getAuthorizedUser().then(res=>{
+    this.userService.getUserInfo(this.userSession).then(res=>{
      this.authUser.title = res['data']['title'];
      this.authUser.image = res['data']['imgs']['normal'];
      let user = res['data'];
+     console.log(user,'USER');
      this.events.publish('authorized-user',user)
 
     })
@@ -346,11 +352,11 @@ export class HomePage implements OnInit {
     })
   }
 
-  presentToast(msg) {
+  presentToast(msg,position:string='bottom') {
     let toast = this.toastCtrl.create({
       message: msg,
       duration: 1000,
-      position: 'bottom',
+      position: position,
       dismissOnPageChange: true
     });
     toast.present();
@@ -371,5 +377,41 @@ export class HomePage implements OnInit {
       notification_type:'friend_request',
     })
   }
+
+   playVideo(post){
+    console.log('wezzzz');
+      this.videoService.getVideo(post.attachments[0].id).then(res=>{
+        post.video_source = res['data']['video_src'];
+        console.log(post.video_source,'vid srrrrc');
+        post.clicked =true;
+        this.stopOtherVideos(post);
+      },err=>{
+        this.presentToast('could not play video','middle');
+      })
+   }
+
+  assignClickedValues(array :Array<{}>){
+    for(let item of array){
+      Object.assign(item,{
+        clicked :false,
+        video_source :'',
+      })
+    }
+  }
+
+  trustResourceUrl(post){
+    let url ='http://intaliq.novway.com'
+    return this.sanitizer.bypassSecurityTrustResourceUrl(post.video_source);
+  }
+
+
+    stopOtherVideos(exceptVideo){
+      let index = this.feed.indexOf(exceptVideo,0);
+      for(let i=0;i<this.feed.length;i++){
+        if(i!=index){
+          this.feed[i]['clicked'] =false;
+        }
+      }
+    }
 
  }

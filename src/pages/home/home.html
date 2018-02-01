@@ -78,8 +78,20 @@
 
 
     <ion-item text-wrap class="post-body">
-      <div (click)="viewPost(post.id)">
-        <div [innerHtml]="processHtmlContent(post)"></div>
+      <div >
+        <div [innerHtml]="processHtmlContent(post)" (press)="viewPost(post.id)" ></div>
+        <div  class="youtube" *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
+
+          <img class="iframe-image" [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="post.attachments[0].img" [scrollObservable]="container.ionScroll">
+          <iframe *ngIf="post.clicked"   [src]="trustResourceUrl(post)"
+                  allowfullscreen frameBorder="0"
+                  width="450" height="200" >
+
+          </iframe>
+          <div  *ngIf="!post.clicked" (click)="playVideo(post)"  class="play-button">
+          </div>
+
+        </div>
 
           <!--<iframe *ngIf="post.attachments.length && post.attachments[0].type=='video'" src="https://www.youtube.com/embed/IJbnG6KDaF0"-->
         <!--allowfullscreen frameBorder="0"-->

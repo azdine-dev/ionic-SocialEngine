@@ -168,9 +168,20 @@
     <ion-item text-wrap class="post-body">
       <div (click)="viewPost(post.id)">
         <div [innerHtml]="processHtmlContent(post)"></div>
-        <div  *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
-          <ion-item  [innerHtml]="videoFeedMap.get(post.attachments[0].id)"  ></ion-item>
+        <div  class="youtube" *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
+
+          <img class="iframe-image" [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="post.attachments[0].img" [scrollObservable]="container.ionScroll">
+          <iframe *ngIf="post.clicked"   [src]="trustResourceUrl(post)"
+                  allowfullscreen frameBorder="0"
+                  width="450" height="200" >
+
+          </iframe>
+          <div  *ngIf="!post.clicked" (click)="playVideo(post)"  class="play-button">
+          </div>
+
         </div>
+
+
         <img #imAtt (error)="getDefaultImage(imAtt)" imageViewer class="full-image"
              *ngIf="post.attachments.length && post.attachments[0].type=='album_photo' " src="{{ post.attachments[0].img }}">
         <!--<p padding-top padding-bottom>{{ post.content }}</p>-->
@@ -192,10 +203,10 @@
         </ion-col>
         <ion-col  *ngIf="post.can_comment"text-center (click)="commentPost(post)">
           <ion-icon name="chatboxes"></ion-icon>
-        </ion-col>
-        <ion-col *ngIf="post.can_share" text-center (click)="sharePost(post)">
-          <ion-icon name="share-alt"></ion-icon>
-        </ion-col>
+        </ion-col> <ion-col *ngIf="post.can_share" text-center (click)="sharePost(post)">
+        <ion-icon name="share-alt"></ion-icon>
+      </ion-col>
+
         <ion-col *ngIf="post.can_delete" text-center (click)="showDeletePostDialog(post)">
           <ion-icon name="ios-trash-outline" ></ion-icon>
         </ion-col>

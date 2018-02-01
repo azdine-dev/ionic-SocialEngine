@@ -24,6 +24,19 @@
 
 </ion-content>
 
+<ion-content padding  *ngIf="item_type=='video'">
+  <h2 ion-text color="primary"  class="post-author" >Partager</h2>
+  <p>Partagez ceci en le ré-affichant avec votre propre message.</p>
+
+  <ion-card>
+    <img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="item.thumb" imageViewer>
+    <ion-card-content>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
+
 <ion-content padding  *ngIf="item_attachment.type == 'no'" >
   <h2 ion-text color="primary"  class="post-author" >Partager</h2>
   <p>Partagez ceci en le ré-affichant avec votre propre message.</p>

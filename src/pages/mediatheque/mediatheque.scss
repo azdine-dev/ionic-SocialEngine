@@ -1,63 +1,4 @@
-page-user,
-.user {
-
-  .profile-picture {
-    width: 8em;
-    height: 8em;
-  }
-  .user-title{
-    padding-bottom: 8em;
-    padding-left: 5em;
-  }
-
-  ion-row {
-    border-top: 1px solid $borderColor;
-
-    .number {
-      display: block;
-    }
-  }
-
-  .post-content {
-
-    .subdued {
-      margin-right: 5px;
-    }
-  }
-
-  div.show-image {
-    position: relative;
-
-
-  }
-  div.show-image img{
-    margin-top: 7px;
-      opacity:0.8;
-      width : 6em;
-      height: 6em;
-    }
-div.show-image ion-icon {
-
-    display: block;
-    position:absolute;
-  }
-  div.show-image ion-icon.update{
-    top : 0px;
-    right: 6em;
-
-
-  }
-
-  .spinner-container{
-    width: 100%;
-    text-align: center;
-    padding: 10px;
-  }
-  .post-actions {
-    color: #7C7C7C;
-    font-size: 1.4em;
-  }
-
+page-mediatheque {
   .youtube {
     background-color: #000;
     width: 50%;
@@ -112,5 +53,15 @@ div.show-image ion-icon {
     width: 100%;
     top: 0;
     left: 0;
+  }
+  .post-actions {
+    color: #7C7C7C;
+    font-size: 1.4em;
+  }
+
+  .subdued {
+    margin-right: 5px;
+    color: black;
+    font-weight: normal;
   }
 }

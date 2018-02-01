@@ -1,0 +1,78 @@
+<ion-header >
+
+  <ion-navbar color="primary"  class="no-border">
+    <ion-title> Videos </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding #container>
+
+  <ion-fab middle right edge>
+    <button ion-fab color="vibrant" color="danger"><ion-icon name="add"></ion-icon></button>
+    <ion-fab-list side="top">
+
+      <button ion-fab (click)="createVimeoVideo()"><ion-icon  color="primary" name="logo-vimeo"></ion-icon></button>
+      <button ion-fab (click)="createYoutubeVideo()"><ion-icon color="danger" name="logo-youtube" ></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <ion-list *ngFor="let vid of videos;let index = index" >
+    <ion-card  >
+      <div  class="youtube"  >
+
+        <img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="vid.thumb" [scrollObservable]="container.ionScroll">
+        <iframe *ngIf="vid.clicked"   [src]="trustResourceUrl(vid)"
+                allowfullscreen frameBorder="0"
+                width="450" height="200" >
+
+        </iframe>
+        <div  *ngIf="!vid.clicked" (click)="playVideo(vid)" #iframe clicked="false" class="play-button">
+        </div>
+
+      </div>
+      <ion-card-content>
+        <ion-card-title>
+          {{vid.title}}
+        </ion-card-title>
+        <ion-label >
+          Publié par : {{vid.owner.title}}
+        </ion-label>
+
+      </ion-card-content>
+      <ion-item>
+      <div>
+        <ion-note (click)="viewPost(post.id)" class="subdued">{{ vid.total_like}} Likes</ion-note>
+        <ion-note (click)="viewPost(post.id)" class="subdued" margin-left>{{ vid.total_comment}} Comments</ion-note>
+      </div>
+      </ion-item>
+      <ion-grid class="post-actions">
+      <ion-row no-padding>
+
+        <ion-col   text-center (click)="toggleLike(vid)">
+          <ion-icon name="thumbs-up" color="primary"  *ngIf="vid.is_liked"></ion-icon>
+          <ion-icon name="thumbs-up" *ngIf="!vid.is_liked"></ion-icon>
+        </ion-col>
+
+        <ion-col *ngIf="vid.can_share" text-center (click)="shareVideo(video)">
+          <ion-icon name="share-alt"></ion-icon>
+        </ion-col>
+
+        <ion-col text-center (click)="goToVideoDetails(vid)" >
+            <ion-icon name='ios-more-outline'></ion-icon>
+        </ion-col>
+
+
+      </ion-row>
+      </ion-grid>
+    </ion-card>
+  </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="loadVideos($event)">
+    <ion-infinite-scroll-content>
+
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>
