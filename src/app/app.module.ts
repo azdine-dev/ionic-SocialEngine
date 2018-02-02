@@ -65,6 +65,7 @@ import {MessageModalPage} from "../pages/message-modal/message-modal";
 import {VideoViewPage} from "../pages/video-view/video-view";
 import {ProfileEditPage} from "../pages/profile-edit/profile-edit";
 import {MediathequePage} from "../pages/mediatheque/mediatheque";
+import {PhotoViewPage} from "../pages/photo-view/photo-view";
 
 // end import pages
 
@@ -105,6 +106,7 @@ import {MediathequePage} from "../pages/mediatheque/mediatheque";
     VideoViewPage,
     ProfileEditPage,
     MediathequePage,
+    PhotoViewPage,
   ],
   imports: [
     BrowserModule,HttpClientModule,
@@ -153,6 +155,7 @@ import {MediathequePage} from "../pages/mediatheque/mediatheque";
     VideoViewPage,
     ProfileEditPage,
     MediathequePage,
+    PhotoViewPage
 
   ],
   providers: [

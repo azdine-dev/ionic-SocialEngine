@@ -23,7 +23,7 @@
   <ion-list *ngFor="let album of userAlbums">
 
     <ion-card  tappable>
-      <img (click)="goToAlbumPhotos(album.id);" height="200" width="50" src="{{album.thumb}}" #image (error)="getDefaultImage(image)"/>
+      <img (click)="goToAlbumPhotos(album);" height="200" width="50" src="{{album.thumb}}" #image (error)="getDefaultImage(image)"/>
 
       <ion-card-content>
 

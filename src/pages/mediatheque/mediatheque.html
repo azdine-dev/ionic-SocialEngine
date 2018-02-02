@@ -17,7 +17,10 @@
       <button ion-fab (click)="createYoutubeVideo()"><ion-icon color="danger" name="logo-youtube" ></ion-icon></button>
     </ion-fab-list>
   </ion-fab>
-
+  <ion-searchbar [(ngModel)]="searchTerm"  [formControl]="searchControl" ></ion-searchbar>
+  <div *ngIf="searching" class="spinner-container">
+    <ion-spinner></ion-spinner>
+  </div>
   <ion-list *ngFor="let vid of videos;let index = index" >
     <ion-card  >
       <div  class="youtube"  >
@@ -55,7 +58,7 @@
           <ion-icon name="thumbs-up" *ngIf="!vid.is_liked"></ion-icon>
         </ion-col>
 
-        <ion-col *ngIf="vid.can_share" text-center (click)="shareVideo(video)">
+        <ion-col *ngIf="vid.can_share" text-center (click)="shareVideo(vid)">
           <ion-icon name="share-alt"></ion-icon>
         </ion-col>
 

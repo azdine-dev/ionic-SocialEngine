@@ -1,3 +1,46 @@
 page-photos {
 
+   .content{
+     background-color: #7C7C7C;
+   }
+  .responsive {
+    padding: 0 6px;
+    padding: 0 0 0 0px;
+    margin-bottom: -10px;
+    float: left;
+    width: 24.99999%;
+  }
+
+  @media only screen and (max-width: 700px){
+    .responsive {
+      width: 49.99999%;
+      margin: 6px 0;
+    }
+  }
+
+  @media only screen and (max-width: 500px){
+    .responsive {
+      width: 100%;
+    }
+  }
+
+  .clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+.gallery {
+    border: 1px solid #ddd;
+    padding: 2px;
+  }
+
+.gallery:hover {
+    border: 1px solid #777;
+  }
+
+ .gallery img {
+    width: 100%;
+    height: auto;
+  }
+
 }

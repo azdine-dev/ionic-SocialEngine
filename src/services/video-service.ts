@@ -26,9 +26,9 @@ export class VideoService {
    })
   }
 
-  getAllVideos(page?,limit?){
+  getAllVideos(keywords,page?,limit?){
     return new Promise((resolve,reject)=>{
-      this.http.get(videoUrl+param+'access_token='+this.accessToken+'&page='+page+'&limit='+limit+'&fields='+fields).subscribe(data=>{
+      this.http.get(videoUrl+param+'access_token='+this.accessToken+'&keywords='+keywords+'&page='+page+'&limit='+limit+'&fields='+fields).subscribe(data=>{
         resolve(data);
       },err=>{
         reject(err);
@@ -134,5 +134,6 @@ export class VideoService {
   likeVideo(){
 
   }
+
 
 }

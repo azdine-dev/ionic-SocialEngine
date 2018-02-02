@@ -217,6 +217,12 @@ export class UserService {
       })
     });
   }
+
+  filterItems(items:Array<any>,keyword){
+    return items.filter((item)=>{
+      return item.title.toLowerCase().indexOf(keyword.toLowerCase()) > -1;
+    })
+  }
 }
 
 

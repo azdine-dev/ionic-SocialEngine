@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
-import {AlertController, Events, NavController, NavParams} from 'ionic-angular';
+import {AlertController, Events, NavController, NavParams, ToastController} from 'ionic-angular';
 import {PostService} from '../../services/post-service';
 import {UserPage} from '../user/user';
 import {AlbumService} from "../../services/album-service";
+import {CoreService} from "../../services/core-service";
 
 /*
  Generated class for the LoginPage page.
@@ -16,18 +17,23 @@ import {AlbumService} from "../../services/album-service";
 })
 export class CommentPage {
   public post: any;
+  item_type : any;
+  item_id:any;
   private albumComments  : Array<{}>;
+  private comments :Array<any>;
   private commentElement = {
     body : '',
     canComment : true,
   };
   private albumPhotos : Array<{}>;
   constructor(public nav: NavController, public postService: PostService,public navParams : NavParams,public events : Events,
-              public alertCtrl : AlertController, public albumService :AlbumService) {
+              public alertCtrl : AlertController, public albumService :AlbumService,private toastCtrl:ToastController,private coreService: CoreService) {
 
 
     this.post = this.navParams.get('post');
-    this.init(this.post.type);
+    this.item_type = this.navParams.get('item_type');
+    this.item_id = this.navParams.get('item_id');
+    this.getComments();
     this.listenToActionEvents();
 
   }
@@ -44,15 +50,21 @@ export class CommentPage {
     }
   }
 
-  toggleLike(post) {
-    // if user liked
-    if(post.liked) {
-      post.likeCount--;
+  getComments(){
+  this.coreService.getComments(this.item_type,this.item_id).then(res=>{
+    this.comments = res['data'];
+  })
+  }
+
+  toggleLikeComment(comment) {
+    console.log(comment.is_liked,'weeeeeez');
+    if(comment.is_liked) {
+      this.unLikeComment(comment)
     } else {
-      post.likeCount++;
+      this.likeComment(comment);
     }
 
-    post.liked = !post.liked
+    comment.is_liked = !comment.is_liked
   }
 
   // on click, go to user timeline
@@ -62,29 +74,16 @@ export class CommentPage {
 
 
   updateActivity(post) {
-    switch (post.type) {
-      case 'activity_action': {
-        this.postService.getFeed(this.post.id).then(data => {
+        this.coreService.getComments(this.item_type,this.item_id).then(data => {
           this.commentElement.body = '';
-          this.post = data['data'];
+          this.comments = data['data'];
 
         });
-        break;
-      }
-      case 'album':{
-        this.postService.getComents(post.type,post.id).then(data => {
-         this.albumComments = data['data'];
-          this.commentElement.body = '';
-
-        });
-        break;
-      }
-     }
-
   }
   commentActivity(post) {
-      this.postService.commentActivity(post,this.commentElement).then(data=>{
-        this.events.publish('new-comment')
+      this.coreService.postComment(this.item_type,this.item_id,this.commentElement.body).then(data=>{
+        this.events.publish('new-comment');
+        console.log('comment-activity');
       },err=>{
       })
     }
@@ -92,7 +91,7 @@ export class CommentPage {
   showDeleteCommentDialog(comment){
     let confirmDelComm = this.alertCtrl.create({
 
-      message: 'voulez-vous vraiment supprimer ce commentaire?',
+      title: 'supprimer ce commentaire?',
       buttons: [
 
         {
@@ -117,15 +116,23 @@ export class CommentPage {
 
   deleteComment(comment){
     this.postService.deleteComment(comment,this.post).then(res=>{
-      console.log(JSON.stringify(res),'OK');
       this.events.publish('delete-comment');
     },err=>{
-      console.log(JSON.stringify(err),'ERR');
+      this.presentToast(err.error.data.message,'middle');
     })
   }
   likeComment(comment){
-    console.log('coment liked');
+    comment.total_like++;
+    this.coreService.likeComment(this.item_type,this.item_id,comment.id).then(res=>{
+
+    })
   }
+unLikeComment(comment){
+  comment.total_like--;
+  this.coreService.unlikeComment(this.item_type,this.item_id,comment.id).then(res=>{
+
+  })
+}
 
   getAlbumPhotos(albumId){
     this.albumService.getAlbumPhotos(albumId).then(res=>{
@@ -157,5 +164,16 @@ export class CommentPage {
   }
   getDefaultImage(image,contact){
     image.src = 'assets/img/user.png';
+  }
+
+  presentToast(msg,position:string='bottom') {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 2000,
+      position: position,
+      dismissOnPageChange: true
+    });
+    toast.present();
+
   }
 }

@@ -7,6 +7,8 @@ import {UserService} from "../../services/user-service";
 import {ShareModalPage} from "../share-modal/share-modal";
 import {VideoViewPage} from "../video-view/video-view";
 import {VideoModalPage} from "../video-modal/video-modal";
+import {FormControl} from "@angular/forms";
+import {debounceTime} from "rxjs/operators";
 
 /**
  * Generated class for the MediathequePage page.
@@ -25,18 +27,34 @@ export class MediathequePage {
   private pageVideoNumber = 1;
   private videoLimit=5;
   private lastPage = false;
+  searching :any = false;
+  searchControl :FormControl;
+
+  searchTerm: string = '';
+
 
 
   constructor(public navParams: NavParams, public userService: UserService,private navCtrl :NavController,
               public postService: PostService,public videoService : VideoService,public sanitizer : DomSanitizer,
               public modalCtrl : ModalController,public alertCtrl :AlertController,public events : Events,) {
+    this.searchControl = new FormControl();
 
-    this.getVideos();
     this.listenToActivities()
   }
 
+  ionViewDidLoad(){
+    this.getVideos();
+    this.searchControl.valueChanges.pipe(
+      debounceTime(700)
+    ).subscribe(search=>{
+      this.getVideos();
+    })
+  }
+
   getVideos(){
-    this.videoService.getAllVideos(this.pageVideoNumber,this.videoLimit).then(data=>{
+    this.searching = true;
+    this.videoService.getAllVideos(this.searchTerm,this.pageVideoNumber,this.videoLimit).then(data=>{
+      this.searching = false;
       this.videos =data['data'];
       this.assignClickedValues(this.videos);
 
@@ -74,7 +92,7 @@ export class MediathequePage {
   loadVideos(refrecher) {
     if(!this.lastPage){
       let page = this.pageVideoNumber+1;
-      this.videoService.getAllVideos(page,this.videoLimit).then(res=>{
+      this.videoService.getAllVideos(this.searchTerm,page,this.videoLimit).then(res=>{
         if(res['data'].length >0){
           let length = res['data'].length;
           console.log(length,'LENGTH VIDEOS');
@@ -153,4 +171,7 @@ export class MediathequePage {
       videoType:'vimeo',
     });
   }
+
+
+
 }

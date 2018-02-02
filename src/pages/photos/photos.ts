@@ -4,6 +4,7 @@ import {AlbumService} from "../../services/album-service";
 import {SafeUrl} from "@angular/platform-browser";
 import {UserService} from "../../services/user-service";
 import {ShareModalPage} from "../share-modal/share-modal";
+import {PhotoViewPage} from "../photo-view/photo-view";
 
 /**
  * Generated class for the PhotosPage page.
@@ -19,16 +20,16 @@ import {ShareModalPage} from "../share-modal/share-modal";
 })
 export class PhotosPage {
 
-  private albumId : any;
+  private album : any;
   private userName : any;
   private albumPhotos : Array<{}>;
   private photosMap : Map <number,SafeUrl> = new Map <number,SafeUrl>();
 
   constructor(public navCtrl: NavController, public navParams: NavParams,public albumService : AlbumService,
   public alertCtrl : AlertController,public events : Events,public userService : UserService, public modalCtrl :ModalController) {
-    this.albumId = this.navParams.get('albumId');
+    this.album = this.navParams.get('album');
     this.userName = this.navParams.get('userName');
-    this.getAlbumPhotos(this.albumId);
+    this.getAlbumPhotos(this.album.id);
     this.listenerEvents()
   }
 
@@ -151,7 +152,13 @@ export class PhotosPage {
 
   listenerEvents(){
     this.events.subscribe('delete-photo',()=>{
-      this.getAlbumPhotos(this.albumId);
+      this.getAlbumPhotos(this.album.id);
     })
+  }
+
+  goToPhotoDetail(imageId){
+   this.navCtrl.push(PhotoViewPage,{
+     imageId : imageId,
+   })
   }
 }

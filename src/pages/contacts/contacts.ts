@@ -3,7 +3,7 @@ import {NavController} from 'ionic-angular';
 import {UserService} from '../../services/user-service';
 import {UserPage} from '../user/user';
 import {FormControl} from "@angular/forms";
-import {debounceTime} from "rxjs/operator/debounceTime";
+import {debounceTime} from "rxjs/operators";
 
 
 @Component({
@@ -12,20 +12,27 @@ import {debounceTime} from "rxjs/operator/debounceTime";
 })
 export class ContactsPage {
   public contacts: any;
-  public members : Array<{}>;
+  public members : Array<any>;
   private pageNumber = 1;
   private lastPage = false;
   searching :any = false;
+  searchControl :FormControl;
 
   searchTerm: string = '';
   constructor(public nav: NavController, public userService: UserService) {
-    this.contacts = userService.getAll();
-    this.getAllMembers();
+    this.searchControl = new FormControl();
 
   }
 
   ionViewDidLoad(){
-    this.searchUsers();
+    this.getAllMembers();
+    this.searchControl.valueChanges.pipe(
+      debounceTime(700),
+
+    ).subscribe(search=>{
+       this.getAllMembers();
+      }
+    )
   }
 
   // on click, go to user timeline
@@ -35,7 +42,9 @@ export class ContactsPage {
   }
 
   getAllMembers(){
+    this.searching=true;
       this.userService.getAllMembers(this.searchTerm,10,1).then((result) =>{
+        this.searching=false;
        this.members = result["data"];
       });
   }
@@ -79,5 +88,7 @@ export class ContactsPage {
 
     })
   }
-
+   filterUsers(){
+      this.members= this.userService.filterItems(this.members,this.searchTerm);
+    }
 }

@@ -2,4 +2,25 @@ page-comment {
   .post-author-comment{
     padding-top: 1.2px;
   }
+  .send-comment{
+    zoom:1.5
+  }
+  .subdued{
+    //margin-right: -30px;
+    margin-left: -15px;
+    //margin-top: -5px;
+    //margin-bottom: -30px;
+  }
+  .comment-body{
+    //margin-bottom: -6px;
+    font-weight:600;
+    color: black;
+  }
+  .delete-comment{
+    //margin-left: 32.5em;
+    margin-bottom: -20em;
+    padding-bottom: -20em;
+    margin-left: 10em;
+    font-size: small;
+  }
 }

@@ -3,7 +3,7 @@ import {Injectable} from "@angular/core";
 
 let albumUrl = 'intaliq.novway.com/api/v1/albums/';
 let fields = 'id,type,thumb,title,is_liked,can_like,can_comment,description,owner,total_photo,can_upload,can_edit,photos,can_edit,can_delete,photos';
-let photos = 'id,type,thumb'
+let photos = 'id,type,thumb,img,title,description,date,album,photo_index,next_photo,previous_photo,can_tag,can_edit,can_delete,can_share,can_report,can_make_profile_photo'
 let photoFields = 'id,type,thumb,img,title,description,date,album,photo_index,next_photo,previous_photo,' +
   'can_tag,can_edit,can_delete,can_share,can_report,can_make_profile_photo';
 let param = '?';

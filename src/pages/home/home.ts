@@ -94,7 +94,12 @@ export class HomePage implements OnInit {
   }
 
   viewComment(post) {
-    let cmntModal = this.modalCtrl.create(CommentPage,{post : post,},{cssClass:'wez'});
+    let cmntModal = this.modalCtrl.create(CommentPage,
+      {
+        item_type : post.type,
+        item_id : post.id,
+        post:post,
+      },{cssClass:'wez'});
     cmntModal.present();
   }
 

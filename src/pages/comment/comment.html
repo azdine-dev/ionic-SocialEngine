@@ -1,91 +1,83 @@
-<!--
-  Generated template for the PostPage page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<ion-content no-bounce *ngIf= " post.type =='activity_action'" >
+<ion-content no-bounce *ngIf= " item_type =='activity_action' || item_type=='album'" >
   <ion-item  class="item-no-border">
-    <ion-avatar item-left (click)="viewUser(post.user_id)">
+    <ion-avatar item-left (click)="viewUser(post.owner)">
       <img   #imgAuthor  (error)="getDefaultImage(imgAuthor)" src="{{ post.owner.imgs.profile }}">
     </ion-avatar>
-    <h2 ion-text color="primary"  class="post-author" (click)="viewUser(post.user_id)">{{ post.owner.title }}</h2>
+    <h2 ion-text color="primary"  class="post-author" (click)="viewUser(post.owner)">{{ post.owner.title }}</h2>
     <span class="post-time">
       <ion-icon name="timer-outline"></ion-icon>
       {{ post.time }}
     </span>
   </ion-item>
-    <div padding>
-    <ion-item    class="post-comment" *ngFor="let comment of post.comments" (press)="showDeleteCommentDialog(comment)">
-      <ion-avatar item-left (click)="viewUser(comment.user_id)">
+      <ion-list>
+    <ion-item    class="post-comment" *ngFor="let comment of comments" >
+      <ion-avatar item-left (click)="viewUser(comment.owner)">
         <img #image (error)="getDefaultImage(image)" src="{{ comment.owner.imgs.profile }}">
       </ion-avatar>
 
       <h3 ion-text color="primary"  class="post-author-comment post-author">
         {{ comment.owner.title }}
       </h3>
-      <p text-wrap>{{ comment.body}}</p>
-      <a class="subdued like-count">
-        <ion-icon name="heart" color="danger"  (click)="likeComment(comment)" *ngIf="comment.is_liked"></ion-icon>
-        <ion-icon name="heart" color="gray"  (click)="unlikeComment(comment)"*ngIf="!comment.is_liked"></ion-icon>
-        {{ comment.total_like}}
-      </a>
-      <br>
-      <a class="subdued">j'aime</a>
+      <p class="comment-body" text-wrap>{{ comment.body}}</p>
+      <!--<ion-item no-lines class="subdued like-count"  >-->
+        <ion-icon name="heart" color="danger"  (click)="toggleLikeComment(comment)" *ngIf="comment.is_liked"></ion-icon>
+        <ion-icon name="heart" color="gray"  (click)="toggleLikeComment(comment)" *ngIf="!comment.is_liked"></ion-icon>  {{ comment.total_like}}<br>
+      <!--</ion-item>-->
+      <ion-note item-end name ="ios-trash-outline" (click)="showDeleteCommentDialog(comment)" class="delete-comment">supprimer</ion-note>
+
     </ion-item>
+      </ion-list>
+  <!--<div class="body-message">-->
+  <!--<ion-grid class="post-actions" ion-fixed >-->
 
-      </div>
-  <div class="body-message">
-  <ion-grid class="post-actions" ion-fixed >
-
-       <ion-input [(ngModel)]="commentElement.body" placeholder="Votre commentaire..." ></ion-input>
-    <br>
-       <button (click)="commentActivity(post)"  [disabled]="!commentElement.body" ion-button>commenter</button>
-  </ion-grid>
-  </div>
+       <!--<ion-input [(ngModel)]="commentElement.body" placeholder="Votre commentaire..." ></ion-input>-->
+    <!--<br>-->
+       <!--<button (click)="commentActivity(post)"  [disabled]="!commentElement.body" ion-button>commenter</button>-->
+  <!--</ion-grid>-->
+  <!--</div>-->
 </ion-content>
 
 
 
-<ion-content *ngIf="post.type=='album'" no-bounce>
-  <ion-item class="item-no-border">
-    <ion-avatar item-left (click)="viewUser(post.user_id)">
-      <img src="{{ post.owner.imgs.profile }}">
-    </ion-avatar>
-    <h2 ion-text color="primary"  class="post-author" (click)="viewUser(post.user_id)">{{ post.owner.title }}</h2>
-    <span class="post-time">
-      <ion-icon name="timer-outline"></ion-icon>
-      {{ post.time }}
-    </span>
-  </ion-item>
+<!--&lt;!&ndash;<ion-content *ngIf="item_type=='album'" no-bounce>&ndash;&gt;-->
+  <!--&lt;!&ndash;<ion-item class="item-no-border">&ndash;&gt;-->
+    <!--&lt;!&ndash;<ion-avatar item-left (click)="viewUser(post.owner)">&ndash;&gt;-->
+      <!--&lt;!&ndash;<img src="{{ post.owner.imgs.profile }}">&ndash;&gt;-->
+    <!--&lt;!&ndash;</ion-avatar>&ndash;&gt;-->
+    <!--&lt;!&ndash;<h2 ion-text color="primary"  class="post-author" (click)="viewUser(post.owner)">{{ post.owner.title }}</h2>&ndash;&gt;-->
+    <!--&lt;!&ndash;<span class="post-time">&ndash;&gt;-->
+      <!--&lt;!&ndash;<ion-icon name="timer-outline"></ion-icon>&ndash;&gt;-->
+      <!--&lt;!&ndash;{{ post.time }}&ndash;&gt;-->
+    <!--&lt;!&ndash;</span>&ndash;&gt;-->
+  <!--&lt;!&ndash;</ion-item>&ndash;&gt;-->
 
 
-  <div padding>
-    <ion-item    class="post-comment" *ngFor="let comment of albumComments" (press)="showDeleteCommentDialog(comment)">
-      <ion-avatar item-left (click)="viewUser(comment.user_id)">
-        <img src="{{ comment.owner.imgs.profile }}">
-      </ion-avatar>
+  <!--&lt;!&ndash;<div padding>&ndash;&gt;-->
+    <!--&lt;!&ndash;<ion-item    class="post-comment" *ngFor="let comment of comments" (press)="showDeleteCommentDialog(comment)">&ndash;&gt;-->
+      <!--&lt;!&ndash;<ion-avatar item-left (click)="viewUser(comment.owner)">&ndash;&gt;-->
+        <!--&lt;!&ndash;<img src="{{ comment.owner.imgs.profile }}">&ndash;&gt;-->
+      <!--&lt;!&ndash;</ion-avatar>&ndash;&gt;-->
 
-      <h3 ion-stext color="primary"  class="post-author">
-        {{ comment.owner.title }}
-      </h3>
-      <p text-wrap>{{ comment.body}}</p>
-      <a class="subdued like-count">
-        <ion-icon name="heart" color="danger"  (click)="likeComment(comment)" *ngIf="comment.is_liked"></ion-icon>
-        <ion-icon name="heart" color="gray"  (click)="unlikeComment(comment)"*ngIf="!comment.is_liked"></ion-icon>
-        {{ comment.total_like}}
-      </a>
-      <br>
-      <a class="subdued">j'aime</a>
-    </ion-item>
-  </div>
-
-
-
+      <!--&lt;!&ndash;<h3 ion-stext color="primary"  class="post-author">&ndash;&gt;-->
+        <!--&lt;!&ndash;{{ comment.owner.title }}&ndash;&gt;-->
+      <!--&lt;!&ndash;</h3>&ndash;&gt;-->
+      <!--&lt;!&ndash;<p text-wrap>{{ comment.body}}</p>&ndash;&gt;-->
+      <!--&lt;!&ndash;<a class="subdued like-count">&ndash;&gt;-->
+        <!--&lt;!&ndash;<ion-icon name="heart" color="danger"  (click)="likeComment(comment)" *ngIf="comment.is_liked"></ion-icon>&ndash;&gt;-->
+        <!--&lt;!&ndash;<ion-icon name="heart" color="gray"  (click)="unlikeComment(comment)"*ngIf="!comment.is_liked"></ion-icon>&ndash;&gt;-->
+        <!--&lt;!&ndash;{{ comment.total_like}}&ndash;&gt;-->
+      <!--&lt;!&ndash;</a>&ndash;&gt;-->
+      <!--&lt;!&ndash;<br>&ndash;&gt;-->
+      <!--&lt;!&ndash;<a class="subdued">j'aime</a>&ndash;&gt;-->
+    <!--&lt;!&ndash;</ion-item>&ndash;&gt;-->
+  <!--&lt;!&ndash;</div>&ndash;&gt;-->
 
 
 
-</ion-content>
+
+
+
+<!--</ion-content>-->
 <!--<ion-footer>-->
 
   <!--<ion-toolbar class="no-border" color="white">-->
@@ -107,4 +99,20 @@
   <!--</ion-toolbar>-->
 
 <!--</ion-footer>-->
+<ion-footer>
 
+  <ion-toolbar class="no-border" color="white">
+
+
+
+    <ion-textarea [(ngModel)]="commentElement.body" placeholder="Votre commentaire..." ></ion-textarea>
+
+    <ion-buttons end>
+      <button (click)="commentActivity(post)"  [disabled]="!commentElement.body" ion-button>
+        <ion-icon name="send" class="send-comment" color="primary"></ion-icon>
+      </button>
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-footer>

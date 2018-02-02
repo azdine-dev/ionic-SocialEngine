@@ -38,9 +38,9 @@ export class AlbumPage {
   }
 
 
-  goToAlbumPhotos(albumId){
+  goToAlbumPhotos(album){
     this.navCtrl.push(PhotosPage,{
-      albumId : albumId,
+      album : album,
       userName : this.userName
     })
   }
@@ -69,7 +69,11 @@ export class AlbumPage {
   }
 
   viewComment(post) {
-    let cmntModal = this.modalCtrl.create(CommentPage,{post : post});
+    let cmntModal = this.modalCtrl.create(CommentPage,{
+      post : post,
+      item_type : 'album',
+      item_id :post.id,
+    });
     cmntModal.present();
   }
   getDefaultImage(image,contact){
