@@ -1,32 +1,36 @@
 <ion-header>
   <ion-navbar color="primary"  class="no-border">
-    <ion-title>Evénement :{{event.title}}</ion-title>
+    <ion-title>Evénement :{{event?.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content #container>
-
+  <div *ngIf="!event" class="spinner-container">
+    <ion-spinner  name="ios" >
+    </ion-spinner>
+  </div>
   <div text-center class="user-profile primary-bg">
-    <div class="show-image">
-      <img #im    imageViewer src="{{ event.thumb}}">
-    </div>
+    <!--<div class="show-image">-->
+      <!--<img #im    imageViewer src="{{ event?.thumb}}">-->
+    <!--</div>-->
 
-    <h4 class="light">{{ event.title }}</h4>
-
+    <!--<h4 class="light">{{ event?.title }}</h4>-->
     <ion-card>
+      <img #im    imageViewer src="{{ event?.thumb}}">
+      <ion-card-content>
+        <h4 style="font-weight: bold" class="light">{{ event?.title }}</h4>
+      </ion-card-content>
+    </ion-card>
+    <ion-card *ngIf="event">
     <ion-grid color="white" >
       <ion-row >
-        <ion-col *ngIf="event.owner.id !=userSession" (click)="participate(event)">
-          <ion-icon name="ios-star-outline" ></ion-icon><br>
-          <ion-note>intéressé(e)</ion-note>
+
+        <ion-col   *ngIf="event?.owner.id !=userSession" (click)="toggleJoinEvent(event)">
+          <ion-icon name="ios-checkmark-circle-outline" [color]="event?.can_leave ? 'primary':''"></ion-icon><br>
+          <ion-note [color]="event?.can_leave ? 'primary':''"> Participe</ion-note>
         </ion-col>
 
-        <ion-col   *ngIf="event.owner.id !=userSession" (click)="toggleJoinEvent(event)">
-          <ion-icon name="ios-checkmark-circle-outline" [color]="event.can_leave ? 'primary':''"></ion-icon><br>
-          <ion-note [color]="event.can_leave ? 'primary':''"> Participe</ion-note>
-        </ion-col>
-
-        <ion-col *ngIf="event.owner.id ==userSession" >
+        <ion-col *ngIf="event?.owner.id ==userSession" (click)="getCanInviteFriends(event)">
           <ion-icon name="ios-redo-outline"> </ion-icon><br>
           <ion-note>Ajouter des invités</ion-note>
         </ion-col>
@@ -36,12 +40,12 @@
           <ion-note>Partagez </ion-note>
         </ion-col>
 
-        <ion-col *ngIf="event.can_delete" (click)="ondeletlick(event)" >
+        <ion-col *ngIf="event?.can_delete" (click)="ondeletlick(event)" >
           <ion-icon name="ios-trash-outline"> </ion-icon><br>
           <ion-note>Supprimer</ion-note>
         </ion-col>
 
-        <ion-col *ngIf="event.can_edit" (click)="editEvent(event)">
+        <ion-col *ngIf="event?.can_edit" (click)="editEvent(event)">
           <ion-icon   name="md-create"> </ion-icon><br>
           <ion-note>Modifier</ion-note>
         </ion-col>
@@ -51,25 +55,25 @@
     </ion-grid>
     </ion-card>
 
-    <ion-card>
+    <ion-card *ngIf="event">
       <ion-list>
-        <ion-item >
+        <ion-item text-wrap >
           <ion-icon name='ios-clock-outline'  item-start></ion-icon>
-          {{event.start_datetime}}--{{event.start_date}} à {{event.end_time}}<br>
+          {{event?.start_datetime}}--{{event?.start_date}} à {{event?.end_time}}<br>
           <ion-note >
             date
           </ion-note>
         </ion-item>
-        <ion-item *ngIf="event.location">
+        <ion-item *ngIf="event?.location">
           <ion-icon name='ios-pin-outline'   item-start></ion-icon>
-          {{event.location}}<br>
+          {{event?.location}}<br>
           <ion-note >
            Location
           </ion-note>
         </ion-item>
-        <ion-item *ngIf="event.host">
+        <ion-item *ngIf="event?.host">
           <ion-icon name='ios-grid-outline'   item-start></ion-icon>
-          {{event.host}}<br>
+          {{event?.host}}<br>
           <ion-note >
             Hôte
           </ion-note>
@@ -85,7 +89,7 @@
 
 
 
-    <ion-card>
+    <ion-card *ngIf="event">
       <ion-segment [(ngModel)]="eventDefault">
         <ion-segment-button value="about" (click)="showEventsFeed(false)">
           A propos
@@ -94,12 +98,10 @@
         <ion-segment-button value="feed" (click)="showEventsFeed(true)">
           Mise à jour
         </ion-segment-button>
-        <ion-segment-button value="photos" (click)="showEventsFeed(false)">
+        <ion-segment-button value="photos" (click)="showEventPhotos(false)">
           Photos
         </ion-segment-button>
-        <ion-segment-button value="invited" (click)="showEventsFeed(false)">
-          Discussion({{event.total_member}})
-        </ion-segment-button>
+
 
       </ion-segment>
       <div [ngSwitch]="eventDefault">
@@ -110,7 +112,7 @@
             </ion-item>
 
             <p ion-item item-start>
-            {{event.description}}
+            {{event?.description}}
             </p>
           </ion-card>
           <ion-card>
@@ -131,20 +133,50 @@
               </ion-row>
               <ion-row>
                 <ion-col col-3 col-md-3 col-sm-3>
-                  {{event.attending_count}}
+                  {{event?.attending_count}}
                 </ion-col>
                 <ion-col col-3 col-md-3 col-sm-3>
-                  {{event.maybe_count}}
+                  {{event?.maybe_count}}
                 </ion-col>
                 <ion-col col-3 col-md-3 col-sm-3>
-                  {{event.not_attending_count}}
+                  {{event?.not_attending_count}}
                 </ion-col>
                 <ion-col col-3 col-md-3 col-sm-3>
-                  {{event.awaiting_reply_count}}
+                  {{event?.awaiting_reply_count}}
                 </ion-col>
               </ion-row>
             </ion-grid>
           </ion-card>
+
+        </div>
+
+        <div *ngSwitchCase="'photos'">
+          <div *ngIf="searchPhotos" class="spinner-container">
+            <ion-spinner name="ios"></ion-spinner>
+          </div>
+          <ion-list>
+            <ion-row>
+              <ion-col col-6 *ngFor="let image of eventPhotos" class="responsive">
+                <ion-card class="gallery" (click)="goToPhotoDetail(image.id)">
+                  <img imageViewer (error)= "'/assets/img/default-image.png'" [src]="image.thumb" class="thumb-img" >
+                </ion-card>
+              </ion-col>
+            </ion-row>
+
+          </ion-list>
+          <!--<ion-slides>-->
+            <!--<ion-slide *ngFor="let image of eventPhotos">-->
+              <!--<ion-card class="gallery" (click)="goToPhotoDetail(image.id)">-->
+                <!--<img [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="image.thumb" class="thumb-img" [scrollObservable]="container.ionScroll">-->
+
+              <!--</ion-card>-->
+              <!--<ion-note>par :{{image.owner.title}}</ion-note>-->
+              <!--<ion-note> le {{image.date}}</ion-note>-->
+            <!--</ion-slide>-->
+
+          <!--</ion-slides>-->
+
+
 
         </div>
 
@@ -177,6 +209,7 @@
         </ion-grid>
       </div>
     </ion-card>
+
     <ion-list *ngIf="eventPosts && showFeed">
     <ion-card *ngFor="let post of eventPosts">
 
@@ -188,22 +221,31 @@
         <ion-label>{{post.owner.title}}</ion-label>
         <p>{{ post.time }}</p>
       </ion-item>
+      <div class="post-content" [innerHtml]="processHtmlContent(post.content)"></div>
+      <div  class="youtube" *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
+        <img class="iframe-image" [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="post.attachments[0].img" [scrollObservable]="container.ionScroll">
+        <iframe *ngIf="post.clicked"   [src]="trustResourceUrl(post)"
+                allowfullscreen frameBorder="0"
+                width="450" height="200" >
 
-      <ion-item text-wrap class="post-body">
-        <div >
-          <div [innerHtml]="processHtmlContent(post.content)"></div>
-          <div  *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
-            <ion-item  [innerHtml]="videoFeedMap.get(post.attachments[0].id)"  ></ion-item>
-          </div>
-          <img #imAtt (error)="getDefaultImage(imAtt)" imageViewer class="full-image"
-               *ngIf="post.attachments.length && post.attachments[0].type=='album_photo' " src="{{ post.attachments[0].img }}">
+        </iframe>
+        <div  *ngIf="!post.clicked" (click)="playVideo(post)"  class="play-button">
         </div>
+      </div>
+
+      <!--<ion-item text-wrap class="post-body">-->
+
+
+
+
+          <img imageViewer *ngIf="post.attachments.length && post.attachments[0].type=='album_photo'"  [defaultImage]= "'/assets/img/default-image.png'"
+               [lazyLoad]="post.attachments[0].img" [scrollObservable]="container.ionScroll">
 
         <div>
           <a (click)="viewPost(post.id)" class="subdued">{{ post.total_like}} Likes</a>
           <a (click)="viewPost(post.id)" class="subdued" margin-left>{{ post.total_comment}} Comments</a>
         </div>
-      </ion-item>
+      <!--</ion-item>-->
 
       <ion-grid class="post-actions">
         <ion-row>

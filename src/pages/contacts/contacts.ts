@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {LoadingController, NavController, ToastController} from 'ionic-angular';
 import {UserService} from '../../services/user-service';
 import {UserPage} from '../user/user';
 import {FormControl} from "@angular/forms";
@@ -19,7 +19,7 @@ export class ContactsPage {
   searchControl :FormControl;
 
   searchTerm: string = '';
-  constructor(public nav: NavController, public userService: UserService) {
+  constructor(public nav: NavController, public userService: UserService,private toastCtrl :ToastController,private loadingCtrl : LoadingController) {
     this.searchControl = new FormControl();
 
   }
@@ -37,8 +37,7 @@ export class ContactsPage {
 
   // on click, go to user timeline
   viewUser(user) {
-    console.log(user);
-    this.nav.push(UserPage, {owner: user})
+    this.nav.push(UserPage, {ownerId: user.id})
   }
 
   getAllMembers(){
@@ -46,6 +45,9 @@ export class ContactsPage {
       this.userService.getAllMembers(this.searchTerm,10,1).then((result) =>{
         this.searching=false;
        this.members = result["data"];
+      },err=>{
+        this.searching=true;
+        this.presentToast(err.data.message,'middle');
       });
   }
 
@@ -79,16 +81,25 @@ export class ContactsPage {
 
   }
 
-  searchUsers(){
-    this.searching=true;
-    this.userService.filterUsers(this.searchTerm).then(res=>{
-      this.searching =false;
-      this.members = res['data'];
-    },err=>{
+  //////////////////////////////////////
 
-    })
+  showLoader(message?){
+    let load = this.loadingCtrl.create({
+      content : message,
+    });
+
+    return load;
   }
-   filterUsers(){
-      this.members= this.userService.filterItems(this.members,this.searchTerm);
-    }
+
+  presentToast(msg,position:string='bottom') {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration : 2000,
+      position: position,
+      dismissOnPageChange: true
+    });
+    toast.present();
+
+  }
+
 }

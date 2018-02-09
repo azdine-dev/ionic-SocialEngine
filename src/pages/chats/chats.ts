@@ -44,13 +44,21 @@ export class ChatsPage {
   }
 
   getInbox(type){
+    this.searching = true;
     if(type=='inbox'){
+
       this.messageService.getInbox(1,10).then(res=>{
         this.inbox = res['data'];
+        this.searching = false;
+      },err=>{
+        this.searching = false
       })
     }else if(type=='outbox'){
       this.messageService.getOutbox(1,10).then(res=>{
         this.inbox = res['data'];
+        this.searching = false
+      },err=>{
+        this.searching = false
       })
     }
 

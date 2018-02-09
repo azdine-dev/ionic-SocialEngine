@@ -28,7 +28,7 @@
 
       <ion-item >
         <ion-label  fixed>À</ion-label>
-        <ion-input (input)="getPossibleUesr($event)" [(ngModel)]="messageData.to" [formControl]="searchUsersControl"></ion-input>
+        <ion-input (ionChange)="searchUsers($event)" [(ngModel)]="messageData.to" [formControl]="searchUsersControl"></ion-input>
 
       </ion-item>
       <ion-buttons *ngIf="selectedUesrs" >

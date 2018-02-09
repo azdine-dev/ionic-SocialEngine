@@ -66,7 +66,7 @@ export class NotificationsPage {
   }
 
   viewUser(user) {
-    this.nav.push(UserPage, {owner: user})
+    this.nav.push(UserPage, {ownerId: user.id})
   }
 
   loadNotifications(refrecher) {

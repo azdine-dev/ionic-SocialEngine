@@ -21,6 +21,8 @@ import {MessageService} from "../../services/message-service";
   templateUrl: 'message-create.html',
 })
 export class MessageCreatePage {
+  private pageNumber = 1;
+  private pageLimit =10;
   private messageData = {
     from : '',
     to:'',
@@ -29,6 +31,7 @@ export class MessageCreatePage {
     toUser :'',
 
   };
+
   private messageAttachment = {
     type:'',
     photo_id :'',
@@ -59,7 +62,7 @@ export class MessageCreatePage {
   getPossibleUesr(myevent){
        console.log(this.messageData.to);
 
-      this.userService.getAllMembers(this.messageData.to).then(res=>{
+      this.userService.getAllMembers(this.messageData.to,this.pageLimit,this.pageNumber).then(res=>{
         let data = {
           type : 'users',
           users : res['data']

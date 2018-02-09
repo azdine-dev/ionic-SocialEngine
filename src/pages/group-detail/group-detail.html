@@ -1,28 +1,37 @@
 <ion-header>
   <ion-navbar color="primary"  class="no-border">
-    <ion-title>Group :{{group.title}}</ion-title>
+    <ion-title>Group :{{group?.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content #container>
 
   <div text-center class="user-profile primary-bg">
-    <div class="show-image">
-      <img #im    imageViewer src="{{ group.thumb}}">
+    <div *ngIf="loading" class="spinner-container">
+      <ion-spinner  name="ios" >
+      </ion-spinner>
     </div>
+    <!--<div class="show-image">-->
+      <!--<img #im    imageViewer src="{{ group.thumb}}">-->
+    <!--</div>-->
 
-    <h4 class="light">{{ group.title }}</h4>
-
+    <!--<h4 class="light">{{ group.title }}</h4>-->
+    <ion-card>
+      <img #im    imageViewer src="{{ group?.thumb}}">
+      <ion-card-content>
+        <h4 style="font-weight: bold" class="light" *ngIf="group">{{ group?.title }}</h4>
+      </ion-card-content>
+    </ion-card>
     <ion-card>
       <ion-grid color="white" >
         <ion-row >
-          <ion-col *ngIf="group.owner.id !=userSession" (click)="toggleJoinGroup(group)">
-            <ion-icon name="{{group.can_leave? 'ios-close-circle-outline':'ios-redo-outline'}}" ></ion-icon><br>
-            <ion-note>{{group.can_leave? 'Quitter le group':'Joindre le groupe'}}</ion-note>
+          <ion-col *ngIf="group?.owner.id !=userSession" (click)="toggleJoinGroup(group)">
+            <ion-icon name="{{group?.can_leave? 'ios-close-circle-outline':'ios-redo-outline'}}" ></ion-icon><br>
+            <ion-note>{{group?.can_leave? 'Quitter le group':'Joindre le groupe'}}</ion-note>
           </ion-col>
 
 
-          <ion-col *ngIf="group.owner.id ==userSession" >
+          <ion-col *ngIf="group?.owner.id ==userSession" >
             <ion-icon name="ios-redo-outline"> </ion-icon><br>
             <ion-note>Inviter des membres</ion-note>
           </ion-col>
@@ -32,13 +41,13 @@
             <ion-note>Partagez le Groupe</ion-note>
           </ion-col>
 
-          <ion-col *ngIf="group.can_message_members" (click)="editEvent(event)">
+          <ion-col *ngIf="group?.can_message_members" (click)="editEvent(event)">
             <ion-icon   name="ios-mail-outline"> </ion-icon><br>
             <ion-note>Message aux membres</ion-note>
           </ion-col>
 
 
-          <ion-col *ngIf="group.can_delete" (click)="ondeletlick(group)" >
+          <ion-col *ngIf="group?.can_delete" (click)="ondeletlick(group)" >
             <ion-icon name="ios-trash-outline"> </ion-icon><br>
             <ion-note>Supprimer le Groupe</ion-note>
           </ion-col>
@@ -52,10 +61,10 @@
     <ion-card>
       <ion-list>
 
-        <ion-item *ngIf="group.owner">
+        <ion-item *ngIf="group?.owner">
           <ion-icon name='ios-contact-outline'   item-start></ion-icon>
 
-          {{group.owner.title}}<br>
+          {{group?.owner.title}}<br>
           <ion-note >
             Dirigé par :
           </ion-note>
@@ -63,7 +72,7 @@
 
         <ion-item >
           <ion-icon name='ios-people-outline'   item-start></ion-icon>
-          {{group.total_member}} membre {{group.total_member > 1 ? 's':''}}<br>
+          {{group?.total_member}} membre {{group?.total_member > 1 ? 's':''}}<br>
           <ion-note >
            Membres
           </ion-note>
@@ -71,7 +80,7 @@
 
         <ion-item >
           <ion-icon name='ios-eye-outline'  item-start></ion-icon>
-          {{group.total_view}}<br>
+          {{group?.total_view}}<br>
           <ion-note >
             Vues Total
           </ion-note>
@@ -99,7 +108,7 @@
           Photos
         </ion-segment-button>
         <ion-segment-button value="invited" (click)="showGroupsFeed(false)">
-          Membres({{group.total_member}})
+          Membres({{group?.total_member}})
         </ion-segment-button>
 
       </ion-segment>
@@ -111,7 +120,7 @@
             </ion-item>
 
             <p ion-item item-start>
-              {{group.description}}
+              {{group?.description}}
             </p>
           </ion-card>
 

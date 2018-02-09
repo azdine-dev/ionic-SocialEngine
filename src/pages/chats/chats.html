@@ -6,6 +6,9 @@
 -->
 <ion-header>
   <ion-navbar [color]="navBarColor" >
+    <button  ion-button menuToggle type="overlay">
+      <ion-icon name="menu"></ion-icon>
+    </button>
     <ion-buttons right>
 
       <button  class="toggle" icon-only  ion-button  *ngIf="!activateDelete" (click)="toggleMessages()" >
@@ -26,12 +29,17 @@
   <ion-fab right bottom>
     <button ion-fab color="secondary" (click)="composeMessage()"><ion-icon name="md-create"></ion-icon></button>
   </ion-fab>
-  <div class="row" *ngIf="!(inbox?.length > 0)">
-    <ion-icon color="coffee" class="no-messages" name="ios-mail-open-outline">
+  <div *ngIf="searching" class="spinner-container">
+    <ion-spinner  name="ios" >
+    </ion-spinner>
+  </div>
+  <div class="row" *ngIf="inbox?.length==0">
+    <ion-icon  class="no-messages" name="ios-mail-open-outline">
 
     </ion-icon><br>
-    No Message To show !
+    <ion-label text-center>No Message To show !</ion-label>
   </div>
+
   <ion-list class="list-full-border">
     <ion-item-sliding *ngFor="let message of inbox">
 

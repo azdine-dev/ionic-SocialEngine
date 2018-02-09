@@ -16,7 +16,7 @@
 <ion-content>
     <ion-searchbar [(ngModel)]="searchTerm"  [formControl]="searchControl" ></ion-searchbar>
     <div *ngIf="searching" class="spinner-container">
-      <ion-spinner></ion-spinner>
+      <ion-spinner name="ios"></ion-spinner>
     </div>
 
   <ion-list class="list-full-border" [virtualScroll]="members" approxItemHeight="60px" >
@@ -35,17 +35,7 @@
 
       </ion-item>
 
-      <ion-item-options>
-        <button  ion-button color="light" >
-          <ion-icon name="more"></ion-icon>
-        </button>
-        <button  ion-button color="green" >
-          <ion-icon name="call"></ion-icon>
-        </button>
-        <button  ion-button color="primary" >
-          <ion-icon name="text"></ion-icon>
-        </button>
-      </ion-item-options>
+
     </ion-item-sliding>
 
   </ion-list>

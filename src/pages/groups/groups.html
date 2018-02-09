@@ -1,7 +1,11 @@
 <ion-header>
 
   <ion-navbar  color="primary" class="no-border">
-    <ion-title>Groups</ion-title>
+    <button  ion-button menuToggle type="overlay">
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title *ngIf="!user">Groups</ion-title>
+    <ion-title *ngIf="user">Groups de {{user.title}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -11,10 +15,19 @@
   <ion-fab right bottom>
     <button ion-fab color="primary" (click)="createGroup()"><ion-icon name="ios-add-circle-outline"></ion-icon></button>
   </ion-fab>
+  <ion-refresher (ionRefresh)="doRefreshGroups($event)" refreshingSpinner="circles">
+    <ion-refresher-content>
+
+    </ion-refresher-content>
+  </ion-refresher>
+  <ion-searchbar [(ngModel)]="searchTerm"  [formControl]="searchControl" ></ion-searchbar>
+  <div *ngIf="searching" class="spinner-container">
+    <ion-spinner name="ios"></ion-spinner>
+  </div>
 
   <ion-list *ngFor="let group of groups">
 
-    <ion-card  *ngIf="groups" (click)="goToGroupDetails(group)" >
+    <ion-card  *ngIf="groups" (click)="goToGroupDetails(group)" class="group-card" >
 
       <img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="group.thumb" [scrollObservable]="container.ionScroll">
       <ion-card-header>

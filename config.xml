@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.novway.azd.intaliq" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>MyApp</name>
-    <description>An awesome Ionic/Cordova app.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+    <name>Intaliq</name>
+    <description>Intaliq By CGEM</description>
+    <author email="azeddinebenhalima@gmail.com" href="www.novway.com">Novway</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -111,4 +111,5 @@
     <allow-navigation href="http://172.16.172.144:8100" />
     <allow-navigation href="http://172.16.172.142:8100" />
     <allow-navigation href="http://172.16.172.141:8100" />
+    <allow-navigation href="http://172.16.172.160:8100" />
 </widget>

@@ -22,6 +22,7 @@ export class PhotosPage {
 
   private album : any;
   private userName : any;
+  private searching :any;
   private albumPhotos : Array<{}>;
   private photosMap : Map <number,SafeUrl> = new Map <number,SafeUrl>();
 
@@ -34,12 +35,11 @@ export class PhotosPage {
   }
 
   getAlbumPhotos(albumId){
+    this.searching = true;
     this.albumService.getAlbumPhotos(albumId).then(res=>{
       this.albumPhotos = res['data'].photos;
-      this.initPhotosMap(this.albumPhotos);
-      console.log('SUCCESS phots');
+      this.searching=false;
     },err=>{
-      console.log('ERR')
     })
   }
   initPhotosMap(albumPhotos){
@@ -151,7 +151,7 @@ export class PhotosPage {
   }
 
   listenerEvents(){
-    this.events.subscribe('delete-photo',()=>{
+    this.events.subscribe('image-delete',()=>{
       this.getAlbumPhotos(this.album.id);
     })
   }

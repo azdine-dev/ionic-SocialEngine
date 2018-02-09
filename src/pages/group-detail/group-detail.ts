@@ -27,7 +27,9 @@ import {CommentPage} from "../comment/comment";
   templateUrl: 'group-detail.html',
 })
 export class GroupDetailPage {
-  private group : any
+  private group : any;
+  private groupId :any;
+  private loading :any;
   private eventDefault ='about';
   private userSession =localStorage.getItem('user-id');
   private showFeed = false;
@@ -36,11 +38,24 @@ export class GroupDetailPage {
               public modalCtrl :ModalController,public sanitizer : DomSanitizer,public postSevice : PostService,
               public viewCtrl : ViewController,private events : Events,private toastCtrl :ToastController,
               private loadingCtrl :LoadingController,private alertCtrl : AlertController,public postService : PostService) {
-    this.group = this.navParams.get('group');
-    this.getGroupFeed(this.group.id);
+    this.groupId =this.navParams.get('groupId');
+    this.getGroupInfo();
+    this.getGroupFeed(this.groupId);
     this.listenToFeedEvents();
 
   }
+
+  getGroupInfo(){
+    this.loading = true;
+    this.groupService.getGroup(this.groupId).then(res=>{
+      this.group = res['data'];
+      this.loading=false;
+    },err=>{
+      this.loading=false;
+    })
+
+    }
+
 
   getGroupFeed(groupId){
     this.groupService.getGroupFeed(groupId).then(res=>{
@@ -104,7 +119,7 @@ export class GroupDetailPage {
     })
   }
   viewUser(user) {
-    this.navCtrl.push(UserPage, {owner: user})
+    this.navCtrl.push(UserPage, {ownerId: user.id})
   }
 
   showGroupsFeed(param?) {
@@ -122,7 +137,7 @@ export class GroupDetailPage {
     })
   }
   doRefreshFeed(refrecher){
-    this.getGroupFeed(this.group.id);
+    this.getGroupFeed(this.groupId);
   }
 
   shareGroupe(group){
@@ -274,23 +289,23 @@ export class GroupDetailPage {
   /****************Feed EVENTS**************/
   private listenToFeedEvents(){
     this.events.subscribe('delete-user',()=>{
-      this.getGroupFeed(this.group.id);
+      this.getGroupFeed(this.groupId);
     });
     this.events.subscribe('new-comment',()=>{
-      this.getGroupFeed(this.group.id);
+      this.getGroupFeed(this.groupId);
     });
     this.events.subscribe('delete-comment',()=>{
-      this.getGroupFeed(this.group.id);
+      this.getGroupFeed(this.groupId);
     });
     this.events.subscribe('new-activity',()=>{
-      this.getGroupFeed(this.group.id);
+      this.getGroupFeed(this.groupId);
     });
     this.events.subscribe('new-state',()=>{
-      this.getGroupFeed(this.group.id);
+      this.getGroupFeed(this.groupId);
     });
 
     this.events.subscribe('new-activity',()=>{
-      this.getGroupFeed(this.group.id);
+      this.getGroupFeed(this.groupId);
     })
 
   }

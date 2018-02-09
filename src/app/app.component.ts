@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Events, Platform} from 'ionic-angular';
+import {Events, Platform, ViewController} from 'ionic-angular';
 import {ViewChild} from '@angular/core';
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
@@ -25,6 +25,7 @@ import {EventsPage} from "../pages/events/events";
 import {EventEditPage} from "../pages/event-edit/event-edit";
 import {GroupsPage} from "../pages/groups/groups";
 import {MediathequePage} from "../pages/mediatheque/mediatheque";
+import {BlogsPage} from "../pages/blogs/blogs";
 
 @Component({
   templateUrl: 'app.component.html',
@@ -33,12 +34,14 @@ import {MediathequePage} from "../pages/mediatheque/mediatheque";
   }
 })
 export class MyApp {
+  @ViewChild('viewCtrl') viewCtrl :ViewController
 
   public rootPage: any;
 
   public nav: any;
   private profilePicture ='';
   private profileNme = '';
+  private profileId =0;
   private userId ='';
 
   public pages = [
@@ -48,12 +51,12 @@ export class MyApp {
       count: 0,
       component: HomePage
     },
-    {
-      title: 'Recent posts',
-      icon: 'ios-list-box-outline',
-      count: 0,
-      component: RecentPostsPage
-    },
+    // {
+    //   title: 'Recent posts',
+    //   icon: 'ios-list-box-outline',
+    //   count: 0,
+    //   component: RecentPostsPage
+    // },
 
     {
       title: 'Mediatheque',
@@ -80,7 +83,12 @@ export class MyApp {
       count: 0,
       component: GroupsPage,
     },
-
+    {
+      title: 'Blogs',
+      icon: 'ios-create-outline',
+      count: 0,
+      component: BlogsPage,
+    },
 
     {
       title: 'Notifications',
@@ -95,7 +103,7 @@ export class MyApp {
       component: WallPostsPage
     },
     {
-      title: 'Contacts',
+      title: 'Entrepreneurs',
       icon: 'ios-person-outline',
       count: 0,
       component: ContactsPage
@@ -149,20 +157,22 @@ export class MyApp {
       });
     }
     else{
-      this.nav.push(page.component);
+      this.nav.setRoot(page.component);
     }
 
   }
 
   // on click, go to user timeline
   viewUser(userId) {
-    this.nav.push(UserPage, {id: userId})
+    this.nav.push(UserPage, {ownerId: userId});
+
   }
 
  listenToCutomEvents(){
     this.events.subscribe('authorized-user',(data)=>{
       this.profileNme=data.title;
       this.profilePicture=data.imgs.normal;
+      this.profileId = data.id;
     })
  }
   getDefaultImage(image){

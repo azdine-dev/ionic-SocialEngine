@@ -35,6 +35,6 @@ export class PostPage {
 
   // on click, go to user timeline
   viewUser(userId) {
-    this.nav.push(UserPage, {id: userId})
+    this.nav.push(UserPage, {ownerId: userId})
   }
 }

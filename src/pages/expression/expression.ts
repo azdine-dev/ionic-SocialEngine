@@ -66,7 +66,7 @@ export class ExpressionPage implements OnInit{
     this.body.bodyText='';
   }
   viewUser(userId) {
-    this.nav.push(UserPage, {id: userId})
+    this.nav.push(UserPage, {ownerId: userId})
   }
   selectPhoto(){
     this.camera.getPicture(this.cameraOptions).then(file_uri =>{

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import {IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
+import {Component, OnInit} from '@angular/core';
+import {Events, IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
 import {AlbumService} from "../../services/album-service";
 import {PhotosPage} from "../photos/photos";
 import {PostService} from "../../services/post-service";
@@ -16,33 +16,49 @@ import {CommentPage} from "../comment/comment";
   selector: 'page-album',
   templateUrl: 'album.html',
 })
-export class AlbumPage {
-  private images = ['ben.png','max.png','mike.png']
+export class AlbumPage implements OnInit{
+  private images = ['ben.png','max.png','mike.png'];
+  private makeProfilePicture : any;
+  private searching :any;
   private userAlbums : Array<{}>;
   private userId : any;
   private userName : any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,public albumService : AlbumService,
-              public postService : PostService,public modalCtrl: ModalController) {
+              public postService : PostService,public modalCtrl: ModalController,private events :Events) {
     this.userId = this.navParams.get('id');
     this.userName =this.navParams.get('name');
+    this.makeProfilePicture = this.navParams.get('profile');
+    this.listenToCustomEvents();
+
+
+  }
+
+  ngOnInit(){
     this.getUserAlbums(this.userId);
   }
 
 
   getUserAlbums(userId) {
+    this.searching = true;
     this.albumService.getUserAlbums(userId).then(data=>{
       this.userAlbums = data['data'];
+      this.searching = false;
     },err=>{
     })
   }
 
 
   goToAlbumPhotos(album){
-    this.navCtrl.push(PhotosPage,{
-      album : album,
-      userName : this.userName
-    })
+    if(this.makeProfilePicture =='YES'){
+
+    }else{
+      this.navCtrl.push(PhotosPage,{
+        album : album,
+        userName : this.userName
+      })
+    }
+
   }
 
   toggleLikeAlbum(album){
@@ -78,6 +94,14 @@ export class AlbumPage {
   }
   getDefaultImage(image,contact){
     image.src = 'assets/img/cover.png';
+  }
+
+  listenToCustomEvents(){
+    this.events.subscribe('image-delete',(data)=>{
+      console.log(data,'IDDD');
+      this.userId=data;
+      this.ngOnInit();
+    })
   }
 
 }

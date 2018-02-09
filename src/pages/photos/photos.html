@@ -7,48 +7,21 @@
 </ion-header>
 
 
-<ion-content padding>
-
+<ion-content padding #container>
+  <div *ngIf="searching" class="spinner-container">
+    <ion-spinner name="ios"></ion-spinner>
+  </div>
      <ion-list>
        <ion-row>
          <ion-col col-6 *ngFor="let image of albumPhotos" class="responsive">
            <ion-card class="gallery" (click)="goToPhotoDetail(image.id)">
-             <img [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="image.thumb" class="thumb-img" >
+             <img [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="image.thumb" class="thumb-img" [scrollObservable]="container.ionScroll">
            </ion-card>
          </ion-col>
        </ion-row>
 
      </ion-list>
 
-  <!--<ion-slides>-->
-    <!--<ion-slide *ngFor="let image of albumPhotos " >-->
-      <!--<img [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="image.thumb" class="thumb-img" imageViewer>-->
-      <!--<ion-grid >-->
-        <!--<ion-row class="post-actions">-->
-
-          <!--<ion-col width-10 *ngIf="photosMap.get(image.id).can_delete" text-center (click)="showDeletePhotoDialog(image.id)">-->
-            <!--<ion-icon name="ios-trash-outline" ></ion-icon>-->
-          <!--</ion-col>-->
-
-          <!--<ion-col width-10 *ngIf="photosMap.get(image.id).can_share" text-center (click)="shareImage(image)">-->
-            <!--<ion-icon name="share-alt"></ion-icon>-->
-          <!--</ion-col>-->
-
-          <!--<ion-col width-10 *ngIf="photosMap.get(image.id).can_report" text-center >-->
-            <!--<ion-icon name="ios-flag-outline" ></ion-icon>-->
-          <!--</ion-col>-->
-
-          <!--<ion-col width-10 *ngIf="photosMap.get(image.id).can_make_profile_photo" text-center (click)="showMakeProfilePictureDialog(image.id)">-->
-            <!--<ion-icon name="ios-image-outline" ></ion-icon>-->
-          <!--</ion-col>-->
-
-        <!--</ion-row>-->
-      <!--</ion-grid>-->
-    <!--</ion-slide>-->
-
-
-
-  <!--</ion-slides>-->
 
 
 </ion-content>

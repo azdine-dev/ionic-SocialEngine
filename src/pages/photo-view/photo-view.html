@@ -6,19 +6,50 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>photo-view</ion-title>
+  <ion-navbar color="primary">
+    <ion-title>Photo</ion-title>
+
   </ion-navbar>
 
 </ion-header>
 
 <ion-content padding>
+   <div *ngIf="searching" class="spinner-container">
+    <ion-spinner name="ios"></ion-spinner>
+   </div>
+     <div class="move-photo" *ngIf="photo?.album.total_photo > 0">
+       <ion-icon class="previous-photo" item-start name="ios-arrow-back-outline" color="primary" (click)="goToImage(photo.previous_photo.id)" > </ion-icon>
+       <ion-icon class="next-photo" item-end name="ios-arrow-forward-outline" color="primary" (click)="goToImage(photo.next_photo.id)"> </ion-icon>
+     </div>
+
 
         <ion-card class="gallery" >
-          <img [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="photo?.thumb" class="thumb-img" imageViewer>
+          <ion-card-header> Photo numéro {{photo?.photo_index+1}} sur {{photo?.album.total_photo}}</ion-card-header>
+          <img (error)= "'/assets/img/default-image.png'" [src]="photo?.img" class="thumb-img" imageViewer>
+          <ion-card-header>
+            <p text-wrap ion-text>{{photo?.description}}</p>
+          </ion-card-header>
          <ion-card-content>
-
+          <ion-label>ajouté le : {{photo?.date}}</ion-label>
          </ion-card-content>
         </ion-card>
+  <ion-grid class="post-actions">
+    <ion-row>
 
+      <ion-col *ngIf="photo?.can_share" text-center (click)="shareImage(photo)">
+        <ion-icon name="share-alt"></ion-icon>
+      </ion-col>
+
+      <ion-col *ngIf="photo?.can_delete" text-center (click)="showDeletePhotoDialog(photo)">
+        <ion-icon name="ios-trash-outline" ></ion-icon>
+      </ion-col>
+      <ion-col  *ngIf="photo?.can_report"text-center >
+        <ion-icon name="ios-flag-outline"></ion-icon>
+      </ion-col>
+      <ion-col  *ngIf="photo?.can_make_profile_photo"text-center (click)="showMakeProfilePictureDialog(photo.id)">
+        <ion-icon name="ios-image-outline"></ion-icon>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
 </ion-content>

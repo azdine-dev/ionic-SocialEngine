@@ -2,8 +2,8 @@
 
   <ion-content class="menu-left">
     <!-- User profile -->
-    <ion-item >
-      <ion-avatar  item-left (click)="viewUser(userId)">
+    <ion-item *ngIf="profileNme" (click)="viewUser(profileId)" menuClose>
+      <ion-avatar  item-left>
         <img class="profile-picture2" #image (error)="getDefaultImage(image)" src="{{profilePicture}}" >
       </ion-avatar>
       <h6>{{profileNme}}</h6>

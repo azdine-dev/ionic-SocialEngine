@@ -1,3 +1,40 @@
 page-blogs-view {
+  .blog-body{
+    img{
+
+    }
+    iframe{
+      max-height: 200px;
+      height:200px;
+    }
+  }
+  .post-body {
+
+    border-top: 1px solid $borderColor;
+    border-bottom: 1px solid $borderColor;
+
+    p {
+      font-size: 0.8em;
+    }
+
+    a.subdued {
+      color: $textColor;
+      font-size: 0.8em;
+    }
+  }
+  .post-actions {
+    color: #7C7C7C;
+    font-size: 1.4em;
+  }
+
+  .blog-owner{
+    font-weight: bold;
+  }
+  .blog-info{
+    img{
+      height: 50%;
+      width: 100%;
+    }
+  }
 
 }

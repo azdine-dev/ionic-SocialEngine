@@ -1,7 +1,11 @@
 <ion-header >
 
   <ion-navbar color="primary"  class="no-border">
-    <ion-title> Videos </ion-title>
+    <button  ion-button menuToggle type="overlay">
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title *ngIf="user"> Videos de {{user.title}} </ion-title>
+    <ion-title *ngIf="!user"> Videos </ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -19,8 +23,16 @@
   </ion-fab>
   <ion-searchbar [(ngModel)]="searchTerm"  [formControl]="searchControl" ></ion-searchbar>
   <div *ngIf="searching" class="spinner-container">
-    <ion-spinner></ion-spinner>
+    <ion-spinner name="ios"></ion-spinner>
   </div>
+  <div class="row" *ngIf="videos?.length==0">
+    <ion-icon  class="no-messages" name="ios-videocam-outline">
+
+    </ion-icon><br>
+    <ion-note >Pas de Videos</ion-note>
+
+  </div>
+
   <ion-list *ngFor="let vid of videos;let index = index" >
     <ion-card  >
       <div  class="youtube"  >

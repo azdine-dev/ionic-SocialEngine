@@ -1,18 +1,116 @@
-<!--
-  Generated template for the BlogsViewPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>blogs-view</ion-title>
+  <ion-navbar color="primary"  class="no-border">
+    <ion-title>{{blog?.title}}</ion-title>
   </ion-navbar>
-
 </ion-header>
 
+<ion-content #container >
+  <div *ngIf="!blog" class="spinner-container">
+    <ion-spinner  name="ios" >
+    </ion-spinner>
+  </div>
 
-<ion-content padding>
+  <div text-center class="user-profile primary-bg" *ngIf="blog">
+    <!--<div class="show-image">-->
+      <!--<img  [defaultImage]= "'assets/img/user.png'" [lazyLoad]="blog.owner.imgs.normal" imageViewer>-->
+    <!--</div>-->
 
+    <!--<h4 class="light" *ngIf="blog">{{ blog?.title }}</h4>-->
+    <ion-card class="blog-info">
+      <img   [defaultImage]= "'assets/img/user.png'" [lazyLoad]="blog.owner.imgs.normal" imageViewer>
+      <ion-card-content>
+        <h4 style="font-weight: bold" class="light" *ngIf="blog">{{ blog?.title }}</h4>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngIf="blog">
+      <ion-grid color="white" >
+        <ion-row >
+
+          <ion-col (click)="shareBlog(blog)" >
+            <ion-icon  name="md-share"></ion-icon><br>
+            <ion-note>Partagez le Blog</ion-note>
+          </ion-col>
+
+          <!--<ion-col *ngIf="blog.can_edit" (click)="editEvent(blog)">-->
+            <!--<ion-icon   name="ios-create"> </ion-icon><br>-->
+            <!--<ion-note>Modifier</ion-note>-->
+          <!--</ion-col>-->
+
+
+          <!--<ion-col *ngIf="blog.can_delete" (click)="ondeletlick(blog)" >-->
+            <!--<ion-icon name="ios-trash-outline"> </ion-icon><br>-->
+            <!--<ion-note>Supprimer</ion-note>-->
+          <!--</ion-col>-->
+
+
+          <ion-col *ngIf="blog.owner.id ==userSession" >
+            <ion-icon name="ios-flag-outline"> </ion-icon><br>
+            <ion-note>Signaler</ion-note>
+          </ion-col>
+
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <ion-card *ngIf="blog">
+      <ion-list>
+
+        <ion-item *ngIf="blog?.owner">
+          <ion-icon name='ios-information-circle-outline'   item-start></ion-icon>
+          <ion-note >
+            Dirigé par :
+          </ion-note><br>
+          <h5 ion-text class="blog-owner">{{blog?.owner.title}}</h5>
+
+        </ion-item>
+
+      </ion-list>
+
+    </ion-card>
+
+
+
+
+
+
+
+  </div>
+
+
+  <ion-card *ngIf="blog">
+    <ion-item>
+      <ion-avatar item-left (click)="viewUser(blog.owner)">
+        <img   #img  src="{{ blog.owner.imgs.normal}}">
+      </ion-avatar>
+      <ion-label>{{blog.owner.title}}</ion-label>
+      <p>{{ blog.date }}</p>
+    </ion-item>
+
+    <ion-item text-wrap class="post-body">
+      <div (click)="viewPost(post.id)" class="blog-body">
+        <div [innerHtml]="processHtmlContent(blog.body)" text-wrap></div>
+
+
+
+      </div>
+
+      <div>
+        <a (click)="viewPost(post.id)" class="subdued">{{ blog.total_like}} Likes</a>
+        <a (click)="viewPost(post.id)" class="subdued" margin-left>{{ blog.total_comment}} Comments</a>
+      </div>
+    </ion-item>
+
+    <ion-grid class="post-actions">
+      <ion-row>
+        <ion-col  *ngIf="blog.can_like"text-center (click)="toggleLike(blog)">
+          <ion-icon name="thumbs-up" color="primary"  *ngIf="blog.is_liked"></ion-icon>
+          <ion-icon name="thumbs-up" *ngIf="!blog.is_liked"></ion-icon>
+        </ion-col>
+        <ion-col  *ngIf="blog.can_comment"text-center (click)="commentBlog(blog)">
+          <ion-icon name="chatboxes"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
 </ion-content>

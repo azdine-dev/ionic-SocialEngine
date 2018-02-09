@@ -6,7 +6,7 @@
 -->
 <ion-header>
   <ion-navbar color="primary"  class="no-border">
-    <ion-title>{{owner.title}}</ion-title>
+    <ion-title>{{user?.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -17,42 +17,44 @@
     </ion-refresher-content>
   </ion-refresher>
 
+
   <div text-center class="user-profile primary-bg">
     <div class="show-image">
-      <img #im (error)="getDefaultImage(im)"   imageViewer src="{{ owner.imgs.normal}}">
-      <ion-icon  *ngIf=" userSession == owner.id" name="md-camera" class="update" (click)="updatePicture($event)"></ion-icon>
+      <img #im (error)="getDefaultImage(im)"   imageViewer src="{{ user?.imgs.profile}}">
+      <ion-icon  *ngIf=" userSession == ownerId" name="md-camera" class="update" (click)="updatePicture($event)"></ion-icon>
 
     </div>
-    <h4 class="light">{{ owner.title }}</h4>
+    <h4 class="light">{{ user?.title }}</h4>
 
-    <ion-grid  *ngIf=" userSession != owner.id">
+    <ion-grid  *ngIf=" userSession != ownerId" class="user-apply">
 
-      <div *ngIf="!user" class="spinner-container">
-        <ion-spinner  name="circles" >
-        </ion-spinner>
-      </div>
+
       <ion-row >
-        <ion-col  (click)="joinMember(user)">
+        <div *ngIf="!user" class="spinner-container">
+          <ion-spinner  name="ios" >
+          </ion-spinner>
+        </div>
+        <ion-col  (click)="joinMember(user)" *ngIf="user">
           <ion-icon name="md-person-add" [color]=" user.friend_status =='is_friend' || user.friend_status =='is_sent_request' ? 'primary' : '' " ></ion-icon> <br>
           <span>{{getFriendState(user)}}</span>
         </ion-col>
 
-        <ion-col>
+        <ion-col *ngIf="user">
           <ion-icon name="logo-rss"></ion-icon>
           <span class="number">{{ user.total_friend }} amis</span>
         </ion-col>
 
-        <ion-col >
+        <ion-col *ngIf="user" >
           <span class="number">{{ user.total_mutual_friend }} </span>
           <span>amis en commun</span>
         </ion-col>
 
-        <ion-col (click)="toggleBlockUser(user)" >
+        <ion-col (click)="toggleBlockUser(user)" *ngIf="user">
           <ion-icon  ios="ios-hand" md="md-hand" [color]="user.block_status == 'no_block' ? '':'primary'"></ion-icon><br>
           <span>{{user.block_status == 'no_block' ? 'Bloquer?':'Débloquer'}} le Membre </span>
         </ion-col>
 
-        <ion-col>
+        <ion-col *ngIf="user">
           <ion-icon ios="ios-flag" md="md-flag"></ion-icon><br>
           <span>Signaler</span>
         </ion-col>
@@ -61,7 +63,7 @@
 
 
 
-     <ion-card>
+     <ion-card *ngIf="user">
        <ion-segment [(ngModel)]="infoUser">
          <ion-segment-button value="infoPer">
            Information Personnelle
@@ -72,11 +74,11 @@
          </ion-segment-button>
 
        </ion-segment>
-       <div [ngSwitch]="infoUser">
+       <div [ngSwitch]="infoUser" class="info-user">
 
-         <ion-list *ngSwitchCase="'infoPer'" inset>
+         <ion-list *ngSwitchCase="'infoPer'" inset >
            <div *ngIf="!user" class="spinner-container">
-             <ion-spinner  name="circles" >
+             <ion-spinner  name="ios" >
              </ion-spinner>
            </div>
               <ion-item>
@@ -99,7 +101,7 @@
 
          <ion-list *ngSwitchCase="'infoContact'" inset>
            <div *ngIf="!user" class="spinner-container">
-             <ion-spinner  name="circles" >
+             <ion-spinner  name="ios" >
              </ion-spinner>
            </div>
            <ion-item>
@@ -122,28 +124,38 @@
     <ion-grid >
       <ion-row>
 
-        <ion-col *ngIf=" userSession == owner.id" (click)="getUserFriends(owner)" >
+        <ion-col *ngIf=" userSession == ownerId" (click)="getUserFriends(owner)" >
           <span>Modifier mon profile </span>
         </ion-col>
 
-        <ion-col (click)="getUserFriends(owner)" >
+        <ion-col (click)="getUserFriends(user)" >
           <span>Contacts </span>
         </ion-col>
 
         <ion-col>
-          <span (click)="getUserAlbums(owner.id,owner.title)">Albums</span>
+          <span (click)="getUserAlbums(user.id,user.title)">Albums</span>
         </ion-col>
 
         <ion-col >
           <span (click)="getUserLinks(user.id)">Liens</span>
         </ion-col>
 
-        <ion-col >
-          <span (click)="getUserVideos(owner.id,owner.title)">Videos</span>
-        </ion-col>
 
+
+
+      </ion-row>
+      <ion-row>
         <ion-col>
-          <span (click)="getUserEvents(owner.id)">Evenements</span>
+          <span (click)="getUserEvents(user)">Evenements</span>
+        </ion-col>
+        <ion-col>
+          <span (click)="getUserGroups(user)">Groups</span>
+        </ion-col>
+        <ion-col>
+          <span (click)="getUserBlogs(user)">Blogs</span>
+        </ion-col>
+        <ion-col >
+          <span (click)="getUserVideos(user)">Videos</span>
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -151,11 +163,11 @@
   </div>
   <ion-item item-right>
     <div *ngIf="!userFeed" class="spinner-container">
-      <ion-spinner  name="circles" >
+      <ion-spinner  name="ios" >
       </ion-spinner>
     </div>
   </ion-item>
-  <ion-list *ngFor="let post of userFeed">
+  <ion-list *ngFor="let post of userFeed?.items">
   <ion-card>
     <ion-item>
       <ion-avatar item-left (click)="viewUser(post.owner)">
@@ -165,35 +177,39 @@
       <p>{{ post.time }}</p>
     </ion-item>
 
-    <ion-item text-wrap class="post-body">
-      <div (click)="viewPost(post.id)">
-        <div [innerHtml]="processHtmlContent(post)"></div>
-        <div  class="youtube" *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
+    <div class="post-content" [innerHtml]="processHtmlContent(post)"  (press)="viewPost(post.id)" text-wrap ></div>
+    <div  class="youtube" *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
 
-          <img class="iframe-image" [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="post.attachments[0].img" [scrollObservable]="container.ionScroll">
-          <iframe *ngIf="post.clicked"   [src]="trustResourceUrl(post)"
-                  allowfullscreen frameBorder="0"
-                  width="450" height="200" >
+      <img class="iframe-image" [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="post.attachments[0].img" [scrollObservable]="container.ionScroll">
+      <iframe *ngIf="post.clicked"   [src]="trustResourceUrl(post)"
+              allowfullscreen frameBorder="0"
+              width="450" height="200" >
 
-          </iframe>
-          <div  *ngIf="!post.clicked" (click)="playVideo(post)"  class="play-button">
-          </div>
-
-        </div>
-
-
-        <img #imAtt (error)="getDefaultImage(imAtt)" imageViewer class="full-image"
-             *ngIf="post.attachments.length && post.attachments[0].type=='album_photo' " src="{{ post.attachments[0].img }}">
-        <!--<p padding-top padding-bottom>{{ post.content }}</p>-->
-        <!--<img imageViewer *ngIf="post.attachments.length && post.attachments[0].type=='album_photo'" [defaultImage]= "defultImage"-->
-             <!--[lazyLoad]="post.attachments[0].img" >-->
+      </iframe>
+      <div  *ngIf="!post.clicked" (click)="playVideo(post)"  class="play-button">
       </div>
+
+    </div>
+    <img imageViewer *ngIf="post.attachments.length && post.attachments[0].type=='album_photo'"  [defaultImage]= "'/assets/img/default-image.png'"
+         [lazyLoad]="post.attachments[0].img" [scrollObservable]="container.ionScroll">
+
+    <div class="attachment-photo"  *ngIf="post.attachments.length && (post.attachments[0].type != 'video') && (post.attachments[0].type!='album_photo')
+          && (post.attachments[0].type != 'core_link')">
+      <img imageViewer [defaultImage]= "'/assets/img/default-image.png'"
+           [lazyLoad]="post.attachments[0].img" [scrollObservable]="container.ionScroll">
+      <ion-note  (click)="goToAttachmentDescription(post.attachments[0])" item-left color="primary"> {{post.attachments[0].title}}</ion-note><br>
+    </div>
+    <div class="attachment-photo" *ngIf="post.attachments.length && (post.attachments[0].type == 'core_link')">
+      <ion-item (click)="openLink(post.attachments[0].href)">
+        <ion-note  (click)="goToAttachmentDescription(post.attachments[0])" item-left color="primary"> {{post.attachments[0].title}}</ion-note>
+      </ion-item>
+
+    </div>
 
       <div>
         <a (click)="viewPost(post.id)" class="subdued">{{ post.total_like}} Likes</a>
         <a (click)="viewPost(post.id)" class="subdued" margin-left>{{ post.total_comment}} Comments</a>
       </div>
-    </ion-item>
 
     <ion-grid class="post-actions">
       <ion-row>
@@ -214,4 +230,10 @@
     </ion-grid>
   </ion-card>
   </ion-list>
+
+  <ion-infinite-scroll  (ionInfinite)="loadInfiniteFeed($event)">
+    <ion-infinite-scroll-content>
+
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

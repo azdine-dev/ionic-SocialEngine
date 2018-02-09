@@ -43,7 +43,6 @@ export class PostService {
       this.http.get(feedUrl+param+'access_token='+this.accessToken+'&limit='+limit+'&maxid='+maxId+param_delimiter+'fields='+this.fields)
         .subscribe( res =>{
           resolve(res);
-          console.log(res);
         }, (err)=>{
           reject(err);
         });
@@ -63,7 +62,6 @@ export class PostService {
         '&subject_type=user'+'&subject_id='+userId)
         .subscribe( res =>{
           resolve(res);
-          console.log(res);
         }, (err)=>{
           reject(err);
         });
@@ -78,7 +76,6 @@ export class PostService {
       this.http.get(feedUrl+'/'+feed_id+param+'access_token='+this.accessToken+param_delimiter+'fields='+this.fields)
         .subscribe( res =>{
           resolve(res);
-          console.log(res);
         }, (err)=>{
           reject(err);
         });
@@ -164,9 +161,10 @@ export class PostService {
         headers.append('Content-Type', 'multipart/form-data');
 
         this.http.post(composePhotoUrl+param+'access_token='+this.accessToken
-          ,formData).subscribe(ok =>console.log(ok),
-          err=>{
-            console.log(JSON.stringify(err));
+          ,formData).subscribe(ok =>{
+
+        }
+          ,err=>{
           });
 
       });
@@ -206,7 +204,6 @@ export class PostService {
         '&item_type='+item_type+'&fields='+this.fields)
           .subscribe( res =>{
             resolve(res);
-            console.log(res);
           }, (err)=>{
             reject(err);
           });
@@ -241,20 +238,33 @@ export class PostService {
 
         this.composeUploadService.uploadPhoto(imageData).then(data=>{
           this.photoUpload = JSON.parse(data['response']);
-          console.log((this.photoUpload).data.photo_id);
 
         }).then(()=> {
             this.http.post(feedUrl + param + 'access_token=' + this.accessToken +
               '&attachment[type]=photo&attachment[photo_id]='+this.photoUpload.data.photo_id,{headers}).subscribe(res=>{
 
-              console.log('POST'+res);
               resolve(res);
             },err=>{
-              console.log('ERR'+JSON.stringify(err));
               reject(err);
             })
 
           }
         )},);
+  }
+
+  postLink(linkData){
+    return new Promise((resolve,reject)=>{
+      let headers = new HttpHeaders();
+      headers.append('Content-Type', 'multipart/form-data');
+
+      this.http.post(feedUrl + param + 'access_token=' + this.accessToken + param_delimiter +
+        +param_delimiter+'&attachment[type]=link&attachment[uri]='+linkData.uri+'&attachment[title]='+linkData.title+'&attachment[description]='+
+        linkData.description
+        +this.composeUploadData.data.photo_id,{headers}).subscribe(res=>{
+        resolve(res);
+      },err=>{
+        reject(err);
+      })
+    });
   }
 }

@@ -4,6 +4,7 @@ import {PostService} from "../../services/post-service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {VideoService} from "../../services/video-service";
 import {UserService} from "../../services/user-service";
+import {EventService} from "../../services/event-service";
 
 /**
  * Generated class for the InfoPage page.
@@ -20,10 +21,10 @@ import {UserService} from "../../services/user-service";
 export class InfoPage {
   @ViewChild("iframe", {read: ElementRef}) iframe: ElementRef;
   private ready =false;
-  private userVideos : Array<{}>;
+  private userInvited :Array<any>;
   private userId : any;
   private userName : any;
-  private showIframe = false;
+  private evantId : any;
   private imageSrc ='assets/img/adam.jpg';
   private pageVideoNumber = 1;
   private videoLimit=5;
@@ -31,12 +32,13 @@ export class InfoPage {
 
 
   constructor(public navParams: NavParams, public userService: UserService,
-              public postService: PostService,public videoService : VideoService,public sanitizer : DomSanitizer,
+              public postService: PostService,public eventService : EventService,public sanitizer : DomSanitizer,
               public modalCtrl : ModalController,public alertCtrl :AlertController,public events : Events) {
 
   this.userId = this.navParams.get('id');
   this.userName =this.navParams.get('name');
-  this.getUserVideos(this.userId);
+  this.evantId = this.navParams.get('eventId');
+  this.getCanInviteFriends();
   }
   ionViewDidLoad(){
     setTimeout( ()=>{
@@ -44,71 +46,12 @@ export class InfoPage {
     },1000)
   }
 
-
-  getUserVideos(userId){
-    this.videoService.getUserVideos(userId,this.pageVideoNumber,this.videoLimit).then(data=>{
-      this.userVideos =data['data'];
-      this.assignClickedValues(this.userVideos);
-
-      console.log(data,'USER-VIDEOS');
-    },err=>{
-      console.log(err)
+  getCanInviteFriends(){
+    console.log(this.evantId,'IDDDD');
+    this.eventService.getCanInviteFriends(this.evantId).then(res=>{
+      console.log(res,'USER CAN INVITE');
+      this.userInvited =res['data'];
     })
   }
 
-  trustResourceUrl(src){
-    return this.sanitizer.bypassSecurityTrustResourceUrl(src);
-  }
- playVideo(video){
- video.clicked=true;
- this.stopOtherVideos(video);
-
-  }
- iframeShow(){
-    return (this.iframe.nativeElement.attributes['clicked'].value);
- }
-
- assignClickedValues(array :Array<{}>){
-  for(let item of array){
-    Object.assign(item,{
-        clicked :false,
-    })
-  }
- }
- stopOtherVideos(exceptVideo){
-    let index = this.userVideos.indexOf(exceptVideo,0);
-    console.log(index,'INDEEEX');
-    for(let i=0;i<this.userVideos.length;i++){
-      if(i!=index){
-        this.userVideos[i]['clicked'] =false;
-      }
-    }
- }
-
-  loadVideos(refrecher) {
-    if(!this.lastPage){
-      let page = this.pageVideoNumber+1;
-      this.videoService.getUserVideos(this.userId,page).then(res=>{
-        if(res['data'].length >0){
-          let length = res['data'].length;
-          this.userVideos=this.userVideos.concat(res['data']);
-          this.pageVideoNumber = this.pageVideoNumber+1;
-          if(length<this.videoLimit){
-            this.lastPage=true;
-            console.log('LASSST PAGE');
-          }
-          refrecher.complete();
-
-        }else{
-          this.lastPage=true;
-          refrecher.complete();
-        }
-      },err=>{
-        refrecher.complete();
-      })
-    } else{
-      refrecher.complete();
-    }
-
-  }
 }

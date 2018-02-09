@@ -1,5 +1,8 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {AlertController, Events, IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
+import {
+  AlertController, Events, IonicPage, ModalController, NavController, NavParams,
+  ToastController
+} from 'ionic-angular';
 import {VideoService} from "../../services/video-service";
 import {PostService} from "../../services/post-service";
 import {DomSanitizer} from "@angular/platform-browser";
@@ -29,16 +32,23 @@ export class MediathequePage {
   private lastPage = false;
   searching :any = false;
   searchControl :FormControl;
+  private firstVideoId='';
 
   searchTerm: string = '';
+  private userId: any;
+  private user :any;
 
 
 
   constructor(public navParams: NavParams, public userService: UserService,private navCtrl :NavController,
               public postService: PostService,public videoService : VideoService,public sanitizer : DomSanitizer,
-              public modalCtrl : ModalController,public alertCtrl :AlertController,public events : Events,) {
+              public modalCtrl : ModalController,public alertCtrl :AlertController,public events : Events,private toastCtrl:ToastController) {
     this.searchControl = new FormControl();
-
+    this.userId = this.navParams.get('userId');
+    this.user = this.navParams.get('user');
+    if(!this.userId){
+      this.userId='';
+    }
     this.listenToActivities()
   }
 
@@ -53,14 +63,13 @@ export class MediathequePage {
 
   getVideos(){
     this.searching = true;
-    this.videoService.getAllVideos(this.searchTerm,this.pageVideoNumber,this.videoLimit).then(data=>{
+    this.videoService.getAllVideos(this.searchTerm,this.userId,this.pageVideoNumber,this.videoLimit).then(data=>{
       this.searching = false;
       this.videos =data['data'];
+      this.firstVideoId = data['data'][0].id;
       this.assignClickedValues(this.videos);
 
-      console.log(data,'USER-VIDEOS');
     },err=>{
-      console.log(err)
     })
   }
 
@@ -92,13 +101,13 @@ export class MediathequePage {
   loadVideos(refrecher) {
     if(!this.lastPage){
       let page = this.pageVideoNumber+1;
-      this.videoService.getAllVideos(this.searchTerm,page,this.videoLimit).then(res=>{
-        if(res['data'].length >0){
+      this.videoService.getAllVideos(this.searchTerm,this.userId,page,this.videoLimit).then(res=>{
+        if(res['data'].length >0 && this.firstVideoId !=res['data'][0].id){
+          this.firstVideoId = res['data'][0].id;
           let length = res['data'].length;
-          console.log(length,'LENGTH VIDEOS');
           this.videos=this.videos.concat(res['data']);
           this.pageVideoNumber = this.pageVideoNumber+1;
-          if(length<this.videoLimit){
+          if(length<this.videoLimit || this.firstVideoId !=res['data'][0].id ){
             this.lastPage=true;
           }
           refrecher.complete();
@@ -109,6 +118,7 @@ export class MediathequePage {
         }
       },err=>{
         refrecher.complete();
+        this.presentToast('could not load videos','middle');
       })
     } else{
       refrecher.complete();
@@ -171,7 +181,16 @@ export class MediathequePage {
       videoType:'vimeo',
     });
   }
+  presentToast(msg,position:string='bottom') {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration : 2000,
+      position: position,
+      dismissOnPageChange: true
+    });
+    toast.present();
 
+  }
 
 
 }

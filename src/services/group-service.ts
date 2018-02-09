@@ -21,9 +21,9 @@ export class GroupService {
   constructor(public http : HttpClient) {
   }
 
-  getAllGrroups(){
+  getAllGrroups(keywords,userId:string=''){
     return new Promise((resolve,reject)=>{
-      this.http.get(groupUrl+'?access_token='+this.accessToken+'&fields='+groupFields).subscribe(data=>{
+      this.http.get(groupUrl+'?access_token='+this.accessToken+'&user_id='+userId+'&keywords='+keywords+'&fields='+groupFields).subscribe(data=>{
         resolve(data);
       },err=>{
         reject(err);

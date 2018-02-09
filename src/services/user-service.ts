@@ -126,7 +126,6 @@ export class UserService {
     return new Promise((resolve,reject)=>{
       this.composeUploadService.composeUploadPhoto(imageData).then(res=> {
         this.composeUploadData = JSON.parse(res['response']);
-        console.log(this.composeUploadData,'HHHHHHHH');
         resolve(res);
       }).catch(err=>{
         reject(err);

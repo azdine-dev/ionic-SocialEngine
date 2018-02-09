@@ -1,3 +1,13 @@
 page-photo-view {
-
+  .previous-photo{
+    zoom: 1.2;
+    padding-left: 10px;
+  }
+  .next-photo{
+    padding-left: 14em;
+    zoom: 1.2;
+  }
+  .gallery{
+    font-weight: bold;
+  }
 }

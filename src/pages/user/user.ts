@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
   AlertController, Events, LoadingController, ModalController, NavController, NavParams, PopoverController,
   ToastController
@@ -14,6 +14,10 @@ import {AlbumPage} from "../album/album";
 import {FriendsPage} from "../friends/friends";
 import {OptionsPage} from "../options/options";
 import {ShareModalPage} from "../share-modal/share-modal";
+import {MediathequePage} from "../mediatheque/mediatheque";
+import {EventsPage} from "../events/events";
+import {GroupsPage} from "../groups/groups";
+import {BlogsPage} from "../blogs/blogs";
 
 /*
  Generated class for the LoginPage page.
@@ -25,30 +29,52 @@ import {ShareModalPage} from "../share-modal/share-modal";
   selector: 'page-user',
   templateUrl: 'user.html'
 })
-export class UserPage {
+export class UserPage implements OnInit  {
   defultImage ='/assets/img/default-image.png'
   private infoUser ='';
-  public user ={
-  };
+  private endOfFeed : boolean = false;
+  public user :any;
   public owner : any;
+  private ownerId : any;
   private friendColor : any;
   private userSession =localStorage.getItem('user-id');
-  private userFeed : Array<{}>;
+  public userFeed :{
+    next_id   : number,
+    endOfFeed : any;
+    items     : Array<any>;
+  }
+  private userFeed2 :{
+    next_id   : number,
+    endOfFeed : any;
+    items : Array<any>;
+  }
   private videoFeedMap : Map <number,SafeUrl> = new Map <number,SafeUrl>();
 
   constructor(public nav: NavController, public navParams: NavParams, public userService: UserService,
               public postService: PostService,public videoService : VideoService,public sanitizer : DomSanitizer,
               public modalCtrl : ModalController,public alertCtrl :AlertController,public events : Events,
               public loadingCtrl : LoadingController,public toastCtrl : ToastController,public popover : PopoverController) {
+    this.userFeed = {
+      next_id   : 0,
+      endOfFeed : false,
+      items : new Array<any>(),
+    };
+    this.userFeed2 = {
+      next_id   : 0,
+      endOfFeed : false,
+      items : new Array<any>(),
+    };
 
-    this.owner = (navParams.get('owner'));
-    this.getUserProfileInfo(this.owner.id);
+
+  }
+  ngOnInit(){
+    this.owner = this.navParams.get('owner');
+    this.ownerId = this.navParams.get('ownerId');
+    this.getUserProfileInfo(this.ownerId);
     this.getUserFeedV2();
     this.listenToFeedEvents();
     this.infoUser ='infoPer';
-
   }
-
   toggleLike(post) {
     // if user liked
     if(post.is_liked) {
@@ -62,33 +88,31 @@ export class UserPage {
 
   // on click, go to user timeline
   viewUser(user) {
-    if(this.owner.id != user.id)
-    this.nav.push(UserPage, {owner: user})
+    if(this.ownerId != user.id)
+    this.nav.push(UserPage, {ownerId: user.id})
   }
 
   // on click, go to post detail
   commentPost(post) {
-    let cmntModal = this.modalCtrl.create(CommentPage,{post : post});
+    console.log(post.type,'POST TYPE');
+    let cmntModal = this.modalCtrl.create(CommentPage,
+      {
+        item_type : 'activity_action',
+        item_id : post.id,
+        post:post,
+      });
     cmntModal.present();
   }
 
   getUserProfileInfo(userId){
-    if(userId == this.userSession){
-      this.userService.getAuthorizedUser().then(data=>{
-        this.user = data['data'];
-      },err=>{
-      })
-    }
-    else{
       this.userService.getUserInfo(userId).then(data=>{
         this.user = data['data'];
       },err=>{
+        this.presentToast('failed loading profile','middle');
       })
-    }
-
   }
   getUserFeed() {
-    this.postService.getUserFeed(this.owner.id).then((result) => {
+    this.postService.getUserFeed(this.ownerId).then((result) => {
       this.userFeed = result["data"]["items"];
       // this.getFeedAttchmentVideos(this.userFeed);
     },(err) => {
@@ -103,16 +127,20 @@ export class UserPage {
           refresher.complete();
         }, 300);
 
-      this.postService.getUserFeed(this.owner.id,10).then(result => {
-        this.userFeed = result['data']['items'];
-        this.assignClickedValues(this.userFeed);
+      this.postService.getUserFeed(this.ownerId,10).then(result => {
+        this.userFeed.endOfFeed = result['data']['end_of_feed'];
+        this.userFeed.next_id = result['data']['next_id'];
+        this.userFeed.items = result['data']['items'];
+        this.assignClickedValues(this.userFeed.items);
       })
     }
     else {
 
-      this.postService.getAllFeed(10).then(result => {
-        this.userFeed = result['data']['items'];
-        this.assignClickedValues(this.userFeed);
+      this.postService.getUserFeed(this.ownerId,10).then(result => {
+        this.userFeed.endOfFeed = result['data']['end_of_feed'];
+        this.userFeed.next_id = result['data']['next_id'];
+        this.userFeed.items = result['data']['items']
+        this.assignClickedValues(this.userFeed.items);
 
       });
 
@@ -207,16 +235,34 @@ export class UserPage {
       this.getUserFeedV2();
     });
       this.events.subscribe('new-state',()=>{
-        this.getUserProfileInfo(this.owner.id);
+        this.getUserProfileInfo(this.ownerId);
       });
 
     }
 
 
-  getUserVideos(userId,userName){
-    this.nav.push(InfoPage,{
-      id: userId,
-      name : userName
+  getUserVideos(user){
+    this.nav.push(MediathequePage,{
+      userId: user.id,
+      user : user,
+    });
+  }
+  getUserEvents(user){
+    this.nav.push(EventsPage,{
+      userId: user.id,
+      user : user,
+    });
+  }
+  getUserGroups(user){
+    this.nav.push(GroupsPage,{
+      userId: user.id,
+      user : user,
+    });
+  }
+  getUserBlogs(user){
+    this.nav.push(BlogsPage,{
+      userId: user.id,
+      user : user,
     });
   }
   getUserFriends(user){
@@ -252,7 +298,6 @@ export class UserPage {
   }
 
   joinMember(contact){
-    console.log(contact.friend_status,'wez');
     switch (contact.friend_status){
       case 'not_friend':{
         this.showFriendsDialog('ajouter a la liste des amis ?',contact,'sendFriendRequest');
@@ -402,7 +447,6 @@ export class UserPage {
 
 
   toggleBlockUser(user){
-    console.log(user.block_status);
      if(user.block_status == 'no_block'){
        this.showFriendsDialog('voulez-vous bloquer '+user.title+'?',user,'blockUserService','Bloquer le membre');
      }
@@ -411,7 +455,6 @@ export class UserPage {
      }
   }
   updatePicture(myevent,owner){
-   console.log('wzez')
    let popover = this.popover.create(OptionsPage,{
      owner : this.owner,
      type :'camera'
@@ -428,10 +471,10 @@ export class UserPage {
 
 
   sharePost(post){
-    console.log(post.type,'POST USER TYPE');
+    console.log(post.attachments[0],'ATTAChment');
     let cmntModal = this.modalCtrl.create(ShareModalPage,{
       item : post,
-      type : post.type,
+      type : 'activity_action',
     });
     cmntModal.present();
   }
@@ -445,7 +488,6 @@ export class UserPage {
   playVideo(post){
     this.videoService.getVideo(post.attachments[0].id).then(res=>{
       post.video_source = res['data']['video_src'];
-      console.log(post.video_source,'vid srrrrc');
       post.clicked =true;
       this.stopOtherVideos(post);
     },err=>{
@@ -454,10 +496,10 @@ export class UserPage {
   }
 
   stopOtherVideos(exceptVideo){
-    let index = this.userFeed.indexOf(exceptVideo,0);
-    for(let i=0;i<this.userFeed.length;i++){
+    let index = this.userFeed.items.indexOf(exceptVideo,0);
+    for(let i=0;i<this.userFeed.items.length;i++){
       if(i!=index){
-        this.userFeed[i]['clicked'] =false;
+        this.userFeed.items[i]['clicked'] =false;
       }
     }
   }
@@ -470,4 +512,59 @@ export class UserPage {
       })
     }
   }
+  loadFeed2(refrecher){
+    // if(this.userFeed && this.userFeed.length>0){
+    //   let maxid = this.userFeed[this.userFeed.length-1].id;
+    //   setTimeout(()=>{
+    //     this.presentToast('end of feed');
+    //     refrecher.complete();
+    //   },300);
+    // }else{
+    //   refrecher.complete();
+    // }
+
+    // if(this.endOfFeed){
+
+    // }
+    // else {
+    //
+    //   this.postService.getUserFeed(this.owner.id,10, maxid).then(res => {
+    //     this.endOfFeed = res['data']['end_of_feed'];
+    //     this.userFeed2 = res['data']['items'];
+    //     this.assignClickedValues(this.userFeed2);
+    //     this.userFeed2.shift();
+    //     this.userFeed = this.userFeed2.concat(this.userFeed2);
+    //     refrecher.complete();
+    //
+    //   },err=>{
+    //     this.presentToast(JSON.stringify(err));
+    //     setTimeout(()=>{
+    //       refrecher.complete();
+    //     },300);
+    //   })
+    // }
+  }
+
+
+   loadInfiniteFeed(refrecher){
+      if(this.userFeed.endOfFeed){
+        refrecher.complete();
+      }else{
+        let maxid = this.userFeed.next_id;
+        this.postService.getUserFeed(this.ownerId,10, maxid).then(result=>{
+           this.userFeed2.endOfFeed = result['data']['end_of_feed'];
+           this.userFeed2.next_id = result['data']['next_id']
+           this.userFeed2.items = result['data']['items'];
+           this.assignClickedValues(this.userFeed2.items);
+           this.userFeed.items = this.userFeed.items.concat(this.userFeed2.items);
+           this.userFeed.endOfFeed=this.userFeed2.endOfFeed;
+           this.userFeed.next_id=this.userFeed2.next_id;
+           refrecher.complete();
+
+        },err=>{
+          this.presentToast('error');
+          refrecher.complete();
+        })
+      }
+   }
 }

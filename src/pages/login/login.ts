@@ -19,6 +19,12 @@ import {CacheService} from "ionic-cache";
 })
 export class LoginPage {
   loading: Modal;
+  sessionInfo={
+    access_token : '',
+    refrech_token:'',
+    userId :'',
+
+  }
   loginData = {
     grant_type: "password",
     scope :"activities basic albums videos blogs settings friends messages events classifieds groups",
@@ -45,6 +51,10 @@ export class LoginPage {
     this.authService.login(this.loginData).then((result) => {
       // this.loading.dismiss();
       this.data = result;
+      this.sessionInfo.access_token=this.data.access_token;
+      this.sessionInfo.refrech_token=this.data.refrech_token;
+      this.sessionInfo.userId=this.data.user_ids;
+
       localStorage.setItem('token',this.data.access_token);
       localStorage.setItem('refresh_token', this.data.refresh_token);
       localStorage.setItem('user-id',this.data.user_id);
@@ -52,7 +62,7 @@ export class LoginPage {
       this.nav.setRoot(HomePage);
     }, (err) => {
       load.dismiss();
-      this.presentToast(err["error_description"]);
+      this.presentToast('Erreur d Authentification');
     });
 
   }
@@ -72,4 +82,5 @@ export class LoginPage {
     toast.present();
 
   }
+
 }

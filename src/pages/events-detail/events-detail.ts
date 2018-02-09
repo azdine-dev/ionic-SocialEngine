@@ -13,6 +13,8 @@ import {UserPage} from "../user/user";
 import {ParticipantsPage} from "../participants/participants";
 import {HomePage} from "../home/home";
 import {ShareModalPage} from "../share-modal/share-modal";
+import {VideoService} from "../../services/video-service";
+import {InfoPage} from "../info/info";
 
 /**
  * Generated class for the EventsDetailPage page.
@@ -30,21 +32,57 @@ export class EventsDetailPage {
   private eventDefault ='about';
   private userSession =localStorage.getItem('user-id');
   private showFeed = false;
+  private eventPhotos : Array<any>;
+  searchPhotos :any;
+
+  private eventId : any;
   private eventPosts : Array<{}>;
   constructor(public navCtrl: NavController, public navParams: NavParams, public eventService : EventService,
               public modalCtrl :ModalController,public sanitizer : DomSanitizer,public postSevice : PostService,
               public viewCtrl : ViewController,private events : Events,private toastCtrl :ToastController,
-              private loadingCtrl :LoadingController,private alertCtrl : AlertController) {
+              private loadingCtrl :LoadingController,private alertCtrl : AlertController,private videoService :VideoService) {
     this.event = this.navParams.get('event');
-    this.getEventFeed(this.event.id);
+    this.eventId = this.navParams.get('eventId');
+    this.getEvent();
+    this.getEventFeed(this.eventId);
     this.getAuthUser();
     this.listenToEvents();
 
+    if(this.eventId){
+
+    }
+
   }
 
+  getEvent(){
+    this.eventService.getEvent(this.eventId).then(res=>{
+      this.event = res['data'];
+    })
+  }
+  showEventPhotos(){
+    this.showFeed =false;
+    this.getEventPhotos();
+  }
+
+  getEventPhotos(){
+    this.searchPhotos = true;
+   this.eventService.getEventPhotos(this.eventId).then(res=>{
+     this.eventPhotos = res['data'];
+     this.searchPhotos = false;
+   },err=>{
+     this.searchPhotos = false;
+   })
+  }
+  getCanInviteFriends(event){
+    console.log(event.id,'EVENT ID');
+    this.navCtrl.push(InfoPage,{
+      eventId : event.id,
+    })
+  }
   getEventFeed(eventId){
     this.eventService.getEventFeed(eventId).then(res=>{
       this.eventPosts = res['data']['items'];
+      this.assignClickedValues(this.eventPosts);
       console.log(this.eventPosts);
     })
   }
@@ -106,16 +144,11 @@ export class EventsDetailPage {
     })
   }
   viewUser(user) {
-    this.navCtrl.push(UserPage, {owner: user})
+    this.navCtrl.push(UserPage, {ownerId: user.id})
   }
 
   showEventsFeed(param?) {
-    if(param){
       this.showFeed=param;
-    }else {
-      this.showFeed=!this.showFeed;
-    }
-
   }
 
   getInvitedMembers(){
@@ -177,7 +210,7 @@ export class EventsDetailPage {
     load.present();
     this.eventService.deleteEvent(event.id).then(res=>{
       load.dismiss();
-      this.presentToast(res['data'].message,3000);
+      this.presentToast(res['data'].message,'middle',3000);
       this.events.publish('event-delete');
       this.viewCtrl.dismiss();
     },err=>{
@@ -263,15 +296,44 @@ export class EventsDetailPage {
     return load;
   }
 
-  presentToast(msg,duration=2000) {
+  presentToast(msg,position='bottom',duration=2000) {
     let toast = this.toastCtrl.create({
       message: msg,
       duration : duration,
-      position: 'bottom',
+      position: position,
       dismissOnPageChange: true
     });
     toast.present();
 
   }
+  assignClickedValues(array :Array<{}>){
+    for(let item of array){
+      Object.assign(item,{
+        clicked :false,
+        video_source :'',
+      })
+    }
+  }
+  trustResourceUrl(post){
+    let url ='http://intaliq.novway.com'
+    return this.sanitizer.bypassSecurityTrustResourceUrl(post.video_source);
+  }
+  playVideo(post){
+    this.videoService.getVideo(post.attachments[0].id).then(res=>{
+      post.video_source = res['data']['video_src'];
+      post.clicked =true;
+      this.stopOtherVideos(post);
+    },err=>{
+      this.presentToast('could not play video','middle');
+    })
+  }
 
+  stopOtherVideos(exceptVideo){
+    let index = this.eventPosts.indexOf(exceptVideo,0);
+    for(let i=0;i<this.eventPosts.length;i++){
+      if(i!=index){
+        this.eventPosts[i]['clicked'] =false;
+      }
+    }
+  }
 }

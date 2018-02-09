@@ -1,6 +1,6 @@
 {
-  "name": "ionic-hello-world",
-  "author": "Ionic Framework",
+  "name": "IntaliQ",
+  "author": "Azeddine Benhlima",
   "homepage": "http://ionicframework.com/",
   "private": true,
   "scripts": {
@@ -62,7 +62,7 @@
     "tslint": "^5.8.0",
     "typescript": "^2.4.2"
   },
-  "description": "ionic2_social: An Ionic project",
+  "description": "IntaliQ by CGEM",
   "cordovaPlugins": [],
   "cordovaPlatforms": [],
   "cordova": {

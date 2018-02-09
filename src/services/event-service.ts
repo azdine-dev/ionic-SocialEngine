@@ -6,6 +6,8 @@ let activityUrl ='intaliq.novway.com/api/v1/activities/';
 let eventfields ='id,thumb,title,category,owner,description,RSVPs,date_detail,member_count,location,category,' +
   'host,total_member,can_edit,can_delete,can_request,date,' +
   'can_join,can_leave,can_cancel,can_accept,can_reject,can_invite,can_compose';
+let eventPhotoFields = 'id,type,owner,thumb,img,title,description,date,album,photo_index,next_photo,previous_photo,'+
+  'can_tag,can_edit,can_delete,can_share,can_report,can_make_profile_photo';
 let feedFields = 'owner,id,content,attachments,timestamp,is_liked,can_like,total_like,user_liked,' +
   'can_comment,total_comment,comments,can_delete,can_share,type';
 
@@ -19,9 +21,9 @@ export class EventService {
 
   }
 
-  getEvents(){
+  getEvents(keywords,user_id:string=''){
     return new Promise((resolve,reject)=>{
-      this.http.get(eventsUrl+'?access_token='+this.accessToken+'&fields='+eventfields).subscribe(data=>{
+      this.http.get(eventsUrl+'?access_token='+this.accessToken+'&keywords='+keywords+'&user_id='+user_id+'&fields='+eventfields).subscribe(data=>{
         resolve(data);
       },err=>{
         reject(err);
@@ -47,7 +49,6 @@ export class EventService {
         '&subject_type=event'+'&subject_id='+userId)
         .subscribe( res =>{
           resolve(res);
-          console.log(res);
         }, (err)=>{
           reject(err);
         });
@@ -97,7 +98,24 @@ export class EventService {
       })
     })
   }
-
+  getEventPhotos(eventId){
+    return new Promise((resolve,reject)=>{
+      this.http.get(eventsUrl+'photos'+'?access_token='+this.accessToken+'&event_id='+eventId+'&fields='+eventPhotoFields).subscribe(data=>{
+        resolve(data);
+      },err=>{
+        reject(err);
+      })
+    })
+  }
+  getCanInviteFriends(eventId){
+    return new Promise((resolve,reject)=>{
+      this.http.get(eventsUrl+'invite'+'?access_token='+this.accessToken+'&id='+eventId).subscribe(data=>{
+        resolve(data);
+      },err=>{
+        reject(err);
+      })
+    })
+  }
   joinEvent(eventId,rsvp){
     return new Promise((resolve,reject)=>{
       let headers = new HttpHeaders();

@@ -66,4 +66,17 @@ export class CoreService {
       })
     });
   }
+
+  linkPreview(uri){
+    return new Promise((resolve, reject) => {
+      let headers = new HttpHeaders();
+      headers.append('content-type', 'text/html');
+      this.http.get(coreUrl +'link_preview'+ '?access_token=' + this.accessToken + '&uri='+uri,{headers}).subscribe(res => {
+        resolve(res);
+      }, err => {
+        reject(err);
+      })
+    });
+  }
+
 }

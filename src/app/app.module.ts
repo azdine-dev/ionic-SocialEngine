@@ -66,6 +66,10 @@ import {VideoViewPage} from "../pages/video-view/video-view";
 import {ProfileEditPage} from "../pages/profile-edit/profile-edit";
 import {MediathequePage} from "../pages/mediatheque/mediatheque";
 import {PhotoViewPage} from "../pages/photo-view/photo-view";
+import {BlogsService} from "../services/blogs-service";
+import {BlogsPage} from "../pages/blogs/blogs";
+import {BlogsViewPage} from "../pages/blogs-view/blogs-view";
+import {LinkPreviewPage} from "../pages/link-preview/link-preview";
 
 // end import pages
 
@@ -107,6 +111,9 @@ import {PhotoViewPage} from "../pages/photo-view/photo-view";
     ProfileEditPage,
     MediathequePage,
     PhotoViewPage,
+    BlogsPage,
+    BlogsViewPage,
+    LinkPreviewPage,
   ],
   imports: [
     BrowserModule,HttpClientModule,
@@ -155,7 +162,10 @@ import {PhotoViewPage} from "../pages/photo-view/photo-view";
     VideoViewPage,
     ProfileEditPage,
     MediathequePage,
-    PhotoViewPage
+    PhotoViewPage,
+    BlogsPage,
+    BlogsViewPage,
+    LinkPreviewPage,
 
   ],
   providers: [
@@ -176,6 +186,7 @@ import {PhotoViewPage} from "../pages/photo-view/photo-view";
     MessageService,
     GroupService,
     NotificationsService,
+    BlogsService,
 
 
     /* import services */

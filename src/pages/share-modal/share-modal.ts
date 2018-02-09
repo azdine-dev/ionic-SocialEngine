@@ -67,7 +67,7 @@ export class ShareModalPage {
 
   trustResourceUrl(html){
     this.sanitizer.bypassSecurityTrustHtml(html);
-    return html;
+   return html;
   }
 
   showLoader(content?){

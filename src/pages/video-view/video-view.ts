@@ -81,7 +81,11 @@ export class VideoViewPage {
     });
   }
   commentVideo(video) {
-    let cmntModal = this.modalCtrl.create(CommentPage,{post : video});
+    let cmntModal = this.modalCtrl.create(CommentPage,{
+      item_type:'video',
+      item_id:video.id,
+      post : video
+    });
     cmntModal.present();
   }
 

@@ -17,6 +17,7 @@ import {CoreService} from "../../services/core-service";
 })
 export class CommentPage {
   public post: any;
+  private refreching : any;
   item_type : any;
   item_id:any;
   private albumComments  : Array<{}>;
@@ -51,8 +52,10 @@ export class CommentPage {
   }
 
   getComments(){
+    this.refreching = true;
   this.coreService.getComments(this.item_type,this.item_id).then(res=>{
     this.comments = res['data'];
+    this.refreching = false;
   })
   }
 
@@ -68,8 +71,8 @@ export class CommentPage {
   }
 
   // on click, go to user timeline
-  viewUser(userId) {
-    this.nav.push(UserPage, {id: userId})
+  viewUser(user) {
+    this.nav.push(UserPage, {ownerId: user.id})
   }
 
 
@@ -115,6 +118,7 @@ export class CommentPage {
   }
 
   deleteComment(comment){
+    this.post.type= this.item_type;
     this.postService.deleteComment(comment,this.post).then(res=>{
       this.events.publish('delete-comment');
     },err=>{

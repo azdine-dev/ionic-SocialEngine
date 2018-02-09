@@ -1,4 +1,7 @@
-<ion-content no-bounce *ngIf= " item_type =='activity_action' || item_type=='album'" >
+<ion-content no-bounce  >
+  <div *ngIf="refreching" class="spinner-container">
+    <ion-spinner name="ios-small"></ion-spinner>
+  </div>
   <ion-item  class="item-no-border">
     <ion-avatar item-left (click)="viewUser(post.owner)">
       <img   #imgAuthor  (error)="getDefaultImage(imgAuthor)" src="{{ post.owner.imgs.profile }}">

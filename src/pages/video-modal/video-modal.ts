@@ -7,7 +7,7 @@ import {HomePage} from "../home/home";
  * Generated class for the VideoModalPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
+ * Ionic pages and navigation.o
  */
 
 @Component({

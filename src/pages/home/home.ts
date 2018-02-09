@@ -21,6 +21,9 @@ import {Observable} from "rxjs/Observable";
 import {NotificationsService} from "../../services/notifications-service";
 import {OptionsPage} from "../options/options";
 import {NotificationsPage} from "../notifications/notifications";
+import {EventsDetailPage} from "../events-detail/events-detail";
+import {BlogsViewPage} from "../blogs-view/blogs-view";
+import {LinkPreviewPage} from "../link-preview/link-preview";
 /*
  Generated class for the LoginPage page.
 
@@ -34,14 +37,23 @@ import {NotificationsPage} from "../notifications/notifications";
 export class HomePage implements OnInit {
   @ViewChild(Content) content: Content;
   public post: any;
-  public feed : Array <any>;
-  public feed2 : Array <any>;
+  public feed : {
+    next_id : 0,
+    end_of_feed : any,
+    items: Array<any>,
+  };
+  public feed2 : {
+    next_id : 0,
+    end_of_feed : any,
+    items: Array<any>,
+  };
   public feedInfo : Array<{}>;
   private endOfFeed : boolean = false;
-  private userSession =localStorage.getItem('user-id');
+  private userSession :any;
   private homeIcon = 'white';
   private defultImage = '/assets/img/default-image.png'
   formatDate = 'medium';
+  private search:any;
 
 
   private videoFeedMap : Map <number,SafeUrl> = new Map <number,SafeUrl>();
@@ -75,11 +87,24 @@ export class HomePage implements OnInit {
               public sanitizer : DomSanitizer,public videoService : VideoService,public viewCtrl :  ViewController
               ,public toastCtrl : ToastController,private  camera : Camera,
               public cach : CacheService,private notifications:NotificationsService,private popover:PopoverController) {
-    this.getAuthUser();
+
+
+
+    this.feed = {
+      next_id   : 0,
+      end_of_feed : false,
+      items : new Array<any>(),
+    };
+    this.feed2 = {
+      next_id   : 0,
+      end_of_feed : false,
+      items : new Array<any>(),
+    };
   }
   ngOnInit(){
+    this.userSession = localStorage.getItem('user-id');
+    this.getAuthUser(this.userSession);
     this.getFeedV2();
-
     this.listenToFeedEvents();
   }
   toggleLike(post) {
@@ -96,7 +121,7 @@ export class HomePage implements OnInit {
   viewComment(post) {
     let cmntModal = this.modalCtrl.create(CommentPage,
       {
-        item_type : post.type,
+        item_type : 'activity_action',
         item_id : post.id,
         post:post,
       },{cssClass:'wez'});
@@ -112,7 +137,7 @@ export class HomePage implements OnInit {
   }
 
   viewUser(user) {
-    this.nav.push(UserPage, {owner: user})
+    this.nav.push(UserPage, {ownerId: user.id})
   }
 
 
@@ -126,34 +151,28 @@ export class HomePage implements OnInit {
       }, 300);
 
       this.postService.getAllFeed(10).then(result=>{
-        this.feed = result['data']['items'];
-        this.assignClickedValues(this.feed);
-        this.cach.saveItem('feed', this.feed);
-
-        // this.getFeedAttchmentVideos(this.feed).then(data=>{
-        //   // this.videoFeedMap = data as Map <number,SafeUrl>;
-        //
-        //
-        // })
+        this.feed.end_of_feed =result['data']['end_of_feed'];
+        this.feed.next_id = result['data']['next_id'];
+        this.feed.items = result['data']['items'];
+        this.assignClickedValues(this.feed.items);
+        this.cach.saveItem('feed', this.feed.items);
 
       })
     }
     else {
       this.cach.getItem('feed').catch(() => {
         this.postService.getAllFeed(10).then(result => {
-          this.feed = result['data']['items'];
-          this.assignClickedValues(this.feed);
-          this.cach.saveItem('feed', this.feed);
-          //
-          // this.getFeedAttchmentVideos(this.feed).then(data => {
-          //   this.videoFeedMap = data as Map<number, SafeUrl>;
-          // })
+          this.feed.end_of_feed =result['data']['end_of_feed'];
+          this.feed.next_id = result['data']['next_id'];
+          this.feed.items = result['data']['items'];
+          this.assignClickedValues(this.feed.items);
+          this.cach.saveItem('feed', this.feed.items);
 
         })
 
       }).then(data => {
 
-        this.feed = data;
+        this.feed.items = data;
 
       });
 
@@ -166,29 +185,29 @@ export class HomePage implements OnInit {
   }
 
   loadFeed2(refrecher){
-    let maxid = this.feed[this.feed.length-1].id;
-    if(this.endOfFeed){
+    let maxid = this.feed.next_id;
+    if(this.feed.end_of_feed){
       setTimeout(()=>{
-        this.presentToast('end of feed');
         refrecher.complete();
       },300);
     }
     else {
 
       this.postService.getAllFeed(10, maxid).then(res => {
-        this.endOfFeed = res['data']['end_of_feed'];
-        this.feed2 = res['data']['items'];
-        this.assignClickedValues(this.feed2);
-        this.feed2.shift();
-        this.feed = this.feed.concat(this.feed2);
+        this.feed2.end_of_feed = res['data']['end_of_feed'];
+        this.feed2.next_id = res['data']['next_id'];
+        this.feed2.items = res['data']['items'];
+
+        this.feed.items = this.feed.items.concat(this.feed2.items);
+        this.assignClickedValues(this.feed.items);
+        this.feed.end_of_feed=this.feed2.end_of_feed;
+        this.feed.next_id = this.feed2.next_id;
         refrecher.complete();
-        this.cach.saveItem('feed',this.feed);
+        this.cach.saveItem('feed',this.feed.items);
 
       },err=>{
-        this.presentToast(JSON.stringify(err));
+        this.presentToast('ERROR');
         setTimeout(()=>{
-          console.log('rejedcted');
-
           refrecher.complete();
         },300);
       })
@@ -196,7 +215,7 @@ export class HomePage implements OnInit {
   }
   likePost(post){
     post.total_like ++ ;
-    this.postService.likePost(post.id,post.type).then((result)=>{
+    this.postService.likePost(post.id,'activity_action').then((result)=>{
 
     },(err)=>{
 
@@ -206,7 +225,7 @@ export class HomePage implements OnInit {
 
   unlikePost(post){
     post.total_like -- ;
-    this.postService.unlikePost(post.id,post.type).then((result)=>{
+    this.postService.unlikePost(post.id,'activity_action').then((result)=>{
 
     },(err)=>{
     });
@@ -237,17 +256,17 @@ export class HomePage implements OnInit {
   deletePost(post){
      this.postService.deletePost(post).then(result =>{
           this.events.publish('delete-user',post);
+          this.presentToast('Elément supprimé','middle');
        }, err =>{
-
+       this.presentToast('Erreur lors de la suppression','middle');
      });
 
   }
-  getAuthUser(){
-    this.userService.getUserInfo(this.userSession).then(res=>{
+  getAuthUser(useId){
+    this.userService.getUserInfo(useId).then(res=>{
      this.authUser.title = res['data']['title'];
      this.authUser.image = res['data']['imgs']['normal'];
      let user = res['data'];
-     console.log(user,'USER');
      this.events.publish('authorized-user',user)
 
     })
@@ -274,15 +293,16 @@ export class HomePage implements OnInit {
 
 
   processHtmlContent(post){
+
     return (post.content);
   }
 
+
+
   videoAttachmentSrc(video_id){
    this.videoService.getVideo(video_id).then(res=>{
-     console.log(res,'SUCCESS');
      return res['data']['video_src'];
    },err=>{
-     console.log(err,'ERR');
    })
   }
 
@@ -335,8 +355,7 @@ export class HomePage implements OnInit {
   }
 
   postNewLink(){
-    let linkModal = this.modalCtrl.create(PhotoModalPage,{
-      photo : false,
+    let linkModal = this.modalCtrl.create(LinkPreviewPage,{
     });
     linkModal.present();
   }
@@ -383,11 +402,12 @@ export class HomePage implements OnInit {
     })
   }
 
+  searchThings(myevent){
+  }
+
    playVideo(post){
-    console.log('wezzzz');
       this.videoService.getVideo(post.attachments[0].id).then(res=>{
         post.video_source = res['data']['video_src'];
-        console.log(post.video_source,'vid srrrrc');
         post.clicked =true;
         this.stopOtherVideos(post);
       },err=>{
@@ -411,12 +431,29 @@ export class HomePage implements OnInit {
 
 
     stopOtherVideos(exceptVideo){
-      let index = this.feed.indexOf(exceptVideo,0);
-      for(let i=0;i<this.feed.length;i++){
+      let index = this.feed.items.indexOf(exceptVideo,0);
+      for(let i=0;i<this.feed.items.length;i++){
         if(i!=index){
-          this.feed[i]['clicked'] =false;
+          this.feed.items[i]['clicked'] =false;
         }
       }
     }
 
+
+   goToAttachmentDescription(att){
+    if(att.type =='event'){
+      this.nav.push(EventsDetailPage,{
+        eventId : att.id,
+      })
+
+    }else if(att.type =='blog'){
+      this.nav.push(BlogsViewPage,{
+        blogId : att.id,
+      })
+    }
+   }
+  openLink(url){
+    console.log(url,'URL');
+    window.open(url)
+  }
  }

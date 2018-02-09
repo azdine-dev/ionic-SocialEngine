@@ -7,6 +7,9 @@
 <ion-header>
 
   <ion-navbar color="primary"  class="no-border">
+    <button  ion-button menuToggle type="overlay">
+      <ion-icon name="menu"></ion-icon>
+    </button>
     <ion-title>albums de {{userName}} </ion-title>
   </ion-navbar>
 
@@ -21,7 +24,9 @@
   <!--</ion-slides>-->
 
   <ion-list *ngFor="let album of userAlbums">
-
+    <div *ngIf="searching" class="spinner-container">
+      <ion-spinner name="ios"></ion-spinner>
+    </div>
     <ion-card  tappable>
       <img (click)="goToAlbumPhotos(album);" height="200" width="50" src="{{album.thumb}}" #image (error)="getDefaultImage(image)"/>
 
@@ -30,8 +35,8 @@
         <p>
           {{album.title}} ({{album.total_photo}} photos)
         </p>
-        <ion-grid >
-          <ion-row class="post-actions">
+        <ion-grid class="post-actions">
+          <ion-row >
             <ion-col *ngIf="album.can_like" (click)="toggleLikeAlbum(album)">
               <ion-icon name="thumbs-up" color="primary"  *ngIf="album.is_liked"></ion-icon>
               <ion-icon name="thumbs-up" *ngIf="!album.is_liked"></ion-icon>

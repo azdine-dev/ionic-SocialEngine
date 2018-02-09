@@ -7,38 +7,31 @@
 <ion-header >
 
   <ion-navbar color="primary"  class="no-border">
-    <ion-title> Videos de {{userName}}</ion-title>
+    <ion-title> Inviter des Amis </ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding #container>
+  <ion-list class="list-full-border" *ngFor="let user of userInvited">
+  <div>
 
-   <ion-list *ngFor="let vid of userVideos;let index = index" >
-  <ion-card  >
-    <div  class="youtube"  >
+      <ion-item >
+        <ion-avatar item-left (click)="viewUser(contact)">
+          <img  *ngIf="user.imgs.icon" #image (error)="'assets/img/user.png'" class="profile-picture" src="{{ user.imgs.icon }}" alt=""/>
+        </ion-avatar>
 
-    <img  [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="vid.thumb" [scrollObservable]="container.ionScroll">
-    <iframe *ngIf="vid.clicked"   [src]="trustResourceUrl(vid.video_src)"
-    allowfullscreen frameBorder="0"
-    width="450" height="200" >
+        <div>
+          <h3 ion-text color="primary"  (click)="viewUser(contact)">{{ user.title }}</h3>
+        </div>
 
-    </iframe>
-    <div  *ngIf="!vid.clicked" (click)="playVideo(vid)" #iframe clicked="false" class="play-button">
-    </div>
 
-    </div>
-  <ion-card-content>
+      </ion-item>
 
-  <p>
-  {{vid.title}}
-  </p>
-  </ion-card-content>
+  </div>
 
-  </ion-card>
   </ion-list>
-
   <ion-infinite-scroll (ionInfinite)="loadVideos($event)">
     <ion-infinite-scroll-content>
 

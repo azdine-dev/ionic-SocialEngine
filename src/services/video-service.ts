@@ -26,9 +26,10 @@ export class VideoService {
    })
   }
 
-  getAllVideos(keywords,page?,limit?){
+  getAllVideos(keywords,userId:string="",page?,limit?){
     return new Promise((resolve,reject)=>{
-      this.http.get(videoUrl+param+'access_token='+this.accessToken+'&keywords='+keywords+'&page='+page+'&limit='+limit+'&fields='+fields).subscribe(data=>{
+      this.http.get(videoUrl+param+'access_token='+this.accessToken+'&keywords='+keywords+'&page='+page+'&limit='+limit+
+        '&user_id='+userId+'&fields='+fields).subscribe(data=>{
         resolve(data);
       },err=>{
         reject(err);

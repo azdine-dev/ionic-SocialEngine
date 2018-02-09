@@ -5,27 +5,28 @@
   Ionic pages and navigation.
 -->
 <ion-header>
+
   <ion-navbar color="primary" >
+
     <button  ion-button menuToggle type="overlay">
       <ion-icon name="menu"></ion-icon>
     </button>
-
-    <ion-row class="home-bar">
-    <ion-col col-4>
+    <ion-row class="home-bar" >
+    <ion-col >
       <button  icon-only ion-button clear (click)="scrollToTop()" >
-        <ion-icon style="zoom: 1.0" name="ios-home-outline"   color="{{homeIcon}}"></ion-icon>
+        <ion-icon style="zoom: 1.0" name="ios-arrow-dropup-outline"   color="{{homeIcon}}"></ion-icon>
       </button>
     </ion-col>
 
 
-      <ion-col col-4>
+      <ion-col >
         <button ion-button icon-only clear (click)="getUpdateNotifications($event)">
           <ion-icon   name="ios-flag-outline" color="white" >
           </ion-icon>
         </button>
 
       </ion-col>
-      <ion-col col-4>
+      <ion-col >
         <button ion-button icon-only clear  (click)="getFriendNotifications($event)">
           <ion-icon   name="ios-person-add-outline" color="white" >
           </ion-icon>
@@ -44,6 +45,10 @@
 
   </ion-refresher-content>
 </ion-refresher>
+  <div *ngIf="!feed" class="spinner-container">
+    <ion-spinner  name="ios" >
+    </ion-spinner>
+  </div>
   <ion-card>
     <ion-item>
       <ion-label color="primary" stacked></ion-label>
@@ -65,7 +70,7 @@
       </ion-grid>
     </div>
   </ion-card>
-  <ion-list *ngFor="let post of feed">
+  <ion-list *ngFor="let post of feed?.items">
   <ion-card>
     <ion-item>
       <ion-avatar item-left (click)="viewUser(post.owner)">
@@ -77,9 +82,7 @@
     </ion-item>
 
 
-    <ion-item text-wrap class="post-body">
-      <div >
-        <div [innerHtml]="processHtmlContent(post)" (press)="viewPost(post.id)" ></div>
+        <div class="post-content" [innerHtml]="processHtmlContent(post)"  (press)="viewPost(post.id)" text-wrap ></div>
         <div  class="youtube" *ngIf="post.attachments.length && post.attachments[0].type=='video'" >
 
           <img class="iframe-image" [defaultImage]= "'/assets/img/default-image.png'" [lazyLoad]="post.attachments[0].img" [scrollObservable]="container.ionScroll">
@@ -92,26 +95,27 @@
           </div>
 
         </div>
-
-          <!--<iframe *ngIf="post.attachments.length && post.attachments[0].type=='video'" src="https://www.youtube.com/embed/IJbnG6KDaF0"-->
-        <!--allowfullscreen frameBorder="0"-->
-        <!--width="350" height="200" style="overflow:hidden;">-->
-
-        <!--</iframe>-->
-        <!---->
-        <!--<img-loader  class="full-image" *ngIf="post.attachments.length && post.attachments[0].type=='album_photo'" src="{{ post.attachments[0].img }}"  >-->
-          <!--&lt;!&ndash;<img  imageViewer class="full-image" *ngIf="post.attachments.length && post.attachments[0].type=='album_photo'" src="{{ post.attachments[0].img }}">&ndash;&gt;-->
-        <!--</img-loader>-->
-        <img imageViewer *ngIf="post.attachments.length && post.attachments[0].type=='album_photo'" [defaultImage]= "'/assets/img/default-image.png'"
+        <img imageViewer *ngIf="post.attachments.length && post.attachments[0].type=='album_photo'"  [defaultImage]= "'/assets/img/default-image.png'"
              [lazyLoad]="post.attachments[0].img" [scrollObservable]="container.ionScroll">
-      </div>
+
+        <div class="attachment-photo"  *ngIf="post.attachments.length && (post.attachments[0].type != 'video') && (post.attachments[0].type!='album_photo')
+          && (post.attachments[0].type != 'core_link')">
+          <img imageViewer [defaultImage]= "'/assets/img/default-image.png'"
+               [lazyLoad]="post.attachments[0].img" [scrollObservable]="container.ionScroll">
+          <ion-note  (click)="goToAttachmentDescription(post.attachments[0])" item-left color="primary"> {{post.attachments[0].title}}</ion-note><br>
+        </div>
+        <div class="attachment-photo" *ngIf="post.attachments.length && (post.attachments[0].type == 'core_link')">
+          <ion-item (click)="openLink(post.attachments[0].href)">
+            <ion-note  (click)="goToAttachmentDescription(post.attachments[0])" item-left color="primary"> {{post.attachments[0].title}}</ion-note>
+          </ion-item>
+
+        </div>
 
       <div>
 
         <a (click)="viewPost(post.id)" class="subdued">{{ post.total_like}} Likes</a>
         <a (click)="viewPost(post.id)" class="subdued" margin-left>{{ post.total_comment}} Comments</a>
       </div>
-    </ion-item>
 
     <ion-grid class="post-actions">
       <ion-row>

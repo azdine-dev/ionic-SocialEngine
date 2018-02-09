@@ -19,7 +19,6 @@ export class NotificationsService {
       this.http.get(notifUrl+'?access_token='+this.accessToken+'&limit='+limit+'&page='+page+'&type='+type+'&fields='+notifFields)
         .subscribe( res =>{
           resolve(res);
-          console.log(res);
         }, (err)=>{
           reject(err);
         });
