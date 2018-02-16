@@ -14,41 +14,32 @@
 </ion-header>
 
 <ion-content>
-  <div class="search-form">
-    <ion-icon name="ios-search"></ion-icon>
-    <ion-input type="text" placeholder="contacts"></ion-input>
+  <ion-searchbar [(ngModel)]="searchTerm"  [formControl]="searchControl" ></ion-searchbar>
+  <div *ngIf="searching" class="spinner-container">
+    <ion-spinner name="ios"></ion-spinner>
   </div>
 
-  <ion-list [virtualScroll]="friends" approxItemHeight="60px" >
+  <ion-list *ngFor="let contact of friends">
 
-    <ion-item-sliding *virtualItem="let contact">
 
       <ion-item >
         <ion-avatar item-left (click)="viewUser(contact.id)">
         <img  #image (error)="getDefaultImage(image)" class="friends-picture"  src="{{ contact.imgs.normal }}" alt="">
         </ion-avatar>
-
-        <ion-avatar>
+         <div>
           <h3 ion-text color="primary"  (click)="viewUser(contact.id)">{{ contact.title }}</h3>
-        </ion-avatar>
-        <ion-avatar (click)="joinMember(contact)" item-end>
-         {{getFriendState(contact)}}
-          <ion-icon  name="ios-person-add"  style="zoom:1.2;"  item-start></ion-icon>
-        </ion-avatar>
+         </div>
+        <ion-buttons right (click)="joinMember(contact)" item-end>
+          <button class="friend-status" color="primary" ion-button block outline small>
+            <ion-icon  name="ios-person-add"  style="zoom:1.2;"  item-start></ion-icon>
+            <ion-note>{{getFriendState(contact)}}</ion-note>
+          </button>
+
+        </ion-buttons>
+
       </ion-item>
 
-      <ion-item-options>
-        <button  ion-button color="light" >
-          <ion-icon name="more"></ion-icon>
-        </button>
-        <button  ion-button color="green" >
-          <ion-icon name="call"></ion-icon>
-        </button>
-        <button  ion-button color="primary" >
-          <ion-icon name="text"></ion-icon>
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
+
 
   </ion-list>
 </ion-content>

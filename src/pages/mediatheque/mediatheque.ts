@@ -33,6 +33,7 @@ export class MediathequePage {
   searching :any = false;
   searchControl :FormControl;
   private firstVideoId='';
+  private loadingVideo :any;
 
   searchTerm: string = '';
   private userId: any;
@@ -74,10 +75,12 @@ export class MediathequePage {
   }
 
   trustResourceUrl(video){
+   this.loadingVideo = false;
     return this.sanitizer.bypassSecurityTrustResourceUrl(video.video_src);
   }
   playVideo(video){
     video.clicked=true;
+    this.loadingVideo = true;
     this.stopOtherVideos(video);
 
   }

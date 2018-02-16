@@ -55,6 +55,7 @@ export class CommentPage {
     this.refreching = true;
   this.coreService.getComments(this.item_type,this.item_id).then(res=>{
     this.comments = res['data'];
+
     this.refreching = false;
   })
   }

@@ -3,7 +3,7 @@ import {Injectable} from "@angular/core";
 import {AttachementClass} from "../Data/attachement.interface";
 
 let messageFields = 'id,title,body,participant,date,read,attachment,from,conversation';
-let messageDetailsFields='id,title,body,recipients,date,read,messages,can_reply';
+let messageDetailsFields='id,title,body,participant,recipients,attachment,from,conversation,date,read,messages,can_reply';
 let messageUrl ='intaliq.novway.com/api/v1/messages/';
 
 @Injectable()
@@ -78,11 +78,11 @@ export class MessageService {
     });
   }
 
-  sendMessageReply(messageData){
+  sendMessageReply(messageData,messageId){
     return new Promise((resolve, reject) => {
       let headers = new HttpHeaders();
       headers.append('Content-Type', 'multipart/form-data');
-      this.http.post(messageUrl +'reply'+'?access_token=' +this.accessToken+'&id='+messageData.id+'&body='+messageData.body
+      this.http.post(messageUrl +'reply'+'?access_token=' +this.accessToken+'&id='+messageId+'&body='+messageData.body
 
         , {headers}).subscribe(data => {
         resolve(data);

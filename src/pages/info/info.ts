@@ -5,6 +5,8 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {VideoService} from "../../services/video-service";
 import {UserService} from "../../services/user-service";
 import {EventService} from "../../services/event-service";
+import {FormControl} from "@angular/forms";
+import {debounceTime} from "rxjs/operators";
 
 /**
  * Generated class for the InfoPage page.
@@ -21,37 +23,46 @@ import {EventService} from "../../services/event-service";
 export class InfoPage {
   @ViewChild("iframe", {read: ElementRef}) iframe: ElementRef;
   private ready =false;
-  private userInvited :Array<any>;
-  private userId : any;
-  private userName : any;
-  private evantId : any;
+  private canSendMessageUser :Array<any>
+  private type :any;
   private imageSrc ='assets/img/adam.jpg';
-  private pageVideoNumber = 1;
-  private videoLimit=5;
-  private lastPage = false;
-
+  private searchTerm: string = '';
+  searchControl :FormControl;
+  private pageNumber = 1;
+  private pageLimit =10;
 
   constructor(public navParams: NavParams, public userService: UserService,
               public postService: PostService,public eventService : EventService,public sanitizer : DomSanitizer,
               public modalCtrl : ModalController,public alertCtrl :AlertController,public events : Events) {
 
-  this.userId = this.navParams.get('id');
-  this.userName =this.navParams.get('name');
-  this.evantId = this.navParams.get('eventId');
-  this.getCanInviteFriends();
+   this.searchControl = new FormControl();
+   this.type = this.navParams.get('type');
+   // this.initCall(this.type);
+
   }
   ionViewDidLoad(){
-    setTimeout( ()=>{
-       this.ready=false;
-    },1000)
-  }
-
-  getCanInviteFriends(){
-    console.log(this.evantId,'IDDDD');
-    this.eventService.getCanInviteFriends(this.evantId).then(res=>{
-      console.log(res,'USER CAN INVITE');
-      this.userInvited =res['data'];
+    this.getCanSendMessages();
+    this.searchControl.valueChanges.pipe(
+      debounceTime(700)
+    ).subscribe(search=>{
+      this.getCanSendMessages();
     })
   }
+  initCall(type){
+   if(type=='event'){
+   }
+   if(type=='message'){
 
+   }
+  }
+
+
+
+  getCanSendMessages(){
+    this.userService.getAllMembers(this.searchTerm,this.pageLimit,this.pageNumber).then(res=>{
+      this.canSendMessageUser = res['data'];
+    },err=>{
+
+    })
+  }
 }

@@ -5,18 +5,19 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar [color]="navBarColor" >
+  <ion-navbar color="{{messagesTodelete.length==0 ?'primary':'gray'}}" >
     <button  ion-button menuToggle type="overlay">
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-buttons right>
 
-      <button  class="toggle" icon-only  ion-button  *ngIf="!activateDelete" (click)="toggleMessages()" >
-        <ion-icon name="md-apps"></ion-icon>
-      </button>
+      <!--<button  class="toggle" icon-only  ion-button  *ngIf="!activateDelete" (click)="toggleMessages()" >-->
+        <!--<ion-icon name="md-apps"></ion-icon>-->
+      <!--</button>-->
 
-      <button  class="toggle" icon-only  ion-button (click)="deleteMessage(message)" *ngIf="activateDelete">
+      <button *ngIf="messagesTodelete.length>0" class="toggle" icon-only  ion-button (click)="deleteMessage(message)">
         <ion-icon name="md-trash"></ion-icon>
+        <ion-note >{{messagesTodelete.length}}</ion-note>
       </button>
     </ion-buttons>
 
@@ -29,40 +30,63 @@
   <ion-fab right bottom>
     <button ion-fab color="secondary" (click)="composeMessage()"><ion-icon name="md-create"></ion-icon></button>
   </ion-fab>
+  <ion-fab left bottom>
+    <button ion-fab color="danger" (click)="toggleActivateDelete()"><ion-icon name="md-trash"></ion-icon></button>
+  </ion-fab>
+  <ion-segment [(ngModel)]="messageDefault" *ngIf="showSegment">
+    <ion-segment-button value="inbox" (click)="geInboxMessages()">
+      Boite de Réception
+    </ion-segment-button>
+
+    <ion-segment-button value="outbox" (click)="geOutboxMessages()">
+      Message Envoyés
+    </ion-segment-button>
+
+  </ion-segment>
   <div *ngIf="searching" class="spinner-container">
     <ion-spinner  name="ios" >
     </ion-spinner>
   </div>
-  <div class="row" *ngIf="inbox?.length==0">
-    <ion-icon  class="no-messages" name="ios-mail-open-outline">
+  <!--<div class="row" *ngIf="inbox?.length==0">-->
+    <!--<ion-icon  class="no-messages" name="ios-mail-open-outline">-->
 
-    </ion-icon><br>
-    <ion-label text-center>No Message To show !</ion-label>
-  </div>
-
-  <ion-list class="list-full-border">
-    <ion-item-sliding *ngFor="let message of inbox">
-
-      <ion-item text-wrap (press)="selectItemTodelete()">
-        <ion-avatar item-left>
-          <img  height="20" width="20" *ngIf="!activateDelete"  #img src="{{ message.participant.img }}" (error)="getDefaultImage(img)" alt=""/>
-          <ion-checkbox item-left *ngIf="activateDelete"   (ionChange)="selectItem($event,message)" checked="false"></ion-checkbox>
+    <!--</ion-icon><br>-->
+    <!--<ion-label text-center>No Message To show !</ion-label>-->
+  <!--</div>-->
+  <div [ngSwitch]="messageDefault">
+    <div *ngSwitchCase="'inbox'">
+  <ion-list class="list-full-border" *ngFor="let message of inbox" >
 
 
-        </ion-avatar>
+    <ion-item text-wrap (click)="goToMessageDetails(message)"  class="message-body">
+      <ion-avatar item-start>
+        <img height="20" width="20"  #img src="{{ message.participant.img }}" (error)="getDefaultImage(img)" alt=""/>
+      </ion-avatar>
 
-          <h2  ion-text color="primary" >{{message.participant.title}}</h2>
-          <h6   ion-text class="to" color="dark">{{message.title}}</h6>
-          <p  style="font-size: 80%">{{message.body}}</p>
-
-      </ion-item>
-
-
-      <ion-item-options>
-        <button  ion-button color="danger" >
-          Supprimer
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
+      <ion-label  item-start color="primary" >{{message.participant.title}}</ion-label>
+      <ion-label  item-start ion-text class="to" color="dark">{{message.title}}</ion-label><br/>
+      <!--<p  item-start text-wrap style="font-size: 80%">{{message.body}}</p>-->
+      <ion-checkbox  *ngIf="activateDelete" item-end  class="message-check" (click)="selectItem($event,message)" checked="false"></ion-checkbox>
+    </ion-item>
   </ion-list>
+    </div>
+
+<div *ngSwitchCase="'outbox'">
+    <ion-list class="list-full-border" *ngFor="let message of outbox">
+
+        <ion-item text-wrap (click)="goToMessageDetails(message)"  class="message-body">
+          <ion-avatar item-start>
+            <img height="20" width="20"  #img src="{{ message.participant.img }}" (error)="getDefaultImage(img)" alt=""/>
+          </ion-avatar>
+
+          <ion-label  item-start color="primary" >{{message.participant.title}}</ion-label>
+          <ion-label  item-start ion-text class="to" color="dark">{{message.title}}</ion-label><br/>
+          <!--<p  item-start text-wrap style="font-size: 80%">{{message.body}}</p>-->
+          <ion-checkbox  *ngIf="activateDelete" item-end  class="message-check" (ionChange)="selectItem($event,message)" checked="false"></ion-checkbox>
+        </ion-item>
+
+
+    </ion-list>
+</div>
+  </div>
 </ion-content>

@@ -7,35 +7,54 @@
 <ion-header >
 
   <ion-navbar color="primary"  class="no-border">
-    <ion-title> Inviter des Amis </ion-title>
+    <ion-title></ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding #container>
-  <ion-list class="list-full-border" *ngFor="let user of userInvited">
-  <div>
+<!--<ion-content padding #container *ngIf="type=='event'">-->
+  <!--<ion-list class="list-full-border" *ngFor="let user of userInvited">-->
+  <!--<div>-->
 
-      <ion-item >
-        <ion-avatar item-left (click)="viewUser(contact)">
-          <img  *ngIf="user.imgs.icon" #image (error)="'assets/img/user.png'" class="profile-picture" src="{{ user.imgs.icon }}" alt=""/>
+      <!--<ion-item >-->
+        <!--<ion-avatar item-left (click)="viewUser(contact)">-->
+          <!--<img  *ngIf="user.imgs.icon" #image (error)="'assets/img/user.png'" class="profile-picture" src="{{ user.imgs.icon }}" alt=""/>-->
+        <!--</ion-avatar>-->
+
+        <!--<div>-->
+          <!--<h3 ion-text color="primary"  (click)="viewUser(contact)">{{ user.title }}</h3>-->
+        <!--</div>-->
+
+
+      <!--</ion-item>-->
+
+  <!--</div>-->
+
+  <!--</ion-list>-->
+  <!--<ion-infinite-scroll (ionInfinite)="loadVideos($event)">-->
+    <!--<ion-infinite-scroll-content>-->
+
+    <!--</ion-infinite-scroll-content>-->
+  <!--</ion-infinite-scroll>-->
+
+<!--</ion-content>-->
+
+<ion-content padding *ngIf="type=='message'">
+
+  <ion-searchbar [(ngModel)]="searchTerm"  [formControl]="searchControl" placeholder="envoyer à ..."></ion-searchbar>
+  <ion-list *ngIf="type =='users' && users">
+
+    <div *ngFor="let contact of canSendMessageUser">
+      <ion-item *ngIf="contact.can_send_message">
+        <ion-avatar item-left (click)="selectItem(contact)" >
+          <img  *ngIf="contact.imgs.icon" #image (error)="getDefaultImage(image)" class="profile-picture" src="{{ contact.imgs.icon }}" alt=""/>
         </ion-avatar>
 
-        <div>
-          <h3 ion-text color="primary"  (click)="viewUser(contact)">{{ user.title }}</h3>
-        </div>
-
-
+        <ion-label color="primary">{{ contact.title }}</ion-label>
+        <ion-checkbox   item-start  class="message-check" (ionChange)="selectItem($event,message)" checked="false"></ion-checkbox>
       </ion-item>
-
-  </div>
+    </div>
 
   </ion-list>
-  <ion-infinite-scroll (ionInfinite)="loadVideos($event)">
-    <ion-infinite-scroll-content>
-
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
-
 </ion-content>

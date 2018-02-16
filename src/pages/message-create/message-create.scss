@@ -1,14 +1,21 @@
 page-message-create {
 
- .label{
+ .user-dest{
    display: inline-block;
    min-width: 10%!important;
    max-width: 10%!important;
    padding-left: 10px;
   }
   .to-user{
-    background-color: #e6f2ff ;
     font-size: 80%;
     color: black;
+  }
+  .can-send{
+
+    .item{
+      padding-bottom: -20px;
+      background-color: whitesmoke;
+    }
+
   }
 }

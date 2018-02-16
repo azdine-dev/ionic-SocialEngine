@@ -32,14 +32,12 @@
 
   <div *ngFor="let contact of users">
   <ion-item *ngIf="contact.can_send_message">
-
     <ion-avatar item-left (click)="selectItem(contact)" >
       <img  *ngIf="contact.imgs.icon" #image (error)="getDefaultImage(image)" class="profile-picture" src="{{ contact.imgs.icon }}" alt=""/>
     </ion-avatar>
 
-    <div >
-      <h3 ion-text color="primary"  (click)="selectItem(contact)">{{ contact.title }}</h3>
-    </div>
+    <ion-label color="primary">{{ contact.title }}</ion-label>
+    <ion-checkbox   item-start  class="message-check" (ionChange)="selectItem($event,message)" checked="false"></ion-checkbox>
   </ion-item>
   </div>
 

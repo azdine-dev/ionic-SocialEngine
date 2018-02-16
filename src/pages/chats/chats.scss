@@ -1,6 +1,35 @@
 page-chats{
+   .toggle{
+     ion-note {
+       font-size: 12px;
+       align-self: flex-start;
+       color: white;
+       zoom: 1.5;
 
 
+     }
+   }
+  .message-check {
+    //position: absolute;
+    //top :9px;
+    //right: 13px;
+    //height: 5px;
+    //width: 5px;
+    //margin-left: 24.5em;
+    //margin-top: -5em;
+  }
+  ion-note {
+    font-size: 12px;
+    align-self: flex-start;
+  }
+  .message-check{
+  }
+  .message-body{
+    //h6{
+    //  white-space: pre-line;
+    //  padding-left:5em;
+    //}
+  }
   .info{
     top: 0%;
     buttom : 0%;

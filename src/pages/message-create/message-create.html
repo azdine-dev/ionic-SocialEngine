@@ -12,7 +12,7 @@
         <ion-icon name="md-link"></ion-icon>
       </button>
 
-      <button   icon-only  ion-button  (click)="sendMessage()" >
+      <button   icon-only  ion-button  (click)="envoyerMessage()" >
         <ion-icon name="md-send"></ion-icon>
       </button>
 
@@ -27,12 +27,27 @@
     <ion-list  no-lines>
 
       <ion-item >
-        <ion-label  fixed>À</ion-label>
-        <ion-input (ionChange)="searchUsers($event)" [(ngModel)]="messageData.to" [formControl]="searchUsersControl"></ion-input>
+        <ion-label class="user-dest" fixed>À</ion-label>
+        <ion-input   [(ngModel)]="messageData.to" [formControl]="searchUsersControl"></ion-input>
 
       </ion-item>
+      <ion-list *ngIf="showUsers" class="can-send">
+        <ion-note *ngIf="canSendMessageUser && canSendMessageUser.length==0">Pas de destination valide</ion-note>
+        <div *ngFor="let contact of canSendMessageUser">
+
+          <ion-item  *ngIf="contact.can_send_message" (click)="selectItem(contact)">
+            <ion-avatar item-left  >
+              <img   #image (error)="getDefaultImage(image)" class="profile-picture" src="{{ contact.imgs.icon }}" alt=""/>
+            </ion-avatar>
+
+            <h2 color="primary">{{ contact.title }}</h2>
+          </ion-item>
+        </div>
+
+      </ion-list>
       <ion-buttons *ngIf="selectedUesrs" >
-        <button  class="to-user" ion-button round  small="true" icon-only *ngFor="let user of selectedUesrs" (click)="removeUser(user)">
+        <button  class="to-user" ion-button round color="light" small="true" icon-only *ngFor="let user of selectedUesrs" (click)="removeUser(user)">
+
           <ion-icon name="md-close">{{user.title}}</ion-icon>
         </button>
       </ion-buttons>

@@ -24,6 +24,8 @@ import {NotificationsPage} from "../notifications/notifications";
 import {EventsDetailPage} from "../events-detail/events-detail";
 import {BlogsViewPage} from "../blogs-view/blogs-view";
 import {LinkPreviewPage} from "../link-preview/link-preview";
+import {GroupsPage} from "../groups/groups";
+import {GroupDetailPage} from "../group-detail/group-detail";
 /*
  Generated class for the LoginPage page.
 
@@ -85,7 +87,7 @@ export class HomePage implements OnInit {
   constructor(public nav: NavController, public postService: PostService, public events : Events,public userService : UserService,
               public modalCtrl : ModalController,public alertCtrl : AlertController,
               public sanitizer : DomSanitizer,public videoService : VideoService,public viewCtrl :  ViewController
-              ,public toastCtrl : ToastController,private  camera : Camera,
+    ,public toastCtrl : ToastController,private  camera : Camera,
               public cach : CacheService,private notifications:NotificationsService,private popover:PopoverController) {
 
 
@@ -121,7 +123,7 @@ export class HomePage implements OnInit {
   viewComment(post) {
     let cmntModal = this.modalCtrl.create(CommentPage,
       {
-        item_type : 'activity_action',
+        item_type : 'event',
         item_id : post.id,
         post:post,
       },{cssClass:'wez'});
@@ -146,9 +148,9 @@ export class HomePage implements OnInit {
 
     if(refresher){
       if(typeof refresher !="boolean")
-      setTimeout(() => {
-        refresher.complete();
-      }, 300);
+        setTimeout(() => {
+          refresher.complete();
+        }, 300);
 
       this.postService.getAllFeed(10).then(result=>{
         this.feed.end_of_feed =result['data']['end_of_feed'];
@@ -179,9 +181,9 @@ export class HomePage implements OnInit {
 
     }
   }
-   /*****Refrecher Events ***/
+  /*****Refrecher Events ***/
   doRefreshFeed(refrecher){
-     this.getFeedV2(refrecher);
+    this.getFeedV2(refrecher);
   }
 
   loadFeed2(refrecher){
@@ -251,23 +253,23 @@ export class HomePage implements OnInit {
       ]
     });
 
-   confirmDelActivity.present();
+    confirmDelActivity.present();
   }
   deletePost(post){
-     this.postService.deletePost(post).then(result =>{
-          this.events.publish('delete-user',post);
-          this.presentToast('Elément supprimé','middle');
-       }, err =>{
-       this.presentToast('Erreur lors de la suppression','middle');
-     });
+    this.postService.deletePost(post).then(result =>{
+      this.events.publish('delete-user',post);
+      this.presentToast('Elément supprimé','middle');
+    }, err =>{
+      this.presentToast('Erreur lors de la suppression','middle');
+    });
 
   }
   getAuthUser(useId){
     this.userService.getUserInfo(useId).then(res=>{
-     this.authUser.title = res['data']['title'];
-     this.authUser.image = res['data']['imgs']['normal'];
-     let user = res['data'];
-     this.events.publish('authorized-user',user)
+      this.authUser.title = res['data']['title'];
+      this.authUser.image = res['data']['imgs']['normal'];
+      let user = res['data'];
+      this.events.publish('authorized-user',user)
 
     })
   }
@@ -300,10 +302,10 @@ export class HomePage implements OnInit {
 
 
   videoAttachmentSrc(video_id){
-   this.videoService.getVideo(video_id).then(res=>{
-     return res['data']['video_src'];
-   },err=>{
-   })
+    this.videoService.getVideo(video_id).then(res=>{
+      return res['data']['video_src'];
+    },err=>{
+    })
   }
 
   getFeedAttchmentVideos(feed){
@@ -327,7 +329,7 @@ export class HomePage implements OnInit {
   }
   initVideoMap(videoId,videoSrc,video : Map <number,SafeUrl>){
 
-      video.set(videoId,this.sanitizer.bypassSecurityTrustHtml(videoSrc));
+    video.set(videoId,this.sanitizer.bypassSecurityTrustHtml(videoSrc));
 
   }
   scrollToTop(){
@@ -347,11 +349,11 @@ export class HomePage implements OnInit {
   }
 
   postNewPhoto(){
-   let photoModal = this.modalCtrl.create(PhotoModalPage,{
-     photo : true,
-     title :'publier une photo',
-   });
-   photoModal.present();
+    let photoModal = this.modalCtrl.create(PhotoModalPage,{
+      photo : true,
+      title :'publier une photo',
+    });
+    photoModal.present();
   }
 
   postNewLink(){
@@ -361,7 +363,7 @@ export class HomePage implements OnInit {
   }
 
   getDefaultImage(image,contact){
-      image.src = 'assets/img/user.png';
+    image.src = 'assets/img/user.png';
   }
 
   trustHtmlSrc(src){
@@ -392,9 +394,9 @@ export class HomePage implements OnInit {
 
 
   getUpdateNotifications(myevent){
-   this.nav.push(NotificationsPage,{
-     notification_type:'update',
-   })
+    this.nav.push(NotificationsPage,{
+      notification_type:'update',
+    })
   }
   getFriendNotifications(myevent){
     this.nav.push(NotificationsPage,{
@@ -405,15 +407,15 @@ export class HomePage implements OnInit {
   searchThings(myevent){
   }
 
-   playVideo(post){
-      this.videoService.getVideo(post.attachments[0].id).then(res=>{
-        post.video_source = res['data']['video_src'];
-        post.clicked =true;
-        this.stopOtherVideos(post);
-      },err=>{
-        this.presentToast('could not play video','middle');
-      })
-   }
+  playVideo(post){
+    this.videoService.getVideo(post.attachments[0].id).then(res=>{
+      post.video_source = res['data']['video_src'];
+      post.clicked =true;
+      this.stopOtherVideos(post);
+    },err=>{
+      this.presentToast('could not play video','middle');
+    })
+  }
 
   assignClickedValues(array :Array<{}>){
     for(let item of array){
@@ -430,17 +432,17 @@ export class HomePage implements OnInit {
   }
 
 
-    stopOtherVideos(exceptVideo){
-      let index = this.feed.items.indexOf(exceptVideo,0);
-      for(let i=0;i<this.feed.items.length;i++){
-        if(i!=index){
-          this.feed.items[i]['clicked'] =false;
-        }
+  stopOtherVideos(exceptVideo){
+    let index = this.feed.items.indexOf(exceptVideo,0);
+    for(let i=0;i<this.feed.items.length;i++){
+      if(i!=index){
+        this.feed.items[i]['clicked'] =false;
       }
     }
+  }
 
 
-   goToAttachmentDescription(att){
+  goToAttachmentDescription(att){
     if(att.type =='event'){
       this.nav.push(EventsDetailPage,{
         eventId : att.id,
@@ -449,6 +451,10 @@ export class HomePage implements OnInit {
     }else if(att.type =='blog'){
       this.nav.push(BlogsViewPage,{
         blogId : att.id,
+      })
+    }else if(att.type =='group'){
+      this.nav.push(GroupDetailPage,{
+        groupId : att.id,
       })
     }
    }

@@ -19,9 +19,8 @@
       <ion-spinner name="ios"></ion-spinner>
     </div>
 
-  <ion-list class="list-full-border" [virtualScroll]="members" approxItemHeight="60px" >
+  <ion-list class="list-full-border" *ngFor="let contact of members"  >
 
-    <ion-item-sliding *virtualItem="let contact">
 
       <ion-item >
         <ion-avatar item-left (click)="viewUser(contact)">
@@ -36,7 +35,6 @@
       </ion-item>
 
 
-    </ion-item-sliding>
 
   </ion-list>
   <ion-infinite-scroll (ionInfinite)="loadUsers($event)">

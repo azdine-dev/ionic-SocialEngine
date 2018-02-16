@@ -133,7 +133,7 @@ export class UserService {
       });
   }
 
-  getUserFriends(userId){
+  getUserFriends(userId,keywords?){
     return new Promise((resolve, reject) => {
       this.http.get(membersUrl + userId + '/friends'+param + 'access_token=' + this.accessToken + '&fields=' + userInfoFields).subscribe(res => {
         resolve(res);

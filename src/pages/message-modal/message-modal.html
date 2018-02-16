@@ -4,15 +4,53 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header>
+<ion-header >
 
-  <ion-navbar>
-    <ion-title>message-modal</ion-title>
+  <ion-navbar color="primary">
+    <ion-title>{{conversation?.title}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding class="message-content">
+
+  <h1>{{conversation?.title}}</h1>
+  <ion-card *ngFor="let message of conversation?.messages">
+    <ion-card-title>{{message?.title}}</ion-card-title>
+    <ion-item>
+    <ion-avatar item-start>
+      <img height="20" width="20"  #img src="{{ message?.from.img }}" (error)="getDefaultImage(img)" alt=""/>
+    </ion-avatar>
+    <h2>{{message?.from.title}}</h2>
+    <p>{{message?.date}}</p>
+      <ion-note color="primary">Afficher plus de détails</ion-note>
+  </ion-item>
+    <ion-card-content>
+      <p ion-text text-wrap>
+        {{message?.body}}
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+
+
 
 </ion-content>
+<ion-footer>
+  <ion-row>
+    <ion-col *ngIf="conversation?.can_reply">
+      <button ion-button color="primary" clear small (click)="replyToMessage(conversation)" icon-start>
+        <ion-icon name='ios-undo-outline'></ion-icon>
+        Répondre
+      </button>
+    </ion-col>
+    <ion-col>
+      <button ion-button color="primary" (click)="deleteMessage(conversation.id)" clear small icon-start>
+        <ion-icon name='md-trash'></ion-icon>
+        Supprimer
+      </button>
+    </ion-col>
+
+  </ion-row>
+</ion-footer>

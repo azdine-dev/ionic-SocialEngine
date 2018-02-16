@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {
+  Events,
   IonicPage, LoadingController, NavController, NavParams, Popover, PopoverController,
   ToastController, ViewController
 } from 'ionic-angular';
@@ -8,6 +9,8 @@ import {UserService} from "../../services/user-service";
 import {FormControl} from "@angular/forms";
 import {consoleTestResultHandler} from "tslint/lib/test";
 import {MessageService} from "../../services/message-service";
+import {InfoPage} from "../info/info";
+import {debounceTime} from "rxjs/operators";
 
 /**
  * Generated class for the MessageCreatePage page.
@@ -45,40 +48,62 @@ export class MessageCreatePage {
   searchUsersControl : FormControl;
   private selectedUesrs :Array<any>;
   private userSession =localStorage.getItem('user-id');
-
-
+  private showUsers =false;
+  private reply =false;
+  private messageId : any;
+  private canSendMessageUser :Array<any>
   constructor(public navCtrl: NavController, public navParams: NavParams,private popover :PopoverController,private userService: UserService,
   private messageService :MessageService,private loadingCtrl :LoadingController,private toastCtrl :ToastController,
-  private viewCtrl :ViewController) {
+  private viewCtrl :ViewController,private events :Events) {
     this.searchUsersControl = new FormControl();
-    this.selectedUesrs = new Array<any>();
+    let selectedUsers = this.navParams.get('selectedUesrs');
+    console.log(this.navParams.get('selectedUesrs'),'SELECTED')
+    if(!selectedUsers){
+      this.selectedUesrs = new Array<any>();
+    }else {
+      this.selectedUesrs=selectedUsers;
+      this.messageData.title=this.navParams.get('subject');
+      this.reply=true;
+      this.messageId = this.navParams.get('messageId');
+
+      console.log(this.messageId);
+    }
+
 
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad MessageCreatePage');
+    this.canSendMessageUser = new Array<any>();
+    this.searchUsersControl.valueChanges.pipe(
+      debounceTime(700)
+    ).subscribe(search=>{
+      this.getCanSendUsers();
+      console.log('wezzz');
+    })
   }
 
-  getPossibleUesr(myevent){
-       console.log(this.messageData.to);
+  getPossibleUesr(){
+    //
+    // this.searchUsersControl.valueChanges.pipe(
+    //   debounceTime(700)
+    // ).subscribe(search=>{
+    //   this.userService.getAllMembers(this.messageData.to,this.pageLimit,this.pageNumber).then(res=>{
+    //     this.canSendMessageUser = res['data'];
+    //     this.showUsers = true;
+    //   })
+    // })
+  }
 
+  getCanSendUsers(){
+    if(this.messageData.to ==''){
+      this.showUsers =false;
+    }else{
       this.userService.getAllMembers(this.messageData.to,this.pageLimit,this.pageNumber).then(res=>{
-        let data = {
-          type : 'users',
-          users : res['data']
-        };
-        let result = res['data'];
-        console.log(res,'REEEEES');
-        if(result.length >0 && this.selectedUesrs.length <10 ){
-        let popover = this.cretePopover(myevent,data);
-        popover.onDidDismiss(data=>{
-          if(data  && !this.arrayInclude(this.selectedUesrs,data.id)){
-            this.selectedUesrs.push(data);
-          }
-
-        })
-        }
+        this.canSendMessageUser = res['data'];
+        this.showUsers = true;
       })
+    }
+
   }
 
 
@@ -113,6 +138,14 @@ export class MessageCreatePage {
     })
   }
 
+  envoyerMessage(){
+    if(this.reply){
+      this.replyToMessage(this.messageId);
+    }else{
+      this.sendMessage();
+    }
+  }
+
   sendMessage(){
     for(let user of this.selectedUesrs){
       this.messageData.toUser +=user.id+','
@@ -121,6 +154,7 @@ export class MessageCreatePage {
     loader.present();
     this.messageService.sendNewMessage(this.messageData,false).then(res=>{
       loader.dismiss();
+      this.events.publish('message-create');
       this.presentToast(res['data'].message);
       this.viewCtrl.dismiss();
     },err=>{
@@ -128,6 +162,25 @@ export class MessageCreatePage {
       this.presentToast(err.error.data.message);
     })
 
+
+  }
+
+  replyToMessage(messageId){
+    for(let user of this.selectedUesrs){
+      this.messageData.toUser +=user.id+','
+    }
+    let loader = this.showLoader('envoie en cours');
+    loader.present();
+    this.messageService.sendMessageReply(this.messageData,messageId).then(res=>{
+      loader.dismiss();
+      this.events.publish('message-create');
+      this.presentToast('Envoie avec succés');
+
+      this.viewCtrl.dismiss();
+    },err=>{
+      loader.dismiss();
+      this.presentToast(err.error.data.message);
+    })
 
   }
 
@@ -151,4 +204,13 @@ export class MessageCreatePage {
 
   }
 
+  getDefaultImage(image){
+    image.src = 'assets/img/user.png';
+  }
+  selectItem(contact){
+    console.log(contact);
+    this.showUsers=false;
+    this.selectedUesrs.push(contact);
+    this.messageData.to='';
+  }
 }

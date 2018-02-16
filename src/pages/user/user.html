@@ -136,9 +136,6 @@
           <span (click)="getUserAlbums(user.id,user.title)">Albums</span>
         </ion-col>
 
-        <ion-col >
-          <span (click)="getUserLinks(user.id)">Liens</span>
-        </ion-col>
 
 
 
@@ -201,7 +198,7 @@
     </div>
     <div class="attachment-photo" *ngIf="post.attachments.length && (post.attachments[0].type == 'core_link')">
       <ion-item (click)="openLink(post.attachments[0].href)">
-        <ion-note  (click)="goToAttachmentDescription(post.attachments[0])" item-left color="primary"> {{post.attachments[0].title}}</ion-note>
+        <ion-note   item-left color="primary"> {{post.attachments[0].title}}</ion-note>
       </ion-item>
 
     </div>

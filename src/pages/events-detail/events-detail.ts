@@ -15,6 +15,7 @@ import {HomePage} from "../home/home";
 import {ShareModalPage} from "../share-modal/share-modal";
 import {VideoService} from "../../services/video-service";
 import {InfoPage} from "../info/info";
+import {CommentPage} from "../comment/comment";
 
 /**
  * Generated class for the EventsDetailPage page.
@@ -97,10 +98,10 @@ export class EventsDetailPage {
 
   }
   postNewLink(){
-    let linkModal = this.modalCtrl.create(PhotoModalPage,{
-      photo : false,
-    });
-    linkModal.present();
+    // let linkModal = this.modalCtrl.create(PhotoModalPage,{
+    //   photo : false,
+    // });
+    // linkModal.present();
   }
 
   goToExpress(eventId){
@@ -153,15 +154,28 @@ export class EventsDetailPage {
 
   getInvitedMembers(){
      this.navCtrl.push(ParticipantsPage,{
-       title: 'liste des invités',
+       title: 'liste des invitées',
      })
   }
   doRefreshFeed(refrecher){
-    this.getEventFeed(this.event.id);
+    this.refrechEvent(refrecher);
+
+  }
+
+  refrechEvent(refrecher){
+    this.eventService.getEvent(this.eventId).then(res=>{
+      this.event = res['data'];
+      refrecher.complete();
+    },err=>{
+      refrecher.complete();
+    })
   }
 
   listenToEvents(){
     this.events.subscribe('new-activity',()=>{
+      this.getEventFeed(this.event.id);
+    })
+    this.events.subscribe('new-comment',()=>{
       this.getEventFeed(this.event.id);
     })
   }
@@ -336,4 +350,22 @@ export class EventsDetailPage {
       }
     }
   }
+  sharePost(post){
+    let cmntModal = this.modalCtrl.create(ShareModalPage,{
+      item : post,
+      type : post.type,
+    });
+    cmntModal.present();
+  }
+  viewComment(post) {
+    console.log(post.id);
+    let cmntModal = this.modalCtrl.create(CommentPage,
+      {
+        item_type : 'activity_action',
+        item_id : post.id,
+        post:post,
+      },{cssClass:'wez'});
+    cmntModal.present();
+  }
+
 }

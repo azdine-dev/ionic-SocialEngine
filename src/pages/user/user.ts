@@ -567,4 +567,9 @@ export class UserPage implements OnInit  {
         })
       }
    }
+
+  openLink(url){
+    console.log(url,'URL');
+    window.open(url)
+  }
 }

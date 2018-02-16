@@ -4,6 +4,8 @@ import {
   ToastController
 } from 'ionic-angular';
 import {UserService} from "../../services/user-service";
+import {UserPage} from "../user/user";
+import {FormControl} from "@angular/forms";
 
 /**
  * Generated class for the FriendsPage page.
@@ -24,11 +26,15 @@ export class FriendsPage {
   private user;
   private defaultIcon ='';
   private defaultColor ='';
+  searching :any = false;
+  searchControl :FormControl;
+
+  searchTerm: string = '';
 
   constructor(public navCtrl: NavController, public navParams: NavParams,public userService : UserService,
               public alertCtrl : AlertController,public loadingCtrl : LoadingController,public toastCtrl:ToastController,
             public events :Events) {
-
+    this.searchControl = new FormControl();
     this.user = navParams.get('owner');
     this.getUserFriends(this.user.id);
     this.updateFriendsStatus();
@@ -97,16 +103,16 @@ export class FriendsPage {
 
    getFriendState(contact){
      if(contact.friend_status =='not_friend'){
-       return 'ajouter comme contact';
+       return 'ajouter';
      }
      else if(contact.friend_status =='is_sent_request'){
-       return 'annuler la demande de connection';
+       return 'annuler';
      }
      else if(contact.friend_status =='is_friend'){
-       return 'retirer de la liste des amis'
+       return 'supprimer'
      }
      else{
-       return 'approuver la  demande de connection';
+       return 'approuver';
      }
    }
 
@@ -186,4 +192,8 @@ export class FriendsPage {
        this.getUserFriends(this.user.id);
      })
    }
+
+  viewUser(user) {
+    this.navCtrl.push(UserPage, {ownerId: user.id})
+  }
 }

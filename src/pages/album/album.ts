@@ -40,11 +40,14 @@ export class AlbumPage implements OnInit{
 
 
   getUserAlbums(userId) {
+    console.log(userId,'USSE')
     this.searching = true;
     this.albumService.getUserAlbums(userId).then(data=>{
       this.userAlbums = data['data'];
+      console.log(this.userAlbums);
       this.searching = false;
     },err=>{
+      console.log(JSON.stringify(err));
     })
   }
 

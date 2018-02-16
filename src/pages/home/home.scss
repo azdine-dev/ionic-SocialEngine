@@ -1,5 +1,9 @@
 page-home,
 .home {
+  .album-atatchment{
+    margin-left: 0.5em;
+    padding-right: 1em;
+  }
 
   .search-toolbar{
 
@@ -24,8 +28,13 @@ page-home,
     a.subdued {
       color: $textColor;
       font-size: 0.8em;
+
     }
   }
+  .subdued{
+  margin-left: 1.5em;
+  }
+
 
   .post-actions {
     color: #7C7C7C;
@@ -105,11 +114,18 @@ page-home,
     img{
       width: 200px;
       height: 200px;
+      margin-left: 0.5em;
+      margin-right: 1em;
     }
     ion-note{
       font-weight: bold;
       position: center;
+      margin-top: 1em;
+      margin-left: 0.5em;
+      font-size: large;
+      font-weight: bold;
     }
+    padding-left: 1em;
   }
   .spinner-container{
     width: 100%;
