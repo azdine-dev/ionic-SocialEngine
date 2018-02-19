@@ -1,7 +1,7 @@
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 
-let coreUrl ='intaliq.novway.com/api/v1/core/'
+let coreUrl ='http://intaliq.novway.com/api/v1/core/'
 
 @Injectable()
 export class CoreService {

@@ -27,7 +27,7 @@
         <img  #image (error)="getDefaultImage(image)" class="friends-picture"  src="{{ contact.imgs.normal }}" alt="">
         </ion-avatar>
          <div>
-          <h3 ion-text color="primary"  (click)="viewUser(contact.id)">{{ contact.title }}</h3>
+          <h3 ion-text color="primary"  (click)="viewUser(contact)">{{ contact.title }}</h3>
          </div>
         <ion-buttons right (click)="joinMember(contact)" item-end>
           <button class="friend-status" color="primary" ion-button block outline small>

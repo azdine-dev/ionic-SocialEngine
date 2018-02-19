@@ -5,9 +5,9 @@ import {catchError, finalize} from "rxjs/operators";
 import {AttachementClass} from "../Data/attachement.interface";
 import {ComposeUploadService} from "./compose-upload";
 
-let feedUrl = 'intaliq.novway.com/api/v1/activities';
-let likeUrl = 'intaliq.novway.com/api/v1/core/likes';
-let commentUrl = 'intaliq.novway.com/api/v1/core/comments';
+let feedUrl = 'http://intaliq.novway.com/api/v1/activities';
+let likeUrl = 'http://intaliq.novway.com/api/v1/core/likes';
+let commentUrl = 'http://intaliq.novway.com/api/v1/core/comments';
 let composePhotoUrl ='intaliq.novway.com/api/v1/albums/compose_upload';
 let param = '?';
 let param_delimiter = '&';

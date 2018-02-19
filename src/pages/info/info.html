@@ -7,54 +7,39 @@
 <ion-header >
 
   <ion-navbar color="primary"  class="no-border">
-    <ion-title></ion-title>
+    <ion-buttons right>
+      <button *ngIf="peopleToInvite.length>0"  icon-only  ion-button (click)="inviteFriends()">
+        <ion-note color="white" >Inviter</ion-note>
+      </button>
+    </ion-buttons>
+
+    <ion-title>Inviter vos amis</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<!--<ion-content padding #container *ngIf="type=='event'">-->
-  <!--<ion-list class="list-full-border" *ngFor="let user of userInvited">-->
-  <!--<div>-->
 
-      <!--<ion-item >-->
-        <!--<ion-avatar item-left (click)="viewUser(contact)">-->
-          <!--<img  *ngIf="user.imgs.icon" #image (error)="'assets/img/user.png'" class="profile-picture" src="{{ user.imgs.icon }}" alt=""/>-->
-        <!--</ion-avatar>-->
-
-        <!--<div>-->
-          <!--<h3 ion-text color="primary"  (click)="viewUser(contact)">{{ user.title }}</h3>-->
-        <!--</div>-->
+<ion-content>
+  <div *ngIf="searching" class="spinner-container">
+    <ion-spinner name="ios"></ion-spinner>
+  </div>
+  <div *ngIf="canInviteFriends.length==0 && !searching" class="spinner-container" >
+    <ion-label color="dark">Liste Vide</ion-label>
+  </div>
+  <ion-list *ngFor="let contact of canInviteFriends" >
 
 
-      <!--</ion-item>-->
+    <ion-item (click)="viewUser(contact)">
+      <ion-avatar item-left >
+        <img  #image (error)="getDefaultImage(image)" class="friends-picture"  src="{{ contact.imgs.normal }}" alt="">
+      </ion-avatar>
+      <ion-label item-end  ion-text color="primary"  >{{ contact.title }}</ion-label>
 
-  <!--</div>-->
+    </ion-item>
+    <ion-checkbox class="invite-friends"  item-end  class="message-check" (ionChange)="selectItem($event,contact)" checked="false"></ion-checkbox>
 
-  <!--</ion-list>-->
-  <!--<ion-infinite-scroll (ionInfinite)="loadVideos($event)">-->
-    <!--<ion-infinite-scroll-content>-->
 
-    <!--</ion-infinite-scroll-content>-->
-  <!--</ion-infinite-scroll>-->
-
-<!--</ion-content>-->
-
-<ion-content padding *ngIf="type=='message'">
-
-  <ion-searchbar [(ngModel)]="searchTerm"  [formControl]="searchControl" placeholder="envoyer à ..."></ion-searchbar>
-  <ion-list *ngIf="type =='users' && users">
-
-    <div *ngFor="let contact of canSendMessageUser">
-      <ion-item *ngIf="contact.can_send_message">
-        <ion-avatar item-left (click)="selectItem(contact)" >
-          <img  *ngIf="contact.imgs.icon" #image (error)="getDefaultImage(image)" class="profile-picture" src="{{ contact.imgs.icon }}" alt=""/>
-        </ion-avatar>
-
-        <ion-label color="primary">{{ contact.title }}</ion-label>
-        <ion-checkbox   item-start  class="message-check" (ionChange)="selectItem($event,message)" checked="false"></ion-checkbox>
-      </ion-item>
-    </div>
 
   </ion-list>
 </ion-content>

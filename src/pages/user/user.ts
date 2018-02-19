@@ -18,6 +18,9 @@ import {MediathequePage} from "../mediatheque/mediatheque";
 import {EventsPage} from "../events/events";
 import {GroupsPage} from "../groups/groups";
 import {BlogsPage} from "../blogs/blogs";
+import {BlogsViewPage} from "../blogs-view/blogs-view";
+import {GroupDetailPage} from "../group-detail/group-detail";
+import {EventsDetailPage} from "../events-detail/events-detail";
 
 /*
  Generated class for the LoginPage page.
@@ -567,6 +570,23 @@ export class UserPage implements OnInit  {
         })
       }
    }
+
+  goToAttachmentDescription(att){
+    if(att.type =='event'){
+      this.nav.push(EventsDetailPage,{
+        eventId : att.id,
+      })
+
+    }else if(att.type =='blog'){
+      this.nav.push(BlogsViewPage,{
+        blogId : att.id,
+      })
+    }else if(att.type =='group'){
+      this.nav.push(GroupDetailPage,{
+        groupId : att.id,
+      })
+    }
+  }
 
   openLink(url){
     console.log(url,'URL');

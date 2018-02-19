@@ -44,6 +44,7 @@ export class EventsDetailPage {
               private loadingCtrl :LoadingController,private alertCtrl : AlertController,private videoService :VideoService) {
     this.event = this.navParams.get('event');
     this.eventId = this.navParams.get('eventId');
+    this.eventPhotos = new Array<any>();
     this.getEvent();
     this.getEventFeed(this.eventId);
     this.getAuthUser();
@@ -78,6 +79,7 @@ export class EventsDetailPage {
     console.log(event.id,'EVENT ID');
     this.navCtrl.push(InfoPage,{
       eventId : event.id,
+      type:'event',
     })
   }
   getEventFeed(eventId){

@@ -1,7 +1,7 @@
 import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 
-let blogUrl ='intaliq.novway.com/api/v1/blogs/';
+let blogUrl ='http://intaliq.novway.com/api/v1/blogs/';
 let fields = 'id,type,title,owner,date,body';
 let blogFields='id,type,title,owner,date,body,tags,category,can_edit,can_delete,total_like,total_comment,can_like,can_comment,can_share';
 

@@ -4,7 +4,7 @@ import {POSTS} from "./mock-posts";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 
-let groupUrl ='intaliq.novway.com/api/v1/groups/'
+let groupUrl ='http://intaliq.novway.com/api/v1/groups/'
 let groupFields='id,thumb,title,category,owner,description,staff,total_view,total_member,updated_date,can_edit,' +
   'can_delete,can_request,can_join,can_leave,can_cancel,can_accept,can_reject,can_invite,can_message_members';
 let activityUrl ='intaliq.novway.com/api/v1/activities/';
@@ -120,10 +120,24 @@ export class GroupService {
   /*****************GFroups Invite****************/
 
   getGroupCanInviteFriends(groupId){
-
+    return new Promise((resolve,reject)=>{
+      this.http.get(groupUrl+'invite'+'?access_token='+this.accessToken+'&id='+groupId).subscribe(data=>{
+        resolve(data);
+      },err=>{
+        reject(err);
+      })
+    })
   }
   inviteFriends(groupId,user_ids){
-
+    return new Promise((resolve,reject)=>{
+      let headers = new HttpHeaders();
+      headers.append('Content-Type', 'multipart/form-data');
+      this.http.post(groupUrl+'invite'+'?access_token='+this.accessToken+'&id='+groupId+'&user_ids='+user_ids,{headers}).subscribe(data=>{
+        resolve(data);
+      },err=>{
+        reject(err);
+      })
+    });
   }
 
   /************FEEEED*****************/

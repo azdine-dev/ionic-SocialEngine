@@ -14,6 +14,7 @@ import {EventService} from "../../services/event-service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {GroupService} from "../../services/group-service";
 import {CommentPage} from "../comment/comment";
+import {InfoPage} from "../info/info";
 
 /**
  * Generated class for the GroupDetailPage page.
@@ -308,5 +309,13 @@ export class GroupDetailPage {
       this.getGroupFeed(this.groupId);
     })
 
+  }
+
+  getCanInviteFriends(group){
+    console.log(group.id,'GROUP ID');
+    this.navCtrl.push(InfoPage,{
+      groupId : group.id,
+      type:'group',
+    })
   }
 }

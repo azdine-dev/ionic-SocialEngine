@@ -192,7 +192,7 @@
 
     <div class="attachment-photo"  *ngIf="post.attachments.length && (post.attachments[0].type != 'video') && (post.attachments[0].type!='album_photo')
           && (post.attachments[0].type != 'core_link')">
-      <img imageViewer [defaultImage]= "'/assets/img/default-image.png'"
+      <img  [defaultImage]= "'/assets/img/default-image.png'"
            [lazyLoad]="post.attachments[0].img" [scrollObservable]="container.ionScroll">
       <ion-note  (click)="goToAttachmentDescription(post.attachments[0])" item-left color="primary"> {{post.attachments[0].title}}</ion-note><br>
     </div>

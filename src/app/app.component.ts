@@ -96,24 +96,24 @@ export class MyApp {
       count: 5,
       component: NotificationsPage
     },
-    {
-      title: 'Wall posts',
-      icon: 'ios-browsers-outline',
-      count: 0,
-      component: WallPostsPage
-    },
+    // {
+    //   title: 'Wall posts',
+    //   icon: 'ios-browsers-outline',
+    //   count: 0,
+    //   component: WallPostsPage
+    // },
     {
       title: 'Entrepreneurs',
       icon: 'ios-person-outline',
       count: 0,
       component: ContactsPage
     },
-    {
-      title: 'Setting',
-      icon: 'ios-settings-outline',
-      count: 0,
-      component: SettingPage
-    },
+    // {
+    //   title: 'Setting',
+    //   icon: 'ios-settings-outline',
+    //   count: 0,
+    //   component: SettingPage
+    // },
     {
       title: 'Logout',
       icon: 'ios-log-out-outline',

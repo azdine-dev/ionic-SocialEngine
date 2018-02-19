@@ -1,8 +1,8 @@
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 
-let eventsUrl = 'intaliq.novway.com/api/v1/events/';
-let activityUrl ='intaliq.novway.com/api/v1/activities/';
+let eventsUrl = 'http://intaliq.novway.com/api/v1/events/';
+let activityUrl ='http://intaliq.novway.com/api/v1/activities/';
 let eventfields ='id,thumb,title,category,owner,description,RSVPs,date_detail,member_count,location,category,' +
   'host,total_member,can_edit,can_delete,can_request,date,' +
   'can_join,can_leave,can_cancel,can_accept,can_reject,can_invite,can_compose';
@@ -115,6 +115,18 @@ export class EventService {
         reject(err);
       })
     })
+  }
+
+  inviteFriends(eventId,userIds){
+    return new Promise((resolve,reject)=>{
+      let headers = new HttpHeaders();
+      headers.append('Content-Type', 'multipart/form-data');
+      this.http.post(eventsUrl+'invite'+'?access_token='+this.accessToken+'&id='+eventId+'&user_ids='+userIds,{headers}).subscribe(data=>{
+        resolve(data);
+      },err=>{
+        reject(err);
+      })
+    });
   }
   joinEvent(eventId,rsvp){
     return new Promise((resolve,reject)=>{

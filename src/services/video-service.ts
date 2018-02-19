@@ -1,7 +1,7 @@
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 
-let videoUrl = 'intaliq.novway.com/api/v1/videos/';
+let videoUrl = 'http://intaliq.novway.com/api/v1/videos/';
 let fields = 'id,title,is_liked,can_share,can_comment,can_delete,can_like,description,duration,thumb,owner,date,total_comment,' +
   'total_like,total_view,total_vote,rating,is_rated,status,video_type,video_src,category,tags,can_edit,can_delete,can_embed';
 let readVideoFields = 'id,title,description,video_type,video_src,description,thumb,total_like,total_view,total_vote,rating,is_rated,status,';

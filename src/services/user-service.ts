@@ -4,7 +4,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {FileTransfer} from "@ionic-native/file-transfer";
 import {ComposeUploadService} from "./compose-upload";
 
-let membersUrl = 'intaliq.novway.com/api/v1/users/';
+let membersUrl = 'http://intaliq.novway.com/api/v1/users/';
 let param = '?';
 let param_delimiter = '&';
 let userInfoFields ='id,title,about_me,aim,birthdate,block_status,can_comment,can_send_message,can_view,' +
@@ -126,13 +126,19 @@ export class UserService {
     return new Promise((resolve,reject)=>{
       this.composeUploadService.composeUploadPhoto(imageData).then(res=> {
         this.composeUploadData = JSON.parse(res['response']);
-        resolve(res);
-      }).catch(err=>{
-        reject(err);
-      })
+      }).then(res=>{
+        console.log(JSON.stringify(this.composeUploadData),'AHM');
+        headers.append('Content-Type', 'multipart/form-data');
+        this.http.post(membersUrl + 'me/external_photo' + param + 'access_token=' + this.accessToken +
+          '&photo_id=' + this.composeUploadData.data.photo_id
+          , {headers}).subscribe(data => {
+          resolve(data);
+        }, err => {
+          reject(err);
+        })
       });
+      })
   }
-
   getUserFriends(userId,keywords?){
     return new Promise((resolve, reject) => {
       this.http.get(membersUrl + userId + '/friends'+param + 'access_token=' + this.accessToken + '&fields=' + userInfoFields).subscribe(res => {

@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 let client_id = 'tmyfu3Hg5nua08I';
 let response_type = 'code';
 let scope = 'basic';
-let apiUrl = 'intaliq.novway.com/api/v1/oauth/token';
+let apiUrl = 'http://intaliq.novway.com/api/v1/oauth/token';
 
 
 

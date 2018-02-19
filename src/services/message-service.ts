@@ -4,7 +4,7 @@ import {AttachementClass} from "../Data/attachement.interface";
 
 let messageFields = 'id,title,body,participant,date,read,attachment,from,conversation';
 let messageDetailsFields='id,title,body,participant,recipients,attachment,from,conversation,date,read,messages,can_reply';
-let messageUrl ='intaliq.novway.com/api/v1/messages/';
+let messageUrl ='http://intaliq.novway.com/api/v1/messages/';
 
 @Injectable()
 export class MessageService {

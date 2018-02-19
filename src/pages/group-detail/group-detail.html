@@ -31,7 +31,7 @@
           </ion-col>
 
 
-          <ion-col *ngIf="group?.owner.id ==userSession" >
+          <ion-col *ngIf="group?.owner.id ==userSession" (click)="getCanInviteFriends(group)">
             <ion-icon name="ios-redo-outline"> </ion-icon><br>
             <ion-note>Inviter des membres</ion-note>
           </ion-col>

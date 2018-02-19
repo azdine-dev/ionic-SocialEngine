@@ -66,7 +66,7 @@
       <ion-label  item-start color="primary" >{{message.participant.title}}</ion-label>
       <ion-label  item-start ion-text class="to" color="dark">{{message.title}}</ion-label><br/>
       <!--<p  item-start text-wrap style="font-size: 80%">{{message.body}}</p>-->
-      <ion-checkbox  *ngIf="activateDelete" item-end  class="message-check" (click)="selectItem($event,message)" checked="false"></ion-checkbox>
+      <ion-checkbox  *ngIf="activateDelete" item-end  class="message-check" (ionChange)="selectItem($event,message)" checked="false"></ion-checkbox>
     </ion-item>
   </ion-list>
     </div>

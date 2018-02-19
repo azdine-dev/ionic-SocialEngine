@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-let notifUrl='intaliq.novway.com/api/v1/notifications/';
+let notifUrl='http://intaliq.novway.com/api/v1/notifications/';
 let notifFields ='id,content,owner,read,timestamp,type'
 @Injectable()
 export class NotificationsService {

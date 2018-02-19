@@ -4,7 +4,8 @@
     <button  ion-button menuToggle type="overlay">
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Blogs</ion-title>
+    <ion-title *ngIf="!user">Blogs</ion-title>
+    <ion-title *ngIf="user">Blogs de {{user.title}}</ion-title>
   </ion-navbar>
 
 </ion-header>
